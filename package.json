@@ -1,0 +1,30 @@
+{
+  "scripts": {
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios"
+  },
+  "dependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
+    "babel-preset-react-native": "^5.0.2",
+    "react": "16.7.0",
+    "react-native": "^0.57.8",
+    "react-native-gesture-handler": "^1.0.12",
+    "react-native-maps": "^0.22.1",
+    "react-native-sound-level": "^1.1.0",
+    "react-native-svg": "^8.0.10",
+    "react-native-svg-charts": "^5.2.0",
+    "react-native-vector-icons": "^6.1.0",
+    "react-navigation": "^3.0.9",
+    "schedule": "^0.5.0"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^5.0.0",
+    "metro-react-native-babel-preset": "^0.49.2",
+    "react-test-renderer": "16.6.0-alpha.8af6728"
+  },
+  "private": true
+}
