@@ -13,7 +13,7 @@
     "react": "16.7.0",
     "react-native": "^0.57.8",
     "react-native-gesture-handler": "^1.0.12",
-    "react-native-maps": "^0.22.1",
+    "react-native-maps": "git://github.com/fqborges/react-native-maps#osmdroid+hotfix",
     "react-native-sound-level": "^1.1.0",
     "react-native-svg": "^8.0.10",
     "react-native-svg-charts": "^5.2.0",

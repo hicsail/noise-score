@@ -71,7 +71,7 @@ export default class RecordScreen extends React.Component {
 
         <TouchableOpacity style={styles.center}
           onPress={this.startRecord}>
-          <Text> Start Recording </Text>
+          <Text> Measure Sounds </Text>
         </TouchableOpacity>
 
         <LineChart
@@ -85,7 +85,7 @@ export default class RecordScreen extends React.Component {
 
         <TouchableOpacity style={styles.center}
         onPress={this.stopRecord}>
-        <Text> Stop the Recording </Text>
+        <Text> Stop </Text>
         </TouchableOpacity>
 
         {/*<View>*/}
