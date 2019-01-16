@@ -1,6 +1,6 @@
 # Xcode
-ios/build/Build
-ios/build/Logs
+ios/build/Build/
+ios/build/Logs/
 ios/build/Index/DataStore/v5
 ios/build/ModuleCache.noindex
 !**/*.xcodeproj
