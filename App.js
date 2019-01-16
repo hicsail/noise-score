@@ -15,7 +15,7 @@ import AccountScreen from './src/screens/Account/AccountScreen';
 console.disableYellowBox = ["Unable to symbolicate"];
 
 const RecordStack = createStackNavigator({
-  Record: RecordScreen,
+  Measure: RecordScreen,
   Record1: RecordScreen1,
   Record2: RecordScreen2,
 });
@@ -24,7 +24,7 @@ const RecordStack = createStackNavigator({
 export default createAppContainer(createBottomTabNavigator(
   {
     Map: MapScreen,
-    Record: RecordStack,
+    Measure: RecordStack,
     Account: AccountScreen
   },
   {
@@ -37,7 +37,7 @@ export default createAppContainer(createBottomTabNavigator(
           iconName = `ios-person`;
         } else if (routeName === 'Map') {
           iconName = `ios-map`;
-        } else if (routeName === 'Record') {
+        } else if (routeName === 'Measure') {
           iconName = `ios-microphone`;
         }
 
