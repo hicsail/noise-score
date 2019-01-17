@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, ScrollView  } from 'react-native';
 import RNSoundLevelModule from 'react-native-sound-level';
 import { Platform, PermissionsAndroid, TouchableOpacity } from 'react-native';
-import ListItem from '../../components/ListItem/ListItem';
 import { LineChart, Grid } from 'react-native-svg-charts';
+import TopBanner from '../../components/TopBanner';
+import ListItem from '../../components/ListItem';
 
 
 export default class RecordScreen extends React.Component {
@@ -12,6 +13,7 @@ export default class RecordScreen extends React.Component {
     super(props);
     this.state = {
       decibels: [],
+      started: false
     };
   }
 
@@ -35,6 +37,7 @@ export default class RecordScreen extends React.Component {
     this.requestAudioPermissionAndroid()
       .then((didGetPermission)=> {
         if (didGetPermission){
+          this.state.started = true;
           RNSoundLevelModule.start();
           RNSoundLevelModule.onNewFrame = (d) => {
             this.setState({
@@ -46,8 +49,9 @@ export default class RecordScreen extends React.Component {
   }
 
 
-  stopRecord(){
-    RNSoundLevelModule.stop()
+  stopRecord = () => {
+    RNSoundLevelModule.stop();
+    this.state.started = false;
   }
 
   aveDecibel = () => {
@@ -67,12 +71,17 @@ export default class RecordScreen extends React.Component {
 
 
     return (
-      <View style={styles.container}>
 
-        <TouchableOpacity style={styles.center}
-          onPress={this.startRecord}>
-          <Text> Measure Sounds </Text>
-        </TouchableOpacity>
+      <ScrollView>
+        <TopBanner content={"Measure sounds."} />
+
+        <View style = {styles.buttonContainer}>
+          <TouchableOpacity style = {styles.button}
+                            onPress={this.startRecord}>
+            <Text style = {styles.buttonText}>Start</Text>
+          </TouchableOpacity>
+        </View>
+
 
         <LineChart
           style={{ height: 100 }}
@@ -83,10 +92,15 @@ export default class RecordScreen extends React.Component {
           <Grid/>
         </LineChart>
 
-        <TouchableOpacity style={styles.center}
-        onPress={this.stopRecord}>
-        <Text> Stop </Text>
-        </TouchableOpacity>
+
+
+        {this.state.started ? <View style = {styles.buttonContainer}>
+          <TouchableOpacity style = {styles.button}
+                            onPress={this.stopRecord}>
+            <Text style = {styles.buttonText}>Stop</Text>
+          </TouchableOpacity>
+        </View> : null }
+
 
         {/*<View>*/}
           {/*{decibelsOutput}*/}
@@ -114,7 +128,7 @@ export default class RecordScreen extends React.Component {
             onPress={() => this.props.navigation.navigate('Record1')}
           />
         </View>
-    </View>
+    </ScrollView>
 
   );
    }
@@ -124,7 +138,22 @@ export default class RecordScreen extends React.Component {
 
 const styles = StyleSheet.create({
   center: {
+    alignItems: 'center'
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    padding: 20
+  },
+  button: {
+    backgroundColor: '#00FF00',
+    padding: 20,
+    borderRadius: 30
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 20,
   },
   container: {
     flex: 1,
