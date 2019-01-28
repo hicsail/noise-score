@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 26,
-    alignSelf: "center"
+    alignSelf: "center",
+    color: "black"
   }
 });
 

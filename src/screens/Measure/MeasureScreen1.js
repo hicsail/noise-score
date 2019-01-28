@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { SelectMultipleGroupButton } from "react-native-selectmultiple-button";
-import TopBanner from '../../components/TopBanner';
+import NavButtons from '../../components/NavButtons';
 
 
-export default class RecordScreen1 extends React.Component {
+export default class MeasureScreen1 extends React.Component {
   constructor(props) {
     super(props);
 
@@ -16,12 +16,20 @@ export default class RecordScreen1 extends React.Component {
     };
   }
 
+  static navigationOptions = {
+    title: 'Comment',
+    headerStyle: {
+      backgroundColor: '#00FF00'
+    },
+    headerTintColor: 'white'
+  };
+
+
 
   render() {
 
     return (
       <ScrollView>
-        <TopBanner content={"Please comment."} />
 
         {/*<View style={styles.questionArea}>*/}
           {/*<View style={styles.wrapText}>*/}
@@ -121,24 +129,15 @@ export default class RecordScreen1 extends React.Component {
           {/*</View>*/}
         {/*</View>*/}
 
-        <View style={styles.padding}>
-          <View style={styles.navContainer}>
-            <View style={styles.navButtons}>
-              <Button
-                title="Back"
-                onPress={() => this.props.navigation.navigate('Record')}
-              />
-              <Button
-                title="Next"
-                onPress={() => this.props.navigation.navigate('Record2')}
-              />
-            </View>
-          </View>
-        </View>
+        <NavButtons navigation = {this.props.navigation}
+                    back={'Measure'}
+                    next={'Measure2'}/>
 
       </ScrollView>
     );
   }
+
+
 
   // setIntensity(value) {
   //   this.setState({
@@ -163,12 +162,16 @@ export default class RecordScreen1 extends React.Component {
 
 }
 
+
+
+const brightGreen = "#00FF00";
 const lightGreen = '#00FF00';
+const darkGray = "#383838";
 
 const questionButtonsStyle = {
-  borderColor: "gray",
+  borderColor: darkGray,
   backgroundColor: "transparent",
-  textColor: "gray",
+  textColor: darkGray,
   borderTintColor: lightGreen,
   backgroundTintColor: lightGreen,
   textTintColor: "black"
@@ -190,17 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly'
   },
   text: {
-    fontSize: 26
-  },
-  navContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'space-evenly'
-  },
-  navButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    fontSize: 26,
+    color: "black"
   }
 });
