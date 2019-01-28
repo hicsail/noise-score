@@ -9,12 +9,12 @@ From Android Studio, start an emulator. (Tools -> AVD Manager)
 ``` 
 npm run android
 ```
-Control M - to reload or allow remote debugging
+Control M on emulator - to set automatic reloads and allow remote debugging
 
 
 ## IOS (Requires XCode installation.)
 ``` 
 npm run ios
 ```
-Control D - to reload or allow remote debugging
+Control D on emulator - to set automatic reloads and allow remote debugging
 
