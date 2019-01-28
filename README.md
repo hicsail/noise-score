@@ -6,13 +6,15 @@ Download and start **React Native Debugger** for help debugging.
 ## Android
 From Android Studio, start an emulator. (Tools -> AVD Manager)
 
-``` npm run android
+``` 
+npm run android
 ```
 Control M - to reload or allow remote debugging
 
 
 ## IOS (Requires XCode installation.)
-``` npm run ios
+``` 
+npm run ios
 ```
 Control D - to reload or allow remote debugging
 
