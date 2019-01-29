@@ -12,7 +12,8 @@ npm run android
 Control M on emulator - to set automatic reloads and allow remote debugging
 
 
-## IOS (Requires XCode installation.)
+## IOS 
+Requires XCode installation.
 ``` 
 npm run ios
 ```
