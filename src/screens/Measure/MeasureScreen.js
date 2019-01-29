@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   Platform,
   PermissionsAndroid,
@@ -7,10 +6,9 @@ import {
   StyleSheet,
   Text,
   View } from 'react-native';
-
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import RNSoundLevelModule from 'react-native-sound-level';
-import { LineChart, Grid } from 'react-native-svg-charts';
+import { LineChart, Grid, YAxis } from 'react-native-svg-charts';
 import ListItem from '../../components/ListItem';
 
 
@@ -20,7 +18,8 @@ export default class MeasureScreen extends React.Component {
     super(props);
     this.state = {
       decibels: [],
-      started: false
+      started: false,
+      stopped: false
     };
   }
 
@@ -47,12 +46,12 @@ export default class MeasureScreen extends React.Component {
     return granted === PermissionsAndroid.RESULTS.GRANTED;
   }
 
-  startRecord = () => {
+  startMeasurement = () => {
     this.requestAudioPermissionAndroid()
       .then((didGetPermission)=> {
         if (didGetPermission){
           this.state.started = true;
-          console.log("got permission, starting to record.");
+          this.state.stopped = false;
           RNSoundLevelModule.start();
           RNSoundLevelModule.onNewFrame = (d) => {
             this.setState({
@@ -64,9 +63,21 @@ export default class MeasureScreen extends React.Component {
   };
 
 
-  stopRecord = () => {
+  stopMeasurement = () => {
+    this.setState({
+      started : false,
+      stopped : true
+    });
+
     RNSoundLevelModule.stop();
-    this.state.started = false;
+  };
+
+  clearData = () => {
+    this.setState({
+      decibels : [],
+      started : false,
+      stopped : false
+  });
   };
 
   aveDecibel = () => {
@@ -89,27 +100,17 @@ export default class MeasureScreen extends React.Component {
 
       <ScrollView>
 
-        <View style = {styles.iconButton}>
+        {!this.state.started ? <View style = {styles.iconButton}>
           <IconFA.Button
             name={'microphone'}
             size={30}
             borderRadius={30}
             color='white'
             backgroundColor={brightGreen}
-            onPress={()=> this.startRecord()}>
+            onPress={()=> this.startMeasurement()}>
             <Text style = {styles.buttonText}>Start</Text>
           </IconFA.Button>
-        </View>
-
-
-        <LineChart
-          style={{ height: 300, paddingVertical: 12 }}
-          data={ this.state.decibels }
-          svg={{ stroke: 'rgb(134, 65, 244)' }}
-          contentInset={{ top: 20, bottom: 20 }}
-        >
-          <Grid/>
-        </LineChart>
+        </View> : null }
 
 
         {this.state.started ? <View style = {styles.iconButton}>
@@ -118,11 +119,33 @@ export default class MeasureScreen extends React.Component {
             size={30}
             borderRadius={30}
             color="white"
-            backgroundColor={brightGreen}
-            onPress={this.stopRecord}>
+            backgroundColor={'#FF0000'}
+            onPress={()=> this.stopMeasurement()}>
             <Text style = {styles.buttonText}>Stop</Text>
           </IconFA.Button>
         </View> : null }
+
+
+        <View style={{ height: 200, flexDirection: 'row', marginLeft: 12, marginRight: 12 }}>
+
+          <YAxis
+            data={ this.state.decibels }
+            contentInset={{ top: 20, bottom: 20, right: 20, left: 20 }}
+            svg={{
+              fill: 'grey',
+              fontSize: 10,
+            }}
+            numberOfTicks={ 5 }
+            formatLabel={ value => `${value}dB` }/>
+
+          <LineChart
+            style={{ flex: 1, marginLeft: 16 }}
+            data={ this.state.decibels }
+            svg={{ stroke: 'rgb(134, 65, 244)' }}
+            contentInset={{ top: 20, bottom: 20, right: 20, left: 20 }}>
+            <Grid/>
+          </LineChart>
+        </View>
 
 
         {this.state.decibels.length > 0 ? <View style={styles.center}>
@@ -138,29 +161,32 @@ export default class MeasureScreen extends React.Component {
         </View> : null }
 
 
-        {this.state.started ? <View style = {styles.iconButton}>
-            <IconFA.Button
-              name={'trash'}
-              size={30}
-              borderRadius={30}
-              color="white"
-              backgroundColor={brightGreen}
-              onPress={()=> alert("Deleted")}>
-              <Text style = {styles.buttonText}>Delete</Text>
-            </IconFA.Button>
-        </View> : null }
+        {this.state.stopped ? <View style = {styles.padding}>
+          <View style = {styles.navContainer}>
+            <View style = {styles.navButtons}>
 
+              <IconFA.Button
+                name={'trash'}
+                size={30}
+                borderRadius={30}
+                color="white"
+                backgroundColor={"blue"}
+                onPress={this.clearData}>
+                <Text style = {styles.buttonText}>Clear</Text>
+              </IconFA.Button>
 
-        {this.state.started ? <View style = {styles.iconButton}>
-          <IconFA.Button
-            name={'paper-plane'}
-            size={30}
-            borderRadius={30}
-            color="white"
-            backgroundColor={brightGreen}
-            onPress={()=> this.props.navigation.navigate('Measure1')}>
-            <Text style = {styles.buttonText}>Submit</Text>
-          </IconFA.Button>
+              <IconFA.Button
+                name={'paper-plane'}
+                size={30}
+                borderRadius={30}
+                color="white"
+                backgroundColor={brightGreen}
+                onPress={()=> this.props.navigation.navigate('Measure1')}>
+                <Text style = {styles.buttonText}>Submit</Text>
+              </IconFA.Button>
+
+            </View>
+          </View>
         </View> : null }
 
     </ScrollView>
@@ -203,6 +229,12 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-evenly',
   },
+  navContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'space-evenly'
+  },
   navButtons: {
     flexDirection: "row",
     alignItems: 'center',
@@ -212,7 +244,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center'
-  }
+  },
+  padding: {
+    padding: 20,
+  },
 });
 
 
