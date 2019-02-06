@@ -9,8 +9,8 @@ import {
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import RNSoundLevelModule from 'react-native-sound-level';
 import { LineChart, Grid, YAxis } from 'react-native-svg-charts';
+import Table from '../../components/Table';
 import ListItem from '../../components/ListItem';
-
 
 export default class MeasureScreen extends React.Component {
 
@@ -126,14 +126,14 @@ export default class MeasureScreen extends React.Component {
         </View> : null }
 
 
-        <View style={{ height: 200, flexDirection: 'row', marginLeft: 12, marginRight: 12 }}>
+        <View style={styles.chart}>
 
           <YAxis
             data={ this.state.decibels }
             contentInset={{ top: 20, bottom: 20, right: 20, left: 20 }}
             svg={{
               fill: 'grey',
-              fontSize: 10,
+              fontSize: 12,
             }}
             numberOfTicks={ 5 }
             formatLabel={ value => `${value}dB` }/>
@@ -147,20 +147,12 @@ export default class MeasureScreen extends React.Component {
           </LineChart>
         </View>
 
-
-        {this.state.decibels.length > 0 ? <View style={styles.center}>
-          <Text style = {styles.text}>
-            Max: { Math.max(...this.state.decibels).toFixed(2) }
-          </Text>
-          <Text style = {styles.text}>
-            Min: { Math.min(...this.state.decibels).toFixed(2) }
-          </Text>
-          <Text style = {styles.text}>
-            Average: { this.aveDecibel().toFixed(2) }
-          </Text>
-        </View> : null }
-
-
+        {this.state.decibels.length > 0 ? <View>
+          <Table ave={this.aveDecibel().toFixed(2)}
+               min={Math.min(...this.state.decibels).toFixed(2)}
+               max={Math.max(...this.state.decibels).toFixed(2)}/>
+          </View> : null }
+          
         {this.state.stopped ? <View style = {styles.padding}>
           <View style = {styles.navContainer}>
             <View style = {styles.navButtons}>
@@ -170,7 +162,7 @@ export default class MeasureScreen extends React.Component {
                 size={30}
                 borderRadius={30}
                 color="white"
-                backgroundColor={"blue"}
+                backgroundColor={"grey"}
                 onPress={this.clearData}>
                 <Text style = {styles.buttonText}>Clear</Text>
               </IconFA.Button>
@@ -248,6 +240,12 @@ const styles = StyleSheet.create({
   padding: {
     padding: 20,
   },
+  chart: {
+    height: 200,
+    flexDirection: 'row',
+    marginLeft: 12,
+    marginRight: 12
+  }
 });
 
 
