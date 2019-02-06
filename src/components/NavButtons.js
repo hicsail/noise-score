@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 
 
@@ -20,7 +20,6 @@ const navButtons = (props) => (
 
 
         {props.next !== null ? <View>
-
           <IconFA.Button
             name={'arrow-right'}
             size={30}
@@ -37,13 +36,6 @@ const navButtons = (props) => (
   </View>
 
 );
-
-// {/*<TouchableOpacity style = {styles.nextButton}*/}
-// {/*onPress={() => this.props.navigation.navigate('Measure2')}>*/}
-// {/*<Text style = {styles.buttonText}>Next</Text>*/}
-// {/*<Icon name={"arrow-right"} size={35} color={"white"}/>*/}
-// {/*</TouchableOpacity>*/}
-
 
 
 const brightGreen = "#00FF00";

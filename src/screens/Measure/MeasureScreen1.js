@@ -129,7 +129,7 @@ export default class MeasureScreen1 extends React.Component {
           {/*</View>*/}
         {/*</View>*/}
 
-        <NavButtons navigation = {this.props.navigation}
+        <NavButtons navigation={this.props.navigation}
                     back={'Measure'}
                     next={'Measure2'}/>
 
