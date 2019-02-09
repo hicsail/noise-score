@@ -38,7 +38,7 @@ const navButtons = (props) => (
 );
 
 
-const brightGreen = "#00FF00";
+const brightGreen = "#31BD4B";
 const styles = StyleSheet.create({
   padding: {
     padding: 20,

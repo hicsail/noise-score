@@ -22,14 +22,9 @@ const MeasureStack = createStackNavigator({
   Measure3: MeasureScreen3,
 });
 
-// const navigationOptions = {
-//   headerStyle: {
-//     backgroundColor: brightGreen
-//   }
-// };
 
 
-const brightGreen = "#00FF00";
+const brightGreen = "#31BD4B";
 
 export default createAppContainer(createBottomTabNavigator(
   {
