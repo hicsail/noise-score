@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 
+
 const topBanner = (props) => (
   <View style={styles.topBanner}>
     <Text style={styles.text}>
@@ -10,10 +11,11 @@ const topBanner = (props) => (
   </View>
 );
 
+const brightGreen = "#31BD4B";
 const styles = StyleSheet.create({
   topBanner: {
     justifyContent: 'center',
-    backgroundColor: '#00FF00',
+    backgroundColor: brightGreen,
     height: 80
   },
   text: {

@@ -11,6 +11,7 @@ import RNSoundLevelModule from 'react-native-sound-level';
 import { LineChart, Grid, YAxis } from 'react-native-svg-charts';
 import Table from '../../components/Table';
 import ListItem from '../../components/ListItem';
+import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 
 export default class MeasureScreen extends React.Component {
 
@@ -26,7 +27,7 @@ export default class MeasureScreen extends React.Component {
   static navigationOptions = {
     title: 'Measure Sounds',
     headerStyle: {
-      backgroundColor: '#00FF00'
+      backgroundColor: "#31BD4B"
     },
     headerTintColor: 'white'
   };
@@ -78,6 +79,10 @@ export default class MeasureScreen extends React.Component {
       started : false,
       stopped : false
   });
+  };
+
+  submit = () => {
+    this.props.navigation.navigate('Measure1');
   };
 
   aveDecibel = () => {
@@ -152,34 +157,14 @@ export default class MeasureScreen extends React.Component {
                min={Math.min(...this.state.decibels).toFixed(2)}
                max={Math.max(...this.state.decibels).toFixed(2)}/>
           </View> : null }
-          
-        {this.state.stopped ? <View style = {styles.padding}>
-          <View style = {styles.navContainer}>
-            <View style = {styles.navButtons}>
 
-              <IconFA.Button
-                name={'trash'}
-                size={30}
-                borderRadius={30}
-                color="white"
-                backgroundColor={"grey"}
-                onPress={this.clearData}>
-                <Text style = {styles.buttonText}>Clear</Text>
-              </IconFA.Button>
 
-              <IconFA.Button
-                name={'paper-plane'}
-                size={30}
-                borderRadius={30}
-                color="white"
-                backgroundColor={brightGreen}
-                onPress={()=> this.props.navigation.navigate('Measure1')}>
-                <Text style = {styles.buttonText}>Submit</Text>
-              </IconFA.Button>
-
-            </View>
-          </View>
-        </View> : null }
+        {this.state.stopped ?
+          <ClearSubmitButtons
+            clear={this.clearData}
+            submit={this.submit}
+          />
+        : null}
 
     </ScrollView>
 
@@ -187,8 +172,7 @@ export default class MeasureScreen extends React.Component {
    }
 }
 
-const brightGreen = "#00FF00";
-
+const brightGreen = "#31BD4B";
 const styles = StyleSheet.create({
   center: {
     alignItems: 'center'

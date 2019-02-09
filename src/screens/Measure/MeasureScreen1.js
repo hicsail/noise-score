@@ -19,7 +19,7 @@ export default class MeasureScreen1 extends React.Component {
   static navigationOptions = {
     title: 'Comment',
     headerStyle: {
-      backgroundColor: '#00FF00'
+      backgroundColor: "#31BD4B"
     },
     headerTintColor: 'white'
   };
@@ -164,8 +164,8 @@ export default class MeasureScreen1 extends React.Component {
 
 
 
-const brightGreen = "#00FF00";
-const lightGreen = '#00FF00';
+const brightGreen = "#31BD4B";
+const lightGreen = '#31BD4B';
 const darkGray = "#383838";
 
 const questionButtonsStyle = {
