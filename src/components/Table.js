@@ -5,8 +5,8 @@ import {Table, Rows, Row} from 'react-native-table-component'
 const table = (props) => (
     <View style={styles.table}>
       <Table borderStyle={styles.tableBorder}>
-        <Row data={['Decibels Measured']} style={styles.center} textStyle={styles.title}/>
-        <Rows data={[['min', props.min], ['max', props.max], ['ave', props.ave]]} style={styles.center} textStyle={styles.text}/>
+        <Row data={[props.title]} style={styles.titleStyle} textStyle={styles.title}/>
+        <Rows data={props.data} style={styles.rowStyle} textStyle={styles.text}/>
       </Table>
     </View>
 );
@@ -14,24 +14,31 @@ const table = (props) => (
 const styles = StyleSheet.create({
   table: {
     justifyContent: 'center',
-    height: 300
+    height: 150,
+    paddingLeft: 25,
+    paddingRight: 25
   },
   text: {
-    fontSize: 26,
+    fontSize: 16,
     alignSelf: "center",
-    color: "black"
+    color: "rgb(134, 65, 244)"
   },
   tableBorder: {
     borderWidth: 2,
-    borderColor: '#c8e1ff'
+    borderColor: 'white'
   },
   title: {
-    fontSize: 32,
+    fontSize: 20,
     alignSelf: "center",
     color: "black"
   },
-  center: {
+  titleStyle: {
+    backgroundColor: '#B7BBBD',
     alignItems: 'center'
+  },
+  rowStyle: {
+    alignItems: 'center',
+    backgroundColor: '#F7F7F8'
   }
 });
 

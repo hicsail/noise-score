@@ -4,14 +4,16 @@ import {
   PermissionsAndroid,
   ScrollView,
   StyleSheet,
-  Text,
   View } from 'react-native';
-import IconFA from 'react-native-vector-icons/FontAwesome';
 import RNSoundLevelModule from 'react-native-sound-level';
-import { LineChart, Grid, YAxis } from 'react-native-svg-charts';
 import Table from '../../components/Table';
 import ListItem from '../../components/ListItem';
+import DecibelChart from '../../components/DecibelChart';
 import ClearSubmitButtons from '../../components/ClearSubmitButtons';
+import StartMicrophone from '../../components/StartMicrophone';
+import StopMicrophone from '../../components/StopMicrophone';
+import ReferenceDecibels from '../../components/ReferenceDecibels';
+
 
 export default class MeasureScreen extends React.Component {
 
@@ -51,12 +53,12 @@ export default class MeasureScreen extends React.Component {
     this.requestAudioPermissionAndroid()
       .then((didGetPermission)=> {
         if (didGetPermission){
-          this.state.started = true;
-          this.state.stopped = false;
           RNSoundLevelModule.start();
           RNSoundLevelModule.onNewFrame = (d) => {
             this.setState({
-              decibels : this.state.decibels.concat(d.value)
+              decibels : this.state.decibels.concat(d.value),
+              started : true,
+              stopped : false
             });
           }
         }
@@ -69,7 +71,6 @@ export default class MeasureScreen extends React.Component {
       started : false,
       stopped : true
     });
-
     RNSoundLevelModule.stop();
   };
 
@@ -103,68 +104,35 @@ export default class MeasureScreen extends React.Component {
 
     return (
 
-      <ScrollView>
+      <ScrollView contentContainerStyle={{
+        flex: 1,
+        justifyContent: 'space-evenly',
+        padding: 20
+      }}>
 
-        {!this.state.started ? <View style = {styles.iconButton}>
-          <IconFA.Button
-            name={'microphone'}
-            size={30}
-            borderRadius={30}
-            color='white'
-            backgroundColor={brightGreen}
-            onPress={()=> this.startMeasurement()}>
-            <Text style = {styles.buttonText}>Start</Text>
-          </IconFA.Button>
-        </View> : null }
+        {this.state.started ? <View><StopMicrophone stopMeasurement={this.stopMeasurement}/></View> :
+          <View><StartMicrophone startMeasurement={this.startMeasurement}/></View> }
 
+          <DecibelChart decibels={this.state.decibels}/>
 
-        {this.state.started ? <View style = {styles.iconButton}>
-          <IconFA.Button
-            name={'stop'}
-            size={30}
-            borderRadius={30}
-            color="white"
-            backgroundColor={'#FF0000'}
-            onPress={()=> this.stopMeasurement()}>
-            <Text style = {styles.buttonText}>Stop</Text>
-          </IconFA.Button>
-        </View> : null }
+          {this.state.decibels.length > 0 ? <View style={styles.tablePadding}>
+            <Table
+              title={'Decibels Measured'}
+              data={[
+                ['min', -Math.min(...this.state.decibels).toFixed(2)],
+                ['max', -Math.max(...this.state.decibels).toFixed(2)],
+                ['ave', -this.aveDecibel().toFixed(2)]]}/>
 
+             <ReferenceDecibels/>
 
-        <View style={styles.chart}>
-
-          <YAxis
-            data={ this.state.decibels }
-            contentInset={{ top: 20, bottom: 20, right: 20, left: 20 }}
-            svg={{
-              fill: 'grey',
-              fontSize: 12,
-            }}
-            numberOfTicks={ 5 }
-            formatLabel={ value => `${value}dB` }/>
-
-          <LineChart
-            style={{ flex: 1, marginLeft: 16 }}
-            data={ this.state.decibels }
-            svg={{ stroke: 'rgb(134, 65, 244)' }}
-            contentInset={{ top: 20, bottom: 20, right: 20, left: 20 }}>
-            <Grid/>
-          </LineChart>
-        </View>
-
-        {this.state.decibels.length > 0 ? <View>
-          <Table ave={this.aveDecibel().toFixed(2)}
-               min={Math.min(...this.state.decibels).toFixed(2)}
-               max={Math.max(...this.state.decibels).toFixed(2)}/>
           </View> : null }
 
-
-        {this.state.stopped ?
+        {this.state.started || this.state.stopped ?
           <ClearSubmitButtons
+            disabled={!this.state.stopped}
             clear={this.clearData}
             submit={this.submit}
-          />
-        : null}
+          /> : null }
 
     </ScrollView>
 
@@ -172,63 +140,11 @@ export default class MeasureScreen extends React.Component {
    }
 }
 
-const brightGreen = "#31BD4B";
+// example decibel source: http://chchearing.org/noise/common-environmental-noise-levels
+
 const styles = StyleSheet.create({
-  center: {
-    alignItems: 'center'
-  },
-  buttonContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20
-  },
-  button: {
-    backgroundColor: '#00FF00',
-    padding: 20,
-    borderRadius: 30
-  },
-  deleteButton: {
-    backgroundColor: 'darkgrey',
-    padding: 20,
-    borderRadius: 30,
-    justifyContent: 'space-between'
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 20
-  },
-  text: {
-    color: 'black',
-    fontSize: 20,
-  },
-  container: {
-    justifyContent: 'space-evenly',
-  },
-  navContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'space-evenly'
-  },
-  navButtons: {
-    flexDirection: "row",
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  iconButton: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  padding: {
-    padding: 20,
-  },
-  chart: {
-    height: 200,
-    flexDirection: 'row',
-    marginLeft: 12,
-    marginRight: 12
+  tablePadding: {
+    paddingBottom: 45
   }
 });
 
