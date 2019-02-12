@@ -73,10 +73,6 @@ export default class MeasureScreen2 extends React.Component {
             {buttons}
         </View>
 
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>{this.state.sources}</Text>
-        </View>
-
         <NavButtons navigation = {this.props.navigation}
                     back={'Measure1'}
                     next={'Measure3'}/>

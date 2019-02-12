@@ -11,32 +11,34 @@ export default class ClearSubmitButtons extends React.Component {
     return (
 
       <View style={styles.padding}>
-        <View style={styles.navContainer}>
-          <View style={styles.navButtons}>
+        <View style={styles.container}>
+          <View style={styles.buttonSpacing}>
 
             <View style={styles.padding}>
-              <View style={styles.navContainer}>
-                <View style={styles.navButtons}>
+              <View style={styles.container}>
+                <View style={styles.buttonSpacing}>
 
-                  <IconFA.Button
-                    name={'trash'}
-                    size={30}
-                    borderRadius={30}
-                    color="white"
-                    backgroundColor={"grey"}
-                    onPress={() => this.props.clear()}>
-                    <Text style={styles.buttonText}>Clear</Text>
-                  </IconFA.Button>
+                      <IconFA.Button
+                        disabled={this.props.disabled}
+                        name={'trash'}
+                        size={30}
+                        borderRadius={30}
+                        color="white"
+                        backgroundColor={this.props.disabled ? '#B7BBBD' : "#4E5255"}
+                        onPress={() => this.props.clear()}>
+                        <Text style={styles.buttonText}>Clear</Text>
+                      </IconFA.Button>
 
-                  <IconFA.Button
-                    name={'paper-plane'}
-                    size={30}
-                    borderRadius={30}
-                    color="white"
-                    backgroundColor={brightGreen}
-                    onPress={() => this.props.submit()}>
-                    <Text style={styles.buttonText}>Submit</Text>
-                  </IconFA.Button>
+                      <IconFA.Button
+                        disabled={this.props.disabled}
+                        name={'paper-plane'}
+                        size={30}
+                        borderRadius={30}
+                        color="white"
+                        backgroundColor={this.props.disabled ? '#B7BBBD' : brightGreen}
+                        onPress={() => this.props.submit()}>
+                        <Text style={styles.buttonText}>Submit</Text>
+                      </IconFA.Button>
 
                 </View>
               </View>
@@ -55,28 +57,15 @@ const styles = StyleSheet.create({
   padding: {
     padding: 20,
   },
-  wrapText: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-evenly'
-  },
-  text: {
-    fontSize: 26,
-    color: "black"
-  },
-  navContainer: {
-    flex: 1,
+  container: {
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'space-evenly'
   },
-  navButtons: {
+ buttonSpacing: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
-  },
-  nextButton: {
-    backgroundColor: brightGreen
   },
   buttonText: {
     color: "white"
