@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Button, AsyncStorage} from 'react-native';
 import { SelectMultipleGroupButton } from "react-native-selectmultiple-button";
-import NavButtons from '../../components/NavButtons';
+import NavButtons2 from '../../components/NavButtons2';
 
 
 export default class MeasureScreen1 extends React.Component {
@@ -26,6 +26,24 @@ export default class MeasureScreen1 extends React.Component {
 
 
 
+  next(){
+      const {navigate} = this.props.navigation;
+
+      // Need to add information Loud, Describe, Feel
+      if (this.state.loudness == '' || this.state.oneWord == '' || this.state.feeling == ''){
+          alert("Please answer every question.");
+      } else {
+          AsyncStorage.getItem('formData').then(function (ret) {
+              var response = JSON.parse(ret);
+              response["loud"] = this.state.loudness;
+              response["describe"] = this.state.oneWord;
+              response["feel"] = this.state.feeling;
+              AsyncStorage.setItem("formData", JSON.stringify(response));
+          }.bind(this)).then(function(){
+              navigate('Measure2');
+          }.bind(this));
+      }
+  }
   render() {
 
     return (
@@ -129,9 +147,12 @@ export default class MeasureScreen1 extends React.Component {
           {/*</View>*/}
         {/*</View>*/}
 
-        <NavButtons navigation={this.props.navigation}
+
+
+
+        <NavButtons2 navigation={this.props.navigation}
                     back={'Measure'}
-                    next={'Measure2'}/>
+                    next={this.next.bind(this)}/>
 
       </ScrollView>
     );
@@ -146,17 +167,17 @@ export default class MeasureScreen1 extends React.Component {
   // }
   setLoudness(value) {
     this.setState({
-      loudness: value
+      loudness: value[0]
     });
   }
   setOneWord(value) {
     this.setState({
-      oneWord: value
+      oneWord: value[0]
     });
   }
   setFeeling(value) {
     this.setState({
-      feeling: value
+      feeling: value[0]
     });
   }
 

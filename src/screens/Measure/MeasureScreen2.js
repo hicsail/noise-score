@@ -1,8 +1,9 @@
 import React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import NavButtons from '../../components/NavButtons';
+import {AsyncStorage, ScrollView, StyleSheet, Text, View} from 'react-native';
 import SourceButton from '../../components/SourceButton';
 import * as constants from '../../components/constants';
+import NavButtons2 from '../../components/NavButtons2';
+
 
 export default class MeasureScreen2 extends React.Component {
 
@@ -41,6 +42,23 @@ export default class MeasureScreen2 extends React.Component {
     }
   };
 
+  next(){
+    const {navigate} = this.props.navigation;
+
+    // Need to add information about sources
+    if (this.state.sources.length == 0){
+      alert("Please select one source.");
+    } else {
+      AsyncStorage.getItem('formData').then(function (ret) {
+        var response = JSON.parse(ret);
+        response["sources"] = this.state.sources;
+        AsyncStorage.setItem("formData", JSON.stringify(response));
+      }.bind(this)).then(function(){
+        navigate('Measure3');
+      }.bind(this));
+    }
+  }
+
 
   render() {
 
@@ -61,6 +79,7 @@ export default class MeasureScreen2 extends React.Component {
       count += 1;
     });
 
+
     return (
       <ScrollView>
 
@@ -73,14 +92,21 @@ export default class MeasureScreen2 extends React.Component {
             {buttons}
         </View>
 
-        <NavButtons navigation = {this.props.navigation}
-                    back={'Measure1'}
-                    next={'Measure3'}/>
+
+        <NavButtons2 navigation={this.props.navigation}
+                     back={'Measure1'}
+                     next={this.next.bind(this)}/>
+
 
       </ScrollView>
     );
   }
+
+
+
 }
+
+
 
 const brightGreen = "#31BD4B";
 const styles = StyleSheet.create({

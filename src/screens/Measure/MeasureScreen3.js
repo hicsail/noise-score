@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, ScrollView, View, TextInput} from 'react-native';
+import { StackActions, NavigationActions } from 'react-navigation';
+import {StyleSheet, Text, ScrollView, View, TextInput, AsyncStorage} from 'react-native';
 import NavButtons from '../../components/NavButtons';
 import ClearSubmitButtons from '../../components/ClearSubmitButtons';
-
+import axios from "axios";
 export default class MeasureScreen3 extends React.Component {
 
   static navigationOptions = {
@@ -28,8 +29,69 @@ export default class MeasureScreen3 extends React.Component {
   };
 
   submit() {
-    // TODO
-    alert('Submitted measurement.');
+    const {navigate} = this.props.navigation;
+
+    var sucsess = true;
+    AsyncStorage.getItem('formData').then(function (ret) {
+
+      var response = JSON.parse(ret);
+      if (this.state.comment.length > 0){
+      response["words"] = this.state.comment;
+      } else {
+        response["words"] = " ";
+      }
+
+      AsyncStorage.getItem('userData').then(function (ret2) {
+        var userData = JSON.parse(ret2);
+        response["username"] = userData['user']['username'];
+        response["userID"] = userData['user']['_id'];
+
+        navigator.geolocation.getCurrentPosition(
+            position => {
+
+              var latitude = position['coords']['latitude'];
+              var longitude = position['coords']['longitude'];
+              response['location'] = [latitude,longitude];
+              console.log(response);
+              axios.post('http://localhost:9000/api/inputMeasurement', response)
+                  .then(function (response1) {
+                    // Store the userData:
+                    console.log("AXIOS",response1);
+                  })
+                  .catch(function (error) {
+                    sucsess = false;
+                  });
+
+            },
+            error => Alert.alert(error.message),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
+
+
+
+
+
+      });
+    }.bind(this)).then(function(){
+      if(sucsess){
+        alert('Submitted measurement.');
+
+
+        const resetAction = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'Measure' })],
+        });
+        this.props.navigation.dispatch(resetAction);
+
+      // navigate('Measure');
+
+      }else {
+        alert('Error');
+      }
+    }.bind(this));
+
+
+
   }
 
 
@@ -56,7 +118,7 @@ export default class MeasureScreen3 extends React.Component {
 
         <ClearSubmitButtons
           clear={this.clear}
-          submit={this.submit}
+          submit={this.submit.bind(this)}
           />
 
 

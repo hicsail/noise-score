@@ -4,7 +4,8 @@ import {
   PermissionsAndroid,
   ScrollView,
   StyleSheet,
-  View } from 'react-native';
+  View, AsyncStorage
+} from 'react-native';
 import RNSoundLevelModule from 'react-native-sound-level';
 import Table from '../../components/Table';
 import ListItem from '../../components/ListItem';
@@ -83,6 +84,12 @@ export default class MeasureScreen extends React.Component {
   };
 
   submit = () => {
+    // We need to gather the data
+    var data = [-Math.min(...this.state.decibels).toFixed(2),  -Math.max(...this.state.decibels).toFixed(2),-this.aveDecibel().toFixed(2) ];
+    var form = {
+        'rawData' : data
+      };
+    AsyncStorage.setItem("formData", JSON.stringify(form));
     this.props.navigation.navigate('Measure1');
   };
 
