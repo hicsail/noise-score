@@ -13,9 +13,15 @@ export default class AccountScreen extends React.Component {
       userID : -1,
       userData : null
     };
+
   }
 
   componentDidMount() {
+
+    // Add listener to notice when we need to reload data
+    this.subs = [
+      this.props.navigation.addListener('willFocus', () => this.updateData())
+    ];
 
     var self = this;
     // Get the information for the Account Screen
@@ -35,21 +41,16 @@ export default class AccountScreen extends React.Component {
             self.setState({
               userData : ret['data']
             });
-            console.log(self.state);
             // this.generateData(self);
           }).catch(function (error){
             alert(error);
           });
-
-        // .bind(this)
         });
       }
     }.bind(this));
   }
 
-  componentDidUpdate(){
-    this.componentDidMount();
-  }
+
 
   async removeItemValue(key) {
     try {
@@ -62,10 +63,7 @@ export default class AccountScreen extends React.Component {
   }
 
   logout() {
-    const requestBody = {
-      username: this.state.username,
-      password: this.state.password
-    };
+
 
     const {navigate} = this.props.navigation;
 
@@ -75,18 +73,18 @@ export default class AccountScreen extends React.Component {
         var key = response['session']['key'];
         console.log(key);
         var username = response['user']['username'];
-        this.setState({username: username});
         // TODO: Change this to API Call
         this.removeItemValue("userData").then(function (ret){
           if(ret){
-            axios.delete('http://localhost:9000/api/delete')
-                .then(function (response) {
-                  navigate("SignedOut");
-                })
-                .catch(function (error) {
-                  console.log(error);
-                  alert("Invalid Username or Password");
-                });
+
+            // axios.delete('http://localhost:9000/api/delete')
+            //     .then(function (response) {
+            //       navigate("SignedOut");
+            //     })
+            //     .catch(function (error) {
+            //       console.log(error);
+            //       alert("Invalid Username or Password");
+            //     });
 
           } else {
             alert("Error")
@@ -97,14 +95,53 @@ export default class AccountScreen extends React.Component {
   }
 
   generateData(data){
+    // The iterator used to generate what is displayed for the data.
     if(data != null){
+      var counter = -1;
       return data.map((data) => {
-        var temp = data['_id'];
+        counter += 1;
+        var id = data['_id'];
+        var date = this.parseISOString(data['date']);
+        var avgDecibels = data['rawData']["average"];
+        var sources = data['sources'];
         return (
-            <Text>{temp}</Text>
+              <Text key={id}>Number: {counter} {"\n"} {'\t'}Date/Time: {date.toDateString()}/{date.toTimeString()}. {"\n"} {'\t'}Average Decibels: {avgDecibels}{"\n"} {'\t'}Major Sources:  {sources}</Text>
         )
       });
+
     }
+  }
+  updateData(){
+    // If we have the data to make the correct API call
+    if(this.state.userID != -1 && this.state.username != "temp"){
+      var self = this;
+      var params = {
+        userID : this.state.userID,
+        username : this.state.username
+      };
+      // Update the userData by making the call 'api/userMeasurements'
+      axios.post('http://localhost:9000/api/userMeasurements', params).then(function (ret){
+        self.setState({
+          userData : ret['data']
+        });
+        // this.generateData(self);
+      }).catch(function (error){
+        alert(error);
+      });
+    }
+  }
+
+  // Helper function to parse the ISO date
+  parseISOString(s) {
+    var b = s.split(/\D+/);
+    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+  }
+  reloadButton() {
+
+    console.log();
+    // Simple function to reload the data
+    this.updateData();
+    this.forceUpdate();
   }
 
   render() {
@@ -117,6 +154,9 @@ export default class AccountScreen extends React.Component {
 
     return (
       <View style={styles.container}>
+        <Button
+            onPress={() => this.reloadButton()}
+            title="Reload"/>
         <Text>Account page</Text>
         <Text>Username: {username}</Text>
         <Button

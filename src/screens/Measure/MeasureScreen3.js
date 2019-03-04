@@ -4,6 +4,8 @@ import {StyleSheet, Text, ScrollView, View, TextInput, AsyncStorage} from 'react
 import NavButtons from '../../components/NavButtons';
 import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import axios from "axios";
+import updateData from '../Account/AccountScreen';
+
 export default class MeasureScreen3 extends React.Component {
 
   static navigationOptions = {
@@ -40,6 +42,7 @@ export default class MeasureScreen3 extends React.Component {
       } else {
         response["words"] = " ";
       }
+      response['date'] =  new Date();
 
       AsyncStorage.getItem('userData').then(function (ret2) {
         var userData = JSON.parse(ret2);
@@ -52,16 +55,13 @@ export default class MeasureScreen3 extends React.Component {
               var latitude = position['coords']['latitude'];
               var longitude = position['coords']['longitude'];
               response['location'] = [latitude,longitude];
-              console.log(response);
               axios.post('http://localhost:9000/api/inputMeasurement', response)
                   .then(function (response1) {
-                    // Store the userData:
-                    console.log("AXIOS",response1);
+                    // Done!
                   })
                   .catch(function (error) {
                     sucsess = false;
                   });
-
             },
             error => Alert.alert(error.message),
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
