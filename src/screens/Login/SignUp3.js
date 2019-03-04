@@ -38,6 +38,7 @@ export default class AccountScreen extends React.Component {
             var weekendArray = [this.state.weekendCommuting, this.state.weekendActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekendRunning];
             response['weekday'] = weekdayArray;
             response['weekend'] = weekendArray;
+            console.log(response);
             // We need to make the API call to create a new user
             axios.post('http://localhost:9000/api/signup', response).then(function (response){
                 // Lets save relevent information and login!

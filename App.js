@@ -55,6 +55,24 @@ const home = createBottomTabNavigator(
 
                 // You can return any component that you like here!
                 return <Icon name={iconName} size={25} color={tintColor}/>;
+            },
+            tabBarOnPress: ({ navigation, defaultHandler }) => {
+                // if(navigation.state.routeName == "Account"){
+                //     console.log(navigation);
+                // }
+                // if (args.scene.focused) { // if tab currently focused tab
+                //     if (args.scene.route.index !== 0) { // if not on first screen of the StackNavigator in focused tab.
+                //         navigation.dispatch(NavigationActions.reset({
+                //             index: 0,
+                //             actions: [
+                //                 NavigationActions.navigate({ routeName: args.scene.route.routes[0].routeName }) // go to first screen of the StackNavigator
+                //             ]
+                //         }))
+                //     }
+                // } else {
+                //     args.jumpToIndex(args.scene.index) // go to another tab (the default behavior)
+                // }
+                defaultHandler();
             }
         }),
         tabBarOptions: {
