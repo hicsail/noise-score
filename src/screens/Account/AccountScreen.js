@@ -138,19 +138,20 @@ export default class AccountScreen extends React.Component {
   }
   reloadButton() {
 
-    console.log();
+
     // Simple function to reload the data
     this.updateData();
     this.forceUpdate();
+    //this.state.userData = null;
+    console.log(this.state.userData);
   }
 
   render() {
 
-
     const { username } = this.state;
     var data = this.state.userData;
     var iterator = this.generateData(data);
-
+   // var iterator = null;
 
     return (
       <View style={styles.container}>
