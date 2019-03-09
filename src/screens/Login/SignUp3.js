@@ -64,11 +64,11 @@ export default class AccountScreen extends React.Component {
             <ScrollView>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text>Last couple of Questions!</Text>
+                        <Text style={styles.text}>Last couple of Questions!</Text>
                     </View>
                 </View>
                 <View style={styles.padding}>
-                    <Text style={styles.text}>On a general WEEKDAY hat percentage of time do you spend:</Text>
+                    <Text style={styles.text}>On a general weekday what percentage of time do you spend:</Text>
                 </View>
 
                 <View style={styles.padding}>
@@ -169,7 +169,7 @@ export default class AccountScreen extends React.Component {
 
 
                 <View style={styles.padding}>
-                    <Text style={styles.text}>On a general WEEKEND hat percentage of time do you spend:</Text>
+                    <Text style={styles.text}>On a general weekend what percentage of time do you spend:</Text>
                 </View>
 
                 <View style={styles.padding}>
@@ -272,7 +272,7 @@ export default class AccountScreen extends React.Component {
 
 
                 <NavButtons2 navigation={this.props.navigation}
-                             back={'SignUp1'}
+                             back={'SignUp2'}
                              next={this.next.bind(this)}/>
             </ScrollView>
 
@@ -366,7 +366,10 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 26,
-        color: "black"
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center"
     }
 });
 
