@@ -76,7 +76,7 @@ export default class AccountScreen extends React.Component {
         // TODO: Change this to API Call
         this.removeItemValue("userData").then(function (ret){
           if(ret){
-
+              navigate("SignedOut");
             // axios.delete('http://localhost:9000/api/delete')
             //     .then(function (response) {
             //       navigate("SignedOut");

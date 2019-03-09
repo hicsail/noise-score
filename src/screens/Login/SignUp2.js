@@ -83,13 +83,13 @@ export default class AccountScreen extends React.Component {
             <ScrollView>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                      <Text>Welcome to Noise-Score!{"\n"} Just a couple more questions to get started</Text>
+                      <Text style={styles.text}>Welcome to Noise-Score! Just a couple more questions to get started</Text>
                     </View>
                 </View>
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text>What pronouns would you like to use?</Text>
+                        <Text style={styles.text}>What pronouns would you like to use?</Text>
                     </View>
                         <Picker
                             selectedValue={this.state.pronouns}
@@ -105,7 +105,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text>What year were you born in?</Text>
+                        <Text style={styles.text}>What year were you born in?</Text>
                     </View>
                     <Picker
                         selectedValue={this.state.yearBorn}
@@ -167,7 +167,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels in your HOME? </Text>
+                        <Text style={styles.text}>How would you rate the noise levels in your home? </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -189,7 +189,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels in your COMMUNITY?  </Text>
+                        <Text style={styles.text}>How would you rate the noise levels in your community?  </Text>
                         <Text style={styles.text}>(community defined as a radius around your home)</Text>
                     </View>
 
@@ -212,7 +212,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels at WORK? </Text>
+                        <Text style={styles.text}>How would you rate the noise levels at work? </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -320,7 +320,10 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 26,
-        color: "black"
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center"
     }
 });
 

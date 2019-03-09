@@ -18,7 +18,9 @@ export default class LoginScreen extends React.Component {
         });
 
         // TODO: Change this
-        this.state = {username: 'username', password: 'password'};
+        this.state = {
+            username: 'username',
+            password: ''};
     }
 
     submit(){
@@ -53,6 +55,7 @@ export default class LoginScreen extends React.Component {
                 />
                 <Text>Password:</Text>
                 <TextInput
+                    secureTextEntry={true}
                     style={{height: 40, borderColor: 'gray', borderWidth: 1}}
                     onChangeText={(password) => this.setState({password})}
                     value={this.state.password}
@@ -82,6 +85,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
 });

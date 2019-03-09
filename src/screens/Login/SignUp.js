@@ -28,6 +28,28 @@ validateEmail(email) {
     }
 }
 
+passwordStrenghTest(password){
+        var ret = true;
+        if(password.length < 8 ){
+            console.log(password.length < 8 );
+            ret = false;
+        } else {
+        var numbers = false;
+        var capital = false;
+        for (var i = 0; i < password.length; i++ ){
+            if(password.indexOf(i) !== -1){
+                numbers = true;
+            }
+            if (password.charAt(i) == password.charAt(i).toUpperCase()){
+                capital = true;
+            }
+        }
+
+        ret = ( capital && numbers);
+        }
+        return ret;
+}
+
 
     next(){
 
@@ -37,7 +59,8 @@ validateEmail(email) {
         } else if (this.state.password == "password"){
             // TODO: We need to do a password strength test
             alert("Please enter a valid password")
-        } else if (this.state.password == "password"){
+        } else if (this.passwordStrenghTest(this.state.password) == false) {
+            alert("Please enter a valid password")
         } else if(this.validateEmail(this.state.email) == false) {
             alert("Please enter a valid email");
         } else if(this.state.name === "name") {
@@ -76,6 +99,7 @@ validateEmail(email) {
                 />
                 <Text>Password:</Text>
                 <TextInput
+                    secureTextEntry={true}
                     style={{height: 40, borderColor: 'gray', borderWidth: 1}}
                     onChangeText={(password) => this.setState({password})}
                     value={this.state.password}
@@ -130,4 +154,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    text: {
+        fontSize: 26,
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center"
+    }
 });
+
