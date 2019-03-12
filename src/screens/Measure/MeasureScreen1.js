@@ -9,7 +9,7 @@ export default class MeasureScreen1 extends React.Component {
     super(props);
 
     this.state = {
-      // intensity: '',
+      intensity: '',
       loudness: '',
       oneWord: '',
       feeling: ''
@@ -31,26 +31,26 @@ export default class MeasureScreen1 extends React.Component {
     return (
       <ScrollView>
 
-        {/*<View style={styles.questionArea}>*/}
-          {/*<View style={styles.wrapText}>*/}
-            {/*<Text style={styles.text}>How intense was the activity?</Text>*/}
-          {/*</View>*/}
-          {/*<SelectMultipleGroupButton*/}
-            {/*multiple={false}*/}
-            {/*group={[*/}
-              {/*{ value: 'Not at all' },*/}
-              {/*{ value: 'A little' },*/}
-              {/*{ value: 'Moderately' },*/}
-              {/*{ value: 'Very' }]}*/}
-            {/*//defaultSelectedIndexes={[0]}*/}
-            {/*buttonViewStyle={questionButtonSize}*/}
-            {/*highLightStyle={questionButtonsStyle}*/}
-            {/*textStyle={{ fontSize:15 }}*/}
-            {/*onSelectedValuesChange={value =>*/}
-              {/*this.setIntensity(value)*/}
-            {/*}*/}
-          {/*/>*/}
-        {/*</View>*/}
+        <View style={styles.questionArea}>
+          <View style={styles.wrapText}>
+            <Text style={styles.text}>How intense was the activity?</Text>
+          </View>
+          <SelectMultipleGroupButton
+            multiple={false}
+            group={[
+              { value: 'Not at all' },
+              { value: 'A little' },
+              { value: 'Moderately' },
+              { value: 'Very' }]}
+            defaultSelectedIndexes={[0]}
+            buttonViewStyle={questionButtonSize}
+            highLightStyle={questionButtonsStyle}
+            textStyle={{ fontSize:15 }}
+            onSelectedValuesChange={value =>
+              this.setIntensity(value)
+            }
+          />
+        </View>
 
         <View style={styles.padding}>
           <View style={styles.wrapText}>
@@ -120,14 +120,14 @@ export default class MeasureScreen1 extends React.Component {
           />
         </View>
 
-        {/*<View style={styles.padding}>*/}
-          {/*<View style={styles.wrapText}>*/}
-            {/*<Text style={styles.text}>*/}
-              {/*DEV ONLY:{this.state.intensity}{"  "}{this.state.loudness}{"\n"}*/}
-              {/*{this.state.oneWord}{"  "}{this.state.feeling}*/}
-            {/*</Text>*/}
-          {/*</View>*/}
-        {/*</View>*/}
+        <View style={styles.padding}>
+          <View style={styles.wrapText}>
+            <Text style={styles.text}>
+              DEV ONLY:{this.state.intensity}{"  "}{this.state.loudness}{"\n"}
+              {this.state.oneWord}{"  "}{this.state.feeling}
+            </Text>
+          </View>
+        </View>
 
         <NavButtons navigation={this.props.navigation}
                     back={'Measure'}
@@ -139,11 +139,11 @@ export default class MeasureScreen1 extends React.Component {
 
 
 
-  // setIntensity(value) {
-  //   this.setState({
-  //     intensity: value
-  //   });
-  // }
+  setIntensity(value) {
+    this.setState({
+      intensity: value
+    });
+  }
   setLoudness(value) {
     this.setState({
       loudness: value
