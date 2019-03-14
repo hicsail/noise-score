@@ -42,7 +42,7 @@ export default class MeasureScreen1 extends React.Component {
               { value: 'A little' },
               { value: 'Moderately' },
               { value: 'Very' }]}
-            defaultSelectedIndexes={[0]}
+            // defaultSelectedIndexes={[0]}
             buttonViewStyle={questionButtonSize}
             highLightStyle={questionButtonsStyle}
             textStyle={{ fontSize:15 }}
@@ -120,14 +120,13 @@ export default class MeasureScreen1 extends React.Component {
           />
         </View>
 
-        <View style={styles.padding}>
-          <View style={styles.wrapText}>
-            <Text style={styles.text}>
-              DEV ONLY:{this.state.intensity}{"  "}{this.state.loudness}{"\n"}
-              {this.state.oneWord}{"  "}{this.state.feeling}
-            </Text>
-          </View>
-        </View>
+        {/*<View style={styles.padding}>*/}
+          {/*<View style={styles.wrapText}>*/}
+            {/*<Text style={styles.text}>*/}
+              {/*{this.state.oneWord}{"  "}{this.state.feeling}*/}
+            {/*</Text>*/}
+          {/*</View>*/}
+        {/*</View>*/}
 
         <NavButtons navigation={this.props.navigation}
                     back={'Measure'}
