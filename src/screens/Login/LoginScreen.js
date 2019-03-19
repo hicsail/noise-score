@@ -13,15 +13,47 @@ export default class LoginScreen extends React.Component {
             // TODO: Change this so it makes an API call
             var response = JSON.parse(ret);
             if(response['authHeader']!= null){
+                // Verify user with sessions
+                var authHeader = response['authHeader'];
+                const header = {
+                    'Content-Type': 'application/json',
+                    'Authorization' : authHeader
+                };
+
+                axios.get('http://localhost:9000/api/sessions/my', {headers: header}).then(function (ret){
                     navigate("SignedIn");
+                }).catch(function (error){
+
+                });
+
             }
         });
 
-        // TODO: Change this
         this.state = {
             username: 'username',
-            password: ''};
+            password: ''
+        };
     }
+
+
+    // AsyncStorage.getItem('userData').then(function (ret) {
+    //     if(ret){
+    //         var response = JSON.parse(ret);
+    //         var authHeader = response['authHeader'];
+    //         const header = {
+    //             'Content-Type': 'application/json',
+    //             'Authorization' : authHeader
+    //         };
+    //         axios.get('http://localhost:9000/api/userMeasurements', {headers: header, params:params}).then(function (ret){
+    //             self.setState({
+    //                 userData : ret['data']
+    //             });
+    //             // this.generateData(self);
+    //         }).catch(function (error){
+    //             alert(error);
+    //         });
+    //     }
+    // });
 
     submit(){
         const requestBody = {
