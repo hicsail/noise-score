@@ -1,5 +1,6 @@
 import React from 'react';
-import {AsyncStorage, Platform, StyleSheet, Text, View} from 'react-native';
+import {AsyncStorage, Platform, StyleSheet, Text, View, StatusBar} from 'react-native';
+import { SearchBar } from 'react-native-elements';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import axios from "axios";
@@ -8,6 +9,8 @@ import axios from "axios";
 export default class MapScreen extends React.Component {
     constructor(props) {
         super(props);
+
+
         this.state = {
             markers: [],
             region: {
@@ -16,7 +19,8 @@ export default class MapScreen extends React.Component {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             },
-            points: []
+            points: [],
+            authHeader : ""
         };
 
     }
@@ -29,7 +33,37 @@ export default class MapScreen extends React.Component {
             this.props.navigation.addListener('willFocus', () => this.updateMarkers())
         ];
 
-        // Set inital region
+        this.updateMarkers();
+        this.getHeatMapPoints();
+    }
+
+
+    getHeatMapPoints(){
+        var self = this;
+
+        AsyncStorage.getItem('userData').then(function (ret) {
+            if(ret){
+                var response = JSON.parse(ret);
+                var authHeader = response['authHeader'];
+                const header = {
+                    'Content-Type': 'application/json',
+                    'Authorization' : authHeader
+                };
+                axios.get('http://localhost:9000/api/allMeasurements', {headers:header, params:{}}).then(function (ret){
+                    self.setState({
+                        points:  ret['data']
+                    })
+                    // this.generateData(self);
+                }).catch(function (error){
+                    alert(error);
+                });
+            }
+        });
+
+
+    }
+    updateMarkers(){
+        // Update the location of the maps focus
         navigator.geolocation.requestAuthorization();
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -43,7 +77,8 @@ export default class MapScreen extends React.Component {
                     longitudeDelta: 0.05,
                 };
 
-                this.setState({ region: initialRegion });
+
+                this.setState({ region: initialRegion});
             },
 
             (error) => {alert('Error getting location')
@@ -51,39 +86,31 @@ export default class MapScreen extends React.Component {
             {
                 enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
             }
-        )
+        );
 
-        this.updateMarkers();
-        this.getHeatMapPoints();
-    }
-    getHeatMapPoints(){
-        var self = this;
-        axios.post('http://localhost:9000/api/allMeasurements', ).then(function (ret){
-            self.setState({
-                points:  ret['data']
-            })
-            // this.generateData(self);
-        }).catch(function (error){
-            alert(error);
-        });
-    }
-    updateMarkers(){
+
+        // Update the markers
         var self = this;
         var newMarkers = [];
-        // Get the information for the Account Screen
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
-                    var username =  response['user']['username'];
-                    var userID = response['user']['_id'];
+                var username =  response['user']['username'];
+                var userID = response['user']['_id'];
 
-                    // Now we need to get all their measurement information
-                    var params = {
-                        userID : userID,
-                        username : username
-                    };
+                // Now we need to get all their measurement information
+                var params = {
+                    userID : userID,
+                    username : username
+                };
+                var authHeader = response['authHeader'];
+                const header = {
+                    'Content-Type': 'application/json',
+                    'Authorization' : authHeader
+                };
 
-                    axios.post('http://localhost:9000/api/userMeasurements', params).then(function (ret){
+                    axios.get('http://localhost:9000/api/userMeasurements', {headers:header, params:params}).then(function (ret){
+                        var dateFormat = require('dateformat');
                         for(var i = 0; i < ret['data'].length; i++){
                             newMarkers = newMarkers.concat([
                                 {
@@ -92,8 +119,9 @@ export default class MapScreen extends React.Component {
                                         longitude: ret['data'][i]['location']['lang']
                                     },
                                     title: ret['data'][i]['rawData']['average'],
-                                    description: "Description1",
-                                    id: ret['data'][i]['_id']
+                                    date: dateFormat(ret['data'][i]['date'], "dddd, mmmm dS, yyyy, h:MM:ss TT"),
+                                    id: ret['data'][i]['_id'],
+                                    majorSources : ret['data'][i]['sources']
                                 }
                             ]);
                         }
@@ -117,14 +145,16 @@ export default class MapScreen extends React.Component {
             return data.map((data) => {
                 var id = data['id'].toString();
                 var latlng = data['latlng'];
-                var title = data['title'].toString();
-                var description = "test";
+                var majorSources = data['majorSources'];
+                var content = "Decibels: " + data['title'].toString() + " | " + "Major Sources: " + majorSources;
+                var date = data['date'];
                 return (
                    <Marker
                                     key={id}
                                     coordinate={latlng}
-                                    title={title}
-                                    description={description}
+                                    title={date}
+                                    description={content}
+                                    tracksViewChanges={false}
                                 />
                 )
             });
@@ -135,8 +165,10 @@ export default class MapScreen extends React.Component {
 
   render() {
       var iterator = this.generateMarkers(this.state.markers);
-      console.log(this.state);
     return (
+
+
+
 
         <MapView
             style={{ left:0, right: 0, top:0, bottom: 0, position: 'absolute' }}
@@ -144,14 +176,26 @@ export default class MapScreen extends React.Component {
                 // style={styles.map}
                 provider={Platform.OS === 'ios' ? null : 'osmdroid'}
             region={this.state.region}
-            moveOnMarkerPress = {false}
+            moveOnMarkerPress = {true}
             showsUserLocation={true}
             showsCompass={true}
             showsPointsOfInterest = {true}
         >
-            {/*<MapView.Heatmap points={this.state.points} />*/}
             {iterator}
+            <MapView.Circle
+                center={{
+                    latitude: 37.76,
+                    longitude: -122.406417,
+                }}
+                radius={200}
+                strokeWidth={10}
+                fillColor={"#f29924"}
+                strokeColor={"#f29924"}
+            />
+
+
         </MapView>
+
 
 
 

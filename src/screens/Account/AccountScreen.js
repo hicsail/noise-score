@@ -28,6 +28,11 @@ export default class AccountScreen extends React.Component {
     AsyncStorage.getItem('userData').then(function (ret) {
       if (ret) {
         var response = JSON.parse(ret);
+        var authHeader = response['authHeader'];
+        const header = {
+          'Content-Type': 'application/json',
+          'Authorization' : authHeader
+        };
         this.setState({
           username : response['user']['username'],
           userID : response['user']['_id']
@@ -37,7 +42,7 @@ export default class AccountScreen extends React.Component {
             userID : this.state.userID,
             username : this.state.username
           };
-          axios.post('http://localhost:9000/api/userMeasurements', params).then(function (ret){
+          axios.get('http://localhost:9000/api/userMeasurements', {headers:header, params:params}).then(function (ret){
             self.setState({
               userData : ret['data']
             });
@@ -70,21 +75,25 @@ export default class AccountScreen extends React.Component {
     AsyncStorage.getItem('userData').then(function (ret) {
       if (ret) {
         var response = JSON.parse(ret);
-        var key = response['session']['key'];
-        console.log(key);
-        var username = response['user']['username'];
-        // TODO: Change this to API Call
+        var authHeader = response['authHeader'];
+        const header = {
+          'Content-Type': 'application/json',
+          'Authorization' : authHeader
+        };
+
+
+
         this.removeItemValue("userData").then(function (ret){
           if(ret){
-              navigate("SignedOut");
-            // axios.delete('http://localhost:9000/api/delete')
-            //     .then(function (response) {
-            //       navigate("SignedOut");
-            //     })
-            //     .catch(function (error) {
-            //       console.log(error);
-            //       alert("Invalid Username or Password");
-            //     });
+              // navigate("SignedOut");
+            axios.delete('http://localhost:9000/api/logout', {headers:header})
+                .then(function (response) {
+                  navigate("SignedOut");
+                })
+                .catch(function (error) {
+                  console.log(error);
+                  alert("Something went wrong!");
+                });
 
           } else {
             alert("Error")
@@ -96,16 +105,17 @@ export default class AccountScreen extends React.Component {
 
   generateData(data){
     // The iterator used to generate what is displayed for the data.
+    var dateFormat = require('dateformat');
     if(data != null){
       var counter = -1;
       return data.map((data) => {
         counter += 1;
         var id = data['_id'];
-        var date = this.parseISOString(data['date']);
+        var date = dateFormat(data['date'], "dddd, mmmm dS, yyyy, h:MM:ss TT");
         var avgDecibels = data['rawData']["average"];
         var sources = data['sources'];
         return (
-              <Text key={id}>Number: {counter} {"\n"} {'\t'}Date/Time: {date.toDateString()}/{date.toTimeString()}. {"\n"} {'\t'}Average Decibels: {avgDecibels}{"\n"} {'\t'}Major Sources:  {sources}</Text>
+              <Text key={id}>Number: {counter} {"\n"} {'\t'}Date/Time: {date}. {"\n"} {'\t'}Average Decibels: {avgDecibels}{"\n"} {'\t'}Major Sources:  {sources}</Text>
         )
       });
 
@@ -120,25 +130,31 @@ export default class AccountScreen extends React.Component {
         username : this.state.username
       };
       // Update the userData by making the call 'api/userMeasurements'
-      axios.post('http://localhost:9000/api/userMeasurements', params).then(function (ret){
-        self.setState({
-          userData : ret['data']
-        });
-        // this.generateData(self);
-      }).catch(function (error){
-        alert(error);
+      AsyncStorage.getItem('userData').then(function (ret) {
+        if(ret){
+          var response = JSON.parse(ret);
+          var authHeader = response['authHeader'];
+          const header = {
+            'Content-Type': 'application/json',
+            'Authorization' : authHeader
+          };
+          axios.get('http://localhost:9000/api/userMeasurements', {headers: header, params:params}).then(function (ret){
+            self.setState({
+              userData : ret['data']
+            });
+            // this.generateData(self);
+          }).catch(function (error){
+            alert(error);
+          });
+        }
       });
+
     }
   }
 
-  // Helper function to parse the ISO date
-  parseISOString(s) {
-    var b = s.split(/\D+/);
-    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
-  }
+
   reloadButton() {
 
-    console.log();
     // Simple function to reload the data
     this.updateData();
     this.forceUpdate();
