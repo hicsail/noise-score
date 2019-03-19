@@ -16,7 +16,7 @@ export default class MapScreen extends React.Component {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             },
-            points: this.getHeatMapPoints()
+            points: []
         };
 
     }
@@ -54,13 +54,13 @@ export default class MapScreen extends React.Component {
         )
 
         this.updateMarkers();
+        this.getHeatMapPoints();
     }
     getHeatMapPoints(){
         var self = this;
         axios.post('http://localhost:9000/api/allMeasurements', ).then(function (ret){
-            console.log(ret);
             self.setState({
-                markers: ret
+                points:  ret['data']
             })
             // this.generateData(self);
         }).catch(function (error){
@@ -131,13 +131,16 @@ export default class MapScreen extends React.Component {
 
         }
     }
+
+
   render() {
       var iterator = this.generateMarkers(this.state.markers);
+      console.log(this.state);
     return (
 
         <MapView
             style={{ left:0, right: 0, top:0, bottom: 0, position: 'absolute' }}
-                //provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                // provider={"google"} // remove if not using Google Maps
                 // style={styles.map}
                 provider={Platform.OS === 'ios' ? null : 'osmdroid'}
             region={this.state.region}
@@ -146,7 +149,7 @@ export default class MapScreen extends React.Component {
             showsCompass={true}
             showsPointsOfInterest = {true}
         >
-            <MapView.Heatmap points={this.state.points} />
+            {/*<MapView.Heatmap points={this.state.points} />*/}
             {iterator}
         </MapView>
 
