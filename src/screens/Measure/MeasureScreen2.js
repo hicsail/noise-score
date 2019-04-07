@@ -48,6 +48,8 @@ export default class MeasureScreen2 extends React.Component {
     // Need to add information about sources
     if (this.state.sources.length == 0){
       alert("Please select one source.");
+    } else if (this.state.sources.length > 5){
+      alert("Please only select 5 sources.")
     } else {
       AsyncStorage.getItem('formData').then(function (ret) {
         var response = JSON.parse(ret);

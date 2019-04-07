@@ -1,10 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, Button, Picker, ScrollView, AsyncStorage, Slider} from 'react-native';
-import NavButtons2 from "../../components/NavButtons2";
-import SourceButton from '../../components/SourceButton';
-import * as constants from '../../components/constants';
-import {SelectMultipleGroupButton} from "react-native-selectmultiple-button";
-import axios from "axios";
+import axios from 'axios';
+
 
 export default class AccountScreen extends React.Component {
 
@@ -38,7 +35,6 @@ export default class AccountScreen extends React.Component {
             var weekendArray = [this.state.weekendCommuting, this.state.weekendActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekendRunning];
             response['weekday'] = weekdayArray;
             response['weekend'] = weekendArray;
-            console.log(response);
             // We need to make the API call to create a new user
             axios.post('http://localhost:9000/api/signup', response).then(function (response){
                 // Lets save relevent information and login!
@@ -61,14 +57,15 @@ export default class AccountScreen extends React.Component {
     render() {
 
         return (
+            <View style={styles.container}>
             <ScrollView>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text>Last couple of Questions!</Text>
+                        <Text style={styles.text}>Last couple of Questions!</Text>
                     </View>
                 </View>
                 <View style={styles.padding}>
-                    <Text style={styles.text}>On a general WEEKDAY hat percentage of time do you spend:</Text>
+                    <Text style={styles.text}>On a general weekday what percentage of time do you spend:</Text>
                 </View>
 
                 <View style={styles.padding}>
@@ -169,7 +166,7 @@ export default class AccountScreen extends React.Component {
 
 
                 <View style={styles.padding}>
-                    <Text style={styles.text}>On a general WEEKEND hat percentage of time do you spend:</Text>
+                    <Text style={styles.text}>On a general weekend what percentage of time do you spend:</Text>
                 </View>
 
                 <View style={styles.padding}>
@@ -271,10 +268,19 @@ export default class AccountScreen extends React.Component {
 
 
 
-                <NavButtons2 navigation={this.props.navigation}
-                             back={'SignUp1'}
-                             next={this.next.bind(this)}/>
+
+
             </ScrollView>
+                <View style={styles.button}>
+                    <Button
+                        title="Next"
+                        onPress={() => this.next()}
+                        buttonStyle={styles.button}
+                        backgroundColor={'white'}
+                        color={'white'}
+                    />
+                </View>
+            </View>
 
         );
     }
@@ -366,8 +372,21 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 26,
-        color: "black"
-    }
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center"
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#cccc31',
+        // TODO: THIS IS THE PROBLEM
+        alignItems: 'center'
+    },
+    button : {
+        marginBottom: 30,
+        backgroundColor: '#323232',
+    },
 });
 
 const brightGreen = "#31BD4B";

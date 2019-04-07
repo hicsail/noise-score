@@ -1,6 +1,10 @@
 import React from 'react';
-import {AsyncStorage, Button, Picker, StyleSheet, Text, View} from 'react-native';
+import {AsyncStorage, Picker, StyleSheet, View, ScrollView} from 'react-native';
 import axios from "axios";
+import { ListItem , Button, Text, Header} from 'react-native-elements';
+import PTRView from 'react-native-pull-to-refresh';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Panel from 'react-native-panel';
 
 
 
@@ -28,6 +32,11 @@ export default class AccountScreen extends React.Component {
     AsyncStorage.getItem('userData').then(function (ret) {
       if (ret) {
         var response = JSON.parse(ret);
+        var authHeader = response['authHeader'];
+        const header = {
+          'Content-Type': 'application/json',
+          'Authorization' : authHeader
+        };
         this.setState({
           username : response['user']['username'],
           userID : response['user']['_id']
@@ -37,13 +46,14 @@ export default class AccountScreen extends React.Component {
             userID : this.state.userID,
             username : this.state.username
           };
-          axios.post('http://localhost:9000/api/userMeasurements', params).then(function (ret){
+          axios.get('http://localhost:9000/api/userMeasurements', {headers:header, params:params}).then(function (ret){
             self.setState({
               userData : ret['data']
             });
             // this.generateData(self);
           }).catch(function (error){
             alert(error);
+            this.props.navigation("SignedOut");
           });
         });
       }
@@ -62,55 +72,62 @@ export default class AccountScreen extends React.Component {
     }
   }
 
-  logout() {
 
-
+  moreInfo (data){
+    AsyncStorage.setItem("moreInfo", JSON.stringify(data));
     const {navigate} = this.props.navigation;
-
-    AsyncStorage.getItem('userData').then(function (ret) {
-      if (ret) {
-        var response = JSON.parse(ret);
-        var key = response['session']['key'];
-        console.log(key);
-        var username = response['user']['username'];
-        // TODO: Change this to API Call
-        this.removeItemValue("userData").then(function (ret){
-          if(ret){
-
-            // axios.delete('http://localhost:9000/api/delete')
-            //     .then(function (response) {
-            //       navigate("SignedOut");
-            //     })
-            //     .catch(function (error) {
-            //       console.log(error);
-            //       alert("Invalid Username or Password");
-            //     });
-
-          } else {
-            alert("Error")
-          }
-        });
-      }
-    }.bind(this));
+    navigate("Account3");
   }
 
   generateData(data){
     // The iterator used to generate what is displayed for the data.
+    var dateFormat = require('dateformat');
+
     if(data != null){
+
       var counter = -1;
       return data.map((data) => {
         counter += 1;
-        var id = data['_id'];
-        var date = this.parseISOString(data['date']);
-        var avgDecibels = data['rawData']["average"];
-        var sources = data['sources'];
+        if(data['rawData']["average"] < 10){
+          return (
+              <ListItem
+                  key={counter}
+                  leftAvatar={{ source: require('./../../../assets/soft.png')}}
+                  title={dateFormat(data['date'], "dddd, mmmm dS, yyyy, h:MM TT")}
+                  subtitle={data['rawData']["average"].toString() + " dB"}
+                  rightIcon={{name: 'dehaze'}}
+                  onPress={() => {this.moreInfo(data)}}
+              />
+          )
+        } else if (data['rawData']["average"] > 10 && data['rawData']["average"] < 40){
+          return (
+              <ListItem
+                  key={counter}
+                  leftAvatar={{ source: require('./../../../assets/medium.png')}}
+                  title={dateFormat(data['date'], "dddd, mmmm dS, yyyy, h:MM TT")}
+                  subtitle={data['rawData']["average"].toString() + " dB"}
+                  rightIcon={{name: 'dehaze'}}
+                  onPress={() => {this.moreInfo(data)}}
+              />
+          )
+        } else {
         return (
-              <Text key={id}>Number: {counter} {"\n"} {'\t'}Date/Time: {date.toDateString()}/{date.toTimeString()}. {"\n"} {'\t'}Average Decibels: {avgDecibels}{"\n"} {'\t'}Major Sources:  {sources}</Text>
+            <ListItem
+                key={counter}
+                leftAvatar={{ source: require('./../../../assets/loud.png')}}
+                title={dateFormat(data['date'], "dddd, mmmm dS, yyyy, h:MM TT")}
+                subtitle={data['rawData']["average"].toString() + " dB"}
+                rightIcon={{name: 'dehaze'}}
+                onPress={() => {this.moreInfo(data)}}
+            />
         )
+        }
       });
 
     }
   }
+
+
   updateData(){
     // If we have the data to make the correct API call
     if(this.state.userID != -1 && this.state.username != "temp"){
@@ -120,55 +137,82 @@ export default class AccountScreen extends React.Component {
         username : this.state.username
       };
       // Update the userData by making the call 'api/userMeasurements'
-      axios.post('http://localhost:9000/api/userMeasurements', params).then(function (ret){
-        self.setState({
-          userData : ret['data']
-        });
-        // this.generateData(self);
-      }).catch(function (error){
-        alert(error);
+      AsyncStorage.getItem('userData').then(function (ret) {
+        if(ret){
+          var response = JSON.parse(ret);
+          var authHeader = response['authHeader'];
+          const header = {
+            'Content-Type': 'application/json',
+            'Authorization' : authHeader
+          };
+          axios.get('http://localhost:9000/api/userMeasurements', {headers: header, params:params}).then(function (ret){
+            self.setState({
+              userData : ret['data']
+            });
+            // this.generateData(self);
+          }).catch(function (error){
+            alert(error);
+            this.props.navigation("SignedOut");
+          });
+        }
       });
+
     }
   }
 
-  // Helper function to parse the ISO date
-  parseISOString(s) {
-    var b = s.split(/\D+/);
-    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
-  }
-  reloadButton() {
 
+  reloadButton() {
 
     // Simple function to reload the data
     this.updateData();
     this.forceUpdate();
     //this.state.userData = null;
-    console.log(this.state.userData);
+    // console.log(this.state.userData);
+  }
+  accountPage(){
+    const {navigate} = this.props.navigation;
+    navigate("Account2");
   }
 
   render() {
 
     const { username } = this.state;
     var data = this.state.userData;
-    var iterator = this.generateData(data);
+    // var iterator = this.generateData(data);
    // var iterator = null;
+    var list = this.generateData(data);
+
 
     return (
       <View style={styles.container}>
-        <Button
-            onPress={() => this.reloadButton()}
-            title="Reload"/>
-        <Text>Account page</Text>
-        <Text>Username: {username}</Text>
-        <Button
-            buttonStyle={{ marginTop: 20 }}
-            backgroundColor="transparent"
-            textStyle={{ color: "#bcbec1" }}
-            title="Sign Out"
-            onPress={() => this.logout()}
-        />
-        {iterator}
 
+
+        <Header
+            centerComponent={{ text: username, style: { color: '#fff' } }}
+            containerStyle={styles.header}
+            leftComponent={<Button  icon={
+              <Icon
+                  name="user-circle"
+                  size={15}
+                  color="#323232"
+              />
+            }onPress = {() => this.accountPage()}
+            buttonStyle={styles.button}/>}
+            rightComponent={<Button  icon={
+              <Icon
+                  name="retweet"
+                  size={15}
+                  color="#323232"
+              />
+            }onPress = {() => this.reloadButton()}
+                                     buttonStyle={styles.button}/>}
+        />
+
+        <ScrollView>
+        <View>
+          {list}
+        </View>
+        </ScrollView>
       </View>
     )
   }
@@ -179,7 +223,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
+  reload : {
+
+  },
+  header : {
+    backgroundColor:  '#323232',
+  },
+  button : {
+    backgroundColor : '#cccc31'
+  }
 });

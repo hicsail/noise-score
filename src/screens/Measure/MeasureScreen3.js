@@ -52,8 +52,8 @@ export default class MeasureScreen3 extends React.Component {
         navigator.geolocation.getCurrentPosition(
             position => {
 
-              var latitude = position['coords']['latitude'];
-              var longitude = position['coords']['longitude'];
+              var longitude = position['coords']['latitude'];
+              var latitude = position['coords']['longitude'];
               response['location'] = [latitude,longitude];
               axios.post('http://localhost:9000/api/inputMeasurement', response)
                   .then(function (response1) {
@@ -96,6 +96,7 @@ export default class MeasureScreen3 extends React.Component {
 
 
   render() {
+
     return (
       <ScrollView>
 
@@ -109,7 +110,7 @@ export default class MeasureScreen3 extends React.Component {
 
           <TextInput
             multiline = {true}
-            style={{height: 200, borderColor: 'gray', borderWidth: 1, fontSize: 26}}
+            style={styles.textInput}
             onChangeText={(comment) => this.setState({comment})}
             value={this.state.comment}
             maxLength={140}
@@ -148,5 +149,11 @@ const styles = StyleSheet.create({
   text : {
     fontSize: 26,
     color: "black"
+  },
+  textInput : {
+    height: 200,
+    borderColor: 'gray',
+    borderWidth: 1,
+    fontSize: 26
   }
 });

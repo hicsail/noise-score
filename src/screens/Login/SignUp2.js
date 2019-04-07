@@ -66,7 +66,7 @@ export default class AccountScreen extends React.Component {
     yearsIter(){
         // Need to create some code to generate all the years (for the date you were born)
         var years = [];
-        for (var y = 1980; y <= 2019; y++) {
+        for (var y = 1940; y <= 2019; y++) {
             years.push([y]);
         }
         // Iterator to display all the options
@@ -80,16 +80,17 @@ export default class AccountScreen extends React.Component {
     render() {
 
         return (
+            <View style={styles.container}>
             <ScrollView>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                      <Text>Welcome to Noise-Score!{"\n"} Just a couple more questions to get started</Text>
+                      <Text style={styles.text}>Welcome to Noise-Score! Just a couple more questions to get started</Text>
                     </View>
                 </View>
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text>What pronouns would you like to use?</Text>
+                        <Text style={styles.text}>What pronouns would you like to use?</Text>
                     </View>
                         <Picker
                             selectedValue={this.state.pronouns}
@@ -105,7 +106,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text>What year were you born in?</Text>
+                        <Text style={styles.text}>What year were you born in?</Text>
                     </View>
                     <Picker
                         selectedValue={this.state.yearBorn}
@@ -167,7 +168,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels in your HOME? </Text>
+                        <Text style={styles.text}>How would you rate the noise levels in your home? </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -189,7 +190,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels in your COMMUNITY?  </Text>
+                        <Text style={styles.text}>How would you rate the noise levels in your community?  </Text>
                         <Text style={styles.text}>(community defined as a radius around your home)</Text>
                     </View>
 
@@ -212,7 +213,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels at WORK? </Text>
+                        <Text style={styles.text}>How would you rate the noise levels at work? </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -254,10 +255,20 @@ export default class AccountScreen extends React.Component {
                     />
                 </View>
 
-                <NavButtons2 navigation={this.props.navigation}
-                             back={'SignUp1'}
-                             next={this.next.bind(this)}/>
+
+
             </ScrollView>
+                <View style={styles.button}>
+                    <Button
+                        title="Next"
+                        onPress={() => this.next()}
+                        buttonStyle={styles.button}
+                        backgroundColor={'white'}
+                        color={'white'}
+                    />
+                </View>
+
+            </View>
 
         );
     }
@@ -313,15 +324,45 @@ const styles = StyleSheet.create({
     padding: {
         padding: 20,
     },
+    button : {
+        marginBottom: 30,
+        backgroundColor: '#323232',
+    },
     wrapText: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#cccc31',
+        alignItems: 'center'
     },
     text: {
         fontSize: 26,
-        color: "black"
-    }
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center"
+    },
+    textInput : {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1
+    },
+    content : {
+        marginTop : 100,
+        width: '75%',
+        // TODO: THIS IS THE PROBLEM
+        alignItems: 'center',
+        textAlign: 'center'
+    },
+    header : {
+        fontFamily: 'Euphemia UCAS',
+        fontSize: 20,
+        color: '#323232'
+    },
+
 });
 
 const brightGreen = "#31BD4B";
