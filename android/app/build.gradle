@@ -140,6 +140,8 @@ android {
 configurations.all {exclude group: 'com.android.support', module: 'support-v4'}
 
 dependencies {
+    compile project(':react-native-splash-screen')
+    compile project(':react-native-maps')
     compile project(':react-native-svg')
     compile project(':react-native-sound-level')
     compile project(':react-native-vector-icons')

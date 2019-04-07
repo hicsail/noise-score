@@ -1,25 +1,50 @@
 import React, { Component }  from 'react';
-import {StyleSheet, Text, View, Button, TextInput, AsyncStorage} from 'react-native';
+import {StyleSheet, View, TextInput, AsyncStorage, Image} from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Input, Text, SocialIcon, Button} from 'react-native-elements';
 
 
 
 export default class LoginScreen extends React.Component {
+
+
+    static navigationOptions = {
+        title: 'Home',
+    };
+
     constructor(props) {
         super(props);
         const {navigate} = this.props.navigation;
         AsyncStorage.getItem("userData").then(function (ret) {
             // TODO: Change this so it makes an API call
             var response = JSON.parse(ret);
-            if(response['authHeader']!= null){
-                    navigate("SignedIn");
+            if (ret){
+                if(response['authHeader']!= null){
+                    // Verify user with sessions
+                    var authHeader = response['authHeader'];
+                    const header = {
+                        'Content-Type': 'application/json',
+                        'Authorization' : authHeader
+                    };
+
+                    axios.get('http://localhost:9000/api/sessions/my', {headers: header}).then(function (ret){
+                        console.log(ret);
+                        navigate("SignedIn");
+                    })
+
+                }
             }
         });
 
-        // TODO: Change this
-        this.state = {username: 'username', password: 'password'};
+        this.state = {
+            username: 'username',
+            password: ''
+        };
     }
+
+
 
     submit(){
         const requestBody = {
@@ -41,37 +66,57 @@ export default class LoginScreen extends React.Component {
 
     }
 
+
+
     render() {
+
         return (
             <View style={styles.container}>
-                <Text>Login</Text>
-                <Text>Username:</Text>
-                <TextInput
-                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                    onChangeText={(username) => this.setState({username})}
-                    value={this.state.username}
-                />
-                <Text>Password:</Text>
-                <TextInput
-                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                    onChangeText={(password) => this.setState({password})}
-                    value={this.state.password}
-                />
-                <Button
-                    buttonStyle={{ marginTop: 20 }}
-                    backgroundColor="transparent"
-                    textStyle={{ color: "#bcbec1" }}
-                    title="Sign In"
-                    onPress={() => this.submit()}
-                />
+                <View style={styles.login}>
+                    <Image
+                        source={require('./../../../assets/logo.png')}
+                        style={styles.logo}
+                    />
+                        <Text style={styles.header}>NOISESCORE{"\n"}</Text>
+                        <Input
+                            autoCapitalize = 'none'
+                            placeholder='Username'
+                            rightIcon={{ type: 'font-awesome', name: 'user' }}
+                            onChangeText={(username) => this.setState({username})}
+                        />
 
-                <Button
-                    buttonStyle={{ marginTop: 20 }}
-                    backgroundColor="transparent"
-                    textStyle={{ color: "#bcbec1" }}
-                    title="Sign Up"
-                    onPress={() => this.props.navigation.navigate("SignUp1")}
-                />
+
+                        <Input
+                            secureTextEntry={true}
+                            autoCapitalize = 'none'
+                            placeholder='Password'
+                            rightIcon={{ type: 'font-awesome', name: 'lock' }}
+                            onChangeText={(password) => this.setState({password})}
+                        />
+                </View>
+                <View>
+                    <Button
+                        buttonStyle={styles.button}
+                        title="Sign In"
+                        onPress={() => this.submit()}
+                    />
+
+                    <Button
+                        buttonStyle={styles.button}
+                        backgroundColor={'white'}
+                        title="Sign Up"
+                        color={'white'}
+                        onPress={() => this.props.navigation.navigate("SignUp1")}
+                    />
+                </View>
+
+                {/*<View style={styles.socialIcon}>*/}
+                    {/*<SocialIcon*/}
+                        {/*type='twitter'*/}
+                        {/*iconColor={'white'}*/}
+                        {/*underlayColor={'#323232'}*/}
+                    {/*/>*/}
+                {/*</View>*/}
             </View>
         );
     }
@@ -80,8 +125,31 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: '#cccc31',
+        alignItems: 'center'
     },
+    socialIcon : {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: 36,
+    },
+    logo : {
+        width: 200,
+        height: 220
+    },
+    login : {
+        marginTop : 150,
+        width: '75%',
+        alignItems: 'center',
+        textAlign: 'center'
+    },
+    header : {
+        fontFamily: 'Euphemia UCAS',
+        fontSize: 40,
+        color: '#323232'
+    },
+    button : {
+        marginTop: 20,
+        backgroundColor: '#323232'
+    }
 });

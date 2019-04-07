@@ -15,6 +15,8 @@ import MeasureScreen1 from './src/screens/Measure/MeasureScreen1';
 import MeasureScreen2 from './src/screens/Measure/MeasureScreen2';
 import MeasureScreen3 from './src/screens/Measure/MeasureScreen3';
 import AccountScreen from './src/screens/Account/AccountScreen';
+import moreInfo from './src/screens/Account/moreInfo';
+import AccountPage from './src/screens/Account/AccountPage';
 import LoginScreen from './src/screens/Login/LoginScreen';
 import SignUp from './src/screens/Login/SignUp';
 import SignUp2 from './src/screens/Login/SignUp2';
@@ -31,6 +33,28 @@ const MeasureStack = createStackNavigator({
 });
 
 
+const AccountStack = createStackNavigator({
+    Account1 : {
+        screen: AccountScreen,
+        navigationOptions: {
+            header: null
+
+        }
+    },
+    Account2 : {
+        screen: AccountPage,
+        navigationOptions: {
+            header: null
+
+        }
+    },
+    Account3 : {
+        screen :  moreInfo,
+        navigationOptions:{
+            header:null
+        }
+    }
+});
 
 const brightGreen = "#31BD4B";
 
@@ -38,7 +62,7 @@ const home = createBottomTabNavigator(
     {
         Map: MapScreen,
         Measure: MeasureStack,
-        Account: AccountScreen
+        Account: AccountStack
     },
     {
         defaultNavigationOptions: ({navigation}) => ({
@@ -81,6 +105,8 @@ const home = createBottomTabNavigator(
         }
     }
 );
+
+
 const SignUpStack = createStackNavigator({
     SignUp: SignUp,
     SignUp1: SignUp2,
@@ -91,25 +117,39 @@ export const login = createStackNavigator({
     SignIn: {
         screen: LoginScreen,
         navigationOptions: {
-            title: "Sign In"
+            header: null
+
         }
     },
     SignUp1: {
         screen: SignUp,
         navigationOptions: {
-            title: "Sign Up"
+            title: "",
+            headerTintColor: '#cccc31',
+            headerStyle: {
+                backgroundColor: '#323232'
+            },
+            // tintColor: '#cccc31'
         }
     },
     SignUp2: {
         screen: SignUp2,
         navigationOptions: {
-            title: "Sign Up"
+            title: "",
+            headerTintColor: '#cccc31',
+            headerStyle: {
+                backgroundColor: '#323232'
+            },
         }
     },
     SignUp3: {
         screen: SignUp3,
         navigationOptions: {
-            title: "Sign Up"
+            title: "",
+            headerTintColor: '#cccc31',
+            headerStyle: {
+                backgroundColor: '#323232'
+            },
         }
     }
 });
@@ -117,38 +157,7 @@ export const login = createStackNavigator({
 
 
 
-// export const createRootNavigator = (signedIn = false) => {
-//     return createSwitchNavigator(
-//         {
-//             SignedIn: {
-//                 screen: bottomNav
-//             },
-//             SignedOut: {
-//                 screen: login
-//             }
-//         },
-//         {
-//             initialRouteName: signedIn ? "SignedIn" : "SignedOut"
-//         }
-//     );
-// };
 
-//
-// export const createRootNavigator = (signedIn = false) => {
-//     return createSwitchNavigator(
-//         {
-//             SignedIn: {
-//                 screen: home
-//             },
-//             SignedOut: {
-//                 screen: login
-//             }
-//         },
-//         {
-//             initialRouteName: signedIn ? "SignedIn" : "SignedOut"
-//         }
-//     );
-// };
 
 
 
@@ -175,6 +184,8 @@ export const isSignedIn = () => {
 
 
 var signedIn = false;
+
+
 
 export const root = createSwitchNavigator({
         SignedIn: {
