@@ -4,6 +4,7 @@ import { home } from "../../../App";
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Text, SocialIcon, Button} from 'react-native-elements';
+import SplashScreen from 'react-native-splash-screen'
 
 
 
@@ -18,7 +19,6 @@ export default class LoginScreen extends React.Component {
         super(props);
         const {navigate} = this.props.navigation;
         AsyncStorage.getItem("userData").then(function (ret) {
-            // TODO: Change this so it makes an API call
             var response = JSON.parse(ret);
             if (ret){
                 if(response['authHeader']!= null){
@@ -44,7 +44,9 @@ export default class LoginScreen extends React.Component {
         };
     }
 
-
+    componentDidMount() {
+        // SplashScreen.hide();
+    }
 
     submit(){
         const requestBody = {
