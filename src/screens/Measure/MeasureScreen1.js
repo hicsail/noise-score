@@ -49,26 +49,7 @@ export default class MeasureScreen1 extends React.Component {
     return (
       <ScrollView>
 
-        {/*<View style={styles.questionArea}>*/}
-          {/*<View style={styles.wrapText}>*/}
-            {/*<Text style={styles.text}>How intense was the activity?</Text>*/}
-          {/*</View>*/}
-          {/*<SelectMultipleGroupButton*/}
-            {/*multiple={false}*/}
-            {/*group={[*/}
-              {/*{ value: 'Not at all' },*/}
-              {/*{ value: 'A little' },*/}
-              {/*{ value: 'Moderately' },*/}
-              {/*{ value: 'Very' }]}*/}
-            {/*//defaultSelectedIndexes={[0]}*/}
-            {/*buttonViewStyle={questionButtonSize}*/}
-            {/*highLightStyle={questionButtonsStyle}*/}
-            {/*textStyle={{ fontSize:15 }}*/}
-            {/*onSelectedValuesChange={value =>*/}
-              {/*this.setIntensity(value)*/}
-            {/*}*/}
-          {/*/>*/}
-        {/*</View>*/}
+
 
         <View style={styles.padding}>
           <View style={styles.wrapText}>
