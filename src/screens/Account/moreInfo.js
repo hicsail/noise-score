@@ -30,7 +30,8 @@ export default class AccountScreen extends React.Component {
                 longitude: -122.4324,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
-            }
+            },
+            date: null
         };
 
     }
@@ -62,7 +63,8 @@ export default class AccountScreen extends React.Component {
                         longitude: response['location']['lang'],
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
-                    }
+                    },
+                    date : response['date']
                 });
             }
         }.bind(this));
@@ -92,7 +94,8 @@ export default class AccountScreen extends React.Component {
                     loud: response['loud'],
                     rawData: response['rawData'],
                     sources: response['sources'],
-                    words: response['words']
+                    words: response['words'],
+                    date : response['date']
                 });
             }
         }.bind(this));
@@ -109,11 +112,19 @@ export default class AccountScreen extends React.Component {
 
 
     render() {
-
+        var dateFormat = require('dateformat');
         const loud = this.state.loud;
+        const date = dateFormat(this.state.date, "dddd, mmmm dS")
         const describe = this.state.describe;
         const feel = this.state.feel;
-        const sources = this.state.sources;
+        const sourcesArray = this.state.sources;
+        var sources = "";
+        if(sourcesArray){
+            for(var i = 0; i <sourcesArray.length; i++ ){
+                sources += sourcesArray[i] + ", ";
+            }
+            sources = sources.substring(0, sources.length-2);
+        }
         var words = this.state.words;
         if(words && words.length <= 1 ){
             words = "No comments"
@@ -133,10 +144,26 @@ export default class AccountScreen extends React.Component {
         };
         // const lang = location['lang'];
         // const lat = location['lat'];
-
+        if(sourcesArray){
         return (
+            <View style={styles.container}>
+                <Header
+                    centerComponent={{ text: date, style: { color: '#fff' } }}
+                    containerStyle={styles.header}
+                    leftComponent={<Button  icon={
+                        <Icon
+                            name="arrow-left"
+                            size={15}
+                            color="#323232"
+                        />
+                    }onPress = {() => this.accountScreen()}
+                                            buttonStyle={styles.headerButton}/>}
+
+                />
+
+
             <MapView
-                style={{ left:0, right: 0, top:0, bottom: 0, position: 'absolute' }}
+                style={{ ...StyleSheet.absoluteFillObject }}
                 // provider={"google"} // remove if not using Google Maps
                 // style={styles.map}
                 provider={Platform.OS === 'ios' ? null : 'osmdroid'}
@@ -150,36 +177,58 @@ export default class AccountScreen extends React.Component {
                 <Marker
                     key={1}
                     coordinate={latlng}
-                    title={"Recoding"}
+                    title={date}
                     tracksViewChanges={false}
                 />
 
-
-
-                <View style={styles.bottomHalf}>
-                    {/*<ScrollView >*/}
-                        <Text style={styles.text}>How loud were the sounds?</Text>
-                        <Text style={styles.text}>{loud}</Text>
-                        <Text style={styles.text}>Which words best describe the sound?</Text>
-                        <Text style={styles.text}>{describe}</Text>
-                        <Text style={styles.text}>How did the sounds make you feel?</Text>
-                        <Text style={styles.text}>{feel}</Text>
-                        <Text style={styles.text}>Major sources of noise?</Text>
-                        <Text style={styles.text}>{sources}</Text>
-                        <Text style={styles.text}>Comments</Text>
-                        <Text style={styles.text}>{words}</Text>
-                        <Text style={styles.text}>Raw Data:</Text>
-                        <Text style={styles.text}>Average : {average}</Text>
-                        <Text style={styles.text}>Min:{min}/Max:{max}</Text>
-
-
-                    {/*</ScrollView>*/}
-                </View>
             </MapView>
 
 
+                <View style={styles.bottomHalf}>
+                    <ScrollView>
+
+                        <Text style={styles.textHeader}>How loud were the sounds?</Text>
+                        <Text style={styles.text}>{loud}</Text>
+                        <Text style={styles.textHeader}>Which words best describe the sound?</Text>
+                        <Text style={styles.text}>{describe}</Text>
+                        <Text style={styles.textHeader}>How did the sounds make you feel?</Text>
+                        <Text style={styles.text}>{feel}</Text>
+                        <Text style={styles.textHeader}>Major sources of noise?</Text>
+                        <Text style={styles.text}>{sources}</Text>
+                        <Text style={styles.textHeader}>Comments</Text>
+                        <Text style={styles.text}>{words}</Text>
+                        <Text style={styles.textHeader}>Raw Data:</Text>
+                        <Text style={styles.text}>Average : {average}db</Text>
+                        <Text style={styles.text}>Min:{min}db - Max:{max}db</Text>
+
+
+
+
+                    </ScrollView>
+                </View>
+
+                {/*<View style={styles.buttonPosition}>*/}
+                    {/*<Button  icon={*/}
+                        {/*<Icon*/}
+                            {/*name="user-circle"*/}
+                            {/*size={15}*/}
+                            {/*color="#323232"*/}
+                        {/*/>*/}
+                    {/*}onPress = {() => this.accountScreen()}*/}
+                             {/*buttonStyle={styles.button}/>*/}
+                {/*</View>*/}
+
+
+
+            </View>
+
+
         )
+        } else {
+            return null;
+        }
     }
+
 }
 
 
@@ -201,13 +250,67 @@ const styles = StyleSheet.create({
         bottom: 0, //Here is the trick
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
+        flex : 1
+
+    },
+    textHeader: {
+        fontSize: 20,
+        fontWeight : 'bold',
+        color: "white",
+        textAlign: 'center'
     },
     text: {
         fontSize: 20,
         color: "white",
-    }
+        textAlign: 'center'
+    },
+    buttonPosition : {
+        // flexDirection: 'row',
+        // marginVertical: 20,
+        position: 'absolute',//use absolute position to show button on top of the map
+        top: '50%', //for center align
+        alignSelf: 'flex-end' //for align to right
+        // position: 'absolute',
+        // justifyContent: 'flex-start',
+        // zIndex : 999,
+    },
+    button : {
+        backgroundColor : '#cccc31',
+        width : '30%'
+    },
+    header : {
+        backgroundColor:  '#323232',
+        zIndex: 999
+    },
+    headerButton : {
+        backgroundColor : '#cccc31'
+    },
 
 });
 
+
+const brightGreen = "#31BD4B";
+const lightGreen = '#31BD4B';
+const darkGray = "#383838";
+
+const questionButtonsStyle = {
+    borderColor: 'white',
+    backgroundColor: "transparent",
+    textColor: 'white',
+    borderTintColor: lightGreen,
+    backgroundTintColor: lightGreen,
+    textTintColor: "white"
+};
+
+const questionButtonSize ={
+    borderRadius: 10,
+    height: 40,
+    borderColor: 'white',
+    backgroundColor: "transparent",
+    textColor: 'white',
+    borderTintColor: lightGreen,
+    backgroundTintColor: lightGreen,
+    textTintColor: "white"
+};
 
