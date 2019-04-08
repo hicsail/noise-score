@@ -230,72 +230,74 @@ export default class MapScreen extends React.Component {
         >
             {iterator}
 
-            <MapView.Circle
-                center={{
-                    latitude: 37.769,
-                    longitude: -122.409999999,
-                }}
-                radius={200}
-                strokeWidth={1}
-                fillColor={"#f29924"}
-                strokeColor={"#000"}
-                zIndex={0}
-            />
-            <MapView.Circle
-            center={{
-                latitude: 37.77,
-                longitude: -122.41,
-            }}
-            radius={200}
-            strokeWidth={1}
-            fillColor={"#f29924"}
-            strokeColor={"#000"}
-            zIndex={0}
-            />
-            <MapView.Circle
-                center={{
-                    latitude: 37.774,
-                    longitude: -122.411,
-                }}
-                radius={200}
-                strokeWidth={1}
-                fillColor={"#f29924"}
-                strokeColor={"#000"}
-                zIndex={0}
-            />
-            <MapView.Circle
-                center={{
-                    latitude: 37.77,
-                    longitude: -122.414,
-                }}
-                radius={200}
-                strokeWidth={1}
-                fillColor={"#f29924"}
-                strokeColor={"#000"}
-                zIndex={0}
-            />
-            <MapView.Circle
-                center={{
-                    latitude: 37.77,
-                    longitude: -122.411,
-                }}
-                radius={200}
-                strokeWidth={1}
-                fillColor={"#5042f4"}
-                strokeColor={"#000"}
-                zIndex={1}
-            />
-            <MapView.Circle
-                center={{
-                    latitude: 37.7725,
-                    longitude: -122.411,
-                }}
-                radius={200}
-                strokeWidth={1}
-                fillColor={"#ff0202"}
-                strokeColor={"#000"}
-                zIndex={2}
-            />
+            {/*<MapView.Circle*/}
+                {/*center={{*/}
+                    {/*latitude: 37.769,*/}
+                    {/*longitude: -122.409999999,*/}
+                {/*}}*/}
+                {/*radius={200}*/}
+                {/*strokeWidth={1}*/}
+                {/*fillColor={"#f29924"}*/}
+                {/*strokeColor={"#000"}*/}
+                {/*zIndex={0}*/}
+            {/*/>*/}
+            {/*<MapView.Circle*/}
+            {/*center={{*/}
+                {/*latitude: 37.77,*/}
+                {/*longitude: -122.41,*/}
+            {/*}}*/}
+            {/*radius={200}*/}
+            {/*strokeWidth={1}*/}
+            {/*fillColor={"#f29924"}*/}
+            {/*strokeColor={"#000"}*/}
+            {/*zIndex={0}*/}
+            {/*/>*/}
+            {/*<MapView.Circle*/}
+                {/*center={{*/}
+                    {/*latitude: 37.774,*/}
+                    {/*longitude: -122.411,*/}
+                {/*}}*/}
+                {/*radius={200}*/}
+                {/*strokeWidth={1}*/}
+                {/*fillColor={"#f29924"}*/}
+                {/*strokeColor={"#000"}*/}
+                {/*zIndex={0}*/}
+            {/*/>*/}
+            {/*<MapView.Circle*/}
+                {/*center={{*/}
+                    {/*latitude: 37.77,*/}
+                    {/*longitude: -122.414,*/}
+                {/*}}*/}
+                {/*radius={200}*/}
+                {/*strokeWidth={1}*/}
+                {/*fillColor={"#f29924"}*/}
+                {/*strokeColor={"#000"}*/}
+                {/*zIndex={0}*/}
+            {/*/>*/}
+            {/*<MapView.Circle*/}
+                {/*center={{*/}
+                    {/*latitude: 37.77,*/}
+                    {/*longitude: -122.411,*/}
+                {/*}}*/}
+                {/*radius={200}*/}
+                {/*strokeWidth={1}*/}
+                {/*fillColor={"#5042f4"}*/}
+                {/*strokeColor={"#000"}*/}
+                {/*zIndex={1}*/}
+            {/*/>*/}
+            {/*<MapView.Circle*/}
+                {/*center={{*/}
+                    {/*latitude: 37.7725,*/}
+                    {/*longitude: -122.411,*/}
+                {/*}}*/}
+                {/*radius={200}*/}
+                {/*strokeWidth={1}*/}
+                {/*fillColor={"#ff0202"}*/}
+                {/*strokeColor={"#000"}*/}
+                {/*zIndex={2}*/}
+            {/*/>*/}
+
+
 
         </MapView>
 

@@ -86,16 +86,20 @@ export default class AccountScreen extends React.Component {
     if(data != null){
 
       var counter = -1;
-      return data.map((data) => {
+      return data.reverse().map((data) => {
         counter += 1;
         if(data['rawData']["average"] < 10){
           return (
               <ListItem
                   key={counter}
                   leftAvatar={{ source: require('./../../../assets/soft.png')}}
-                  title={dateFormat(data['date'], "dddd, mmmm dS, yyyy, h:MM TT")}
+                  title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
                   subtitle={data['rawData']["average"].toString() + " dB"}
-                  rightIcon={{name: 'dehaze'}}
+                  rightIcon={<Icon
+                      name="arrow-right"
+                      size={15}
+                      color="#323232"
+                  />}
                   onPress={() => {this.moreInfo(data)}}
               />
           )
@@ -104,9 +108,13 @@ export default class AccountScreen extends React.Component {
               <ListItem
                   key={counter}
                   leftAvatar={{ source: require('./../../../assets/medium.png')}}
-                  title={dateFormat(data['date'], "dddd, mmmm dS, yyyy, h:MM TT")}
+                  title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
                   subtitle={data['rawData']["average"].toString() + " dB"}
-                  rightIcon={{name: 'dehaze'}}
+                  rightIcon={<Icon
+                      name="arrow-right"
+                      size={15}
+                      color="#323232"
+                  />}
                   onPress={() => {this.moreInfo(data)}}
               />
           )
@@ -115,9 +123,13 @@ export default class AccountScreen extends React.Component {
             <ListItem
                 key={counter}
                 leftAvatar={{ source: require('./../../../assets/loud.png')}}
-                title={dateFormat(data['date'], "dddd, mmmm dS, yyyy, h:MM TT")}
+                title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
                 subtitle={data['rawData']["average"].toString() + " dB"}
-                rightIcon={{name: 'dehaze'}}
+                rightIcon={<Icon
+                    name="arrow-right"
+                    size={15}
+                    color="#323232"
+                />}
                 onPress={() => {this.moreInfo(data)}}
             />
         )
