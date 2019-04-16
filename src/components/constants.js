@@ -6,7 +6,7 @@ export const NOISE_SOURCES = [
 
   {val: 'airplane', text:'airplane', icon:'airplane'},
   {val: 'alarm', text:'alarm', icon:'alarm-light'},
-  {val: 'carMusic', text:'car music', icon:'car-wash'},
+  {val: 'car music', text:'car music', icon:'car-wash'},
   {val: 'construction', text:'construction', icon:'wrench'},
 
   {val: 'delivery', text:'delivery', icon:'truck-delivery'},
@@ -16,7 +16,7 @@ export const NOISE_SOURCES = [
   {val: 'horn', text:'horn', icon:'bullhorn'},
   {val: 'hvac', text:'hvac', icon:'air-conditioner'},
 
-  {val: 'leafBlower', text:'leaf blower', icon:'leaf'},
+  {val: 'leaf blower', text:'leaf blower', icon:'leaf'},
   {val: 'music', text:'music', icon:'music'},
   {val: 'neighbor', text:'neighbor', icon:'human-male'},
   {val: 'party', text:'party', icon:'glass-cocktail'},
