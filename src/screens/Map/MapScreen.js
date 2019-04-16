@@ -1,11 +1,17 @@
 import React from 'react';
-import {AsyncStorage, Platform, StyleSheet, View, StatusBar} from 'react-native';
+import {AsyncStorage, Platform, StyleSheet, Image, View} from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
-import { Marker, Callout } from 'react-native-maps';
+import { Marker, Callout, Overlay, LocalTile } from 'react-native-maps';
 import axios from "axios";
 import {  Text, List } from 'react-native-elements';
 
+
+import img from './../../../assets/greenBox.png';
+
+const OVERLAY_TOP_LEFT_COORDINATE = [38, -123];
+const OVERLAY_BOTTOM_RIGHT_COORDINATE = [-37, 122];
+const IMAGE = img;
 
 export default class MapScreen extends React.Component {
     constructor(props) {
@@ -22,7 +28,12 @@ export default class MapScreen extends React.Component {
                 longitudeDelta: 0.0421,
             },
             points: [],
-            authHeader : ""
+            authHeader : "",
+            overlay: {
+                bounds: [OVERLAY_TOP_LEFT_COORDINATE, OVERLAY_BOTTOM_RIGHT_COORDINATE],
+                image: IMAGE,
+            },
+            pathTemplate : './../../../assets/greenBox.png'
         };
 
     }
@@ -214,92 +225,98 @@ export default class MapScreen extends React.Component {
       var iterator = this.generateMarkers(this.state.markers);
     return (
 
+        <View style={styles.container}>
+            <MapView
+                style={{ left:0, right: 0, top:0, bottom: 0, position: 'absolute' }}
+                    // provider={"google"} // remove if not using Google Maps
+                    // style={styles.map}
+                    provider={Platform.OS === 'ios' ? null : 'osmdroid'}
+                region={this.state.region}
+                moveOnMarkerPress = {true}
+                showsUserLocation={true}
+                showsCompass={true}
+                showsPointsOfInterest = {true}
+            >
+                <MapView.Overlay
+                    bounds={this.state.overlay.bounds}
+                    image={this.state.overlay.image}
+                    zindex={2}
+                />
 
 
+                {iterator}
 
-        <MapView
-            style={{ left:0, right: 0, top:0, bottom: 0, position: 'absolute' }}
-                // provider={"google"} // remove if not using Google Maps
-                // style={styles.map}
-                provider={Platform.OS === 'ios' ? null : 'osmdroid'}
-            region={this.state.region}
-            moveOnMarkerPress = {true}
-            showsUserLocation={true}
-            showsCompass={true}
-            showsPointsOfInterest = {true}
-        >
-            {iterator}
 
-            {/*<MapView.Circle*/}
-                {/*center={{*/}
-                    {/*latitude: 37.769,*/}
-                    {/*longitude: -122.409999999,*/}
-                {/*}}*/}
-                {/*radius={200}*/}
-                {/*strokeWidth={1}*/}
-                {/*fillColor={"#f29924"}*/}
-                {/*strokeColor={"#000"}*/}
-                {/*zIndex={0}*/}
-            {/*/>*/}
-            {/*<MapView.Circle*/}
-            {/*center={{*/}
-                {/*latitude: 37.77,*/}
-                {/*longitude: -122.41,*/}
-            {/*}}*/}
-            {/*radius={200}*/}
-            {/*strokeWidth={1}*/}
-            {/*fillColor={"#f29924"}*/}
-            {/*strokeColor={"#000"}*/}
-            {/*zIndex={0}*/}
-            {/*/>*/}
-            {/*<MapView.Circle*/}
-                {/*center={{*/}
-                    {/*latitude: 37.774,*/}
-                    {/*longitude: -122.411,*/}
-                {/*}}*/}
-                {/*radius={200}*/}
-                {/*strokeWidth={1}*/}
-                {/*fillColor={"#f29924"}*/}
-                {/*strokeColor={"#000"}*/}
-                {/*zIndex={0}*/}
-            {/*/>*/}
-            {/*<MapView.Circle*/}
+                {/*<MapView.Circle*/}
+                    {/*center={{*/}
+                        {/*latitude: 37.769,*/}
+                        {/*longitude: -122.409999999,*/}
+                    {/*}}*/}
+                    {/*radius={200}*/}
+                    {/*strokeWidth={1}*/}
+                    {/*fillColor={"#f29924"}*/}
+                    {/*strokeColor={"#000"}*/}
+                    {/*zIndex={0}*/}
+                {/*/>*/}
+                {/*<MapView.Circle*/}
                 {/*center={{*/}
                     {/*latitude: 37.77,*/}
-                    {/*longitude: -122.414,*/}
+                    {/*longitude: -122.41,*/}
                 {/*}}*/}
                 {/*radius={200}*/}
                 {/*strokeWidth={1}*/}
                 {/*fillColor={"#f29924"}*/}
                 {/*strokeColor={"#000"}*/}
                 {/*zIndex={0}*/}
-            {/*/>*/}
-            {/*<MapView.Circle*/}
-                {/*center={{*/}
-                    {/*latitude: 37.77,*/}
-                    {/*longitude: -122.411,*/}
-                {/*}}*/}
-                {/*radius={200}*/}
-                {/*strokeWidth={1}*/}
-                {/*fillColor={"#5042f4"}*/}
-                {/*strokeColor={"#000"}*/}
-                {/*zIndex={1}*/}
-            {/*/>*/}
-            {/*<MapView.Circle*/}
-                {/*center={{*/}
-                    {/*latitude: 37.7725,*/}
-                    {/*longitude: -122.411,*/}
-                {/*}}*/}
-                {/*radius={200}*/}
-                {/*strokeWidth={1}*/}
-                {/*fillColor={"#ff0202"}*/}
-                {/*strokeColor={"#000"}*/}
-                {/*zIndex={2}*/}
-            {/*/>*/}
+                {/*/>*/}
+                {/*<MapView.Circle*/}
+                    {/*center={{*/}
+                        {/*latitude: 37.774,*/}
+                        {/*longitude: -122.411,*/}
+                    {/*}}*/}
+                    {/*radius={200}*/}
+                    {/*strokeWidth={1}*/}
+                    {/*fillColor={"#f29924"}*/}
+                    {/*strokeColor={"#000"}*/}
+                    {/*zIndex={0}*/}
+                {/*/>*/}
+                {/*<MapView.Circle*/}
+                    {/*center={{*/}
+                        {/*latitude: 37.77,*/}
+                        {/*longitude: -122.414,*/}
+                    {/*}}*/}
+                    {/*radius={200}*/}
+                    {/*strokeWidth={1}*/}
+                    {/*fillColor={"#f29924"}*/}
+                    {/*strokeColor={"#000"}*/}
+                    {/*zIndex={0}*/}
+                {/*/>*/}
+                {/*<MapView.Circle*/}
+                    {/*center={{*/}
+                        {/*latitude: 37.77,*/}
+                        {/*longitude: -122.411,*/}
+                    {/*}}*/}
+                    {/*radius={200}*/}
+                    {/*strokeWidth={1}*/}
+                    {/*fillColor={"#5042f4"}*/}
+                    {/*strokeColor={"#000"}*/}
+                    {/*zIndex={1}*/}
+                {/*/>*/}
+                {/*<MapView.Circle*/}
+                    {/*center={{*/}
+                        {/*latitude: 37.7725,*/}
+                        {/*longitude: -122.411,*/}
+                    {/*}}*/}
+                    {/*radius={200}*/}
+                    {/*strokeWidth={1}*/}
+                    {/*fillColor={"#ff0202"}*/}
+                    {/*strokeColor={"#000"}*/}
+                    {/*zIndex={2}*/}
+                {/*/>*/}
 
 
-
-        </MapView>
+            </MapView>
+        </View>
 
 
 
@@ -312,8 +329,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
     calloutHeader : {
         textAlign: 'center',

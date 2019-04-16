@@ -2,9 +2,7 @@ import React from 'react';
 import {AsyncStorage, Picker, StyleSheet, View, ScrollView} from 'react-native';
 import axios from "axios";
 import { ListItem , Button, Text, Header} from 'react-native-elements';
-import PTRView from 'react-native-pull-to-refresh';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Panel from 'react-native-panel';
 
 
 
@@ -94,7 +92,7 @@ export default class AccountScreen extends React.Component {
                   key={counter}
                   leftAvatar={{ source: require('./../../../assets/soft.png')}}
                   title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
-                  subtitle={data['rawData']["average"].toString() + " dB"}
+                  subtitle={data['rawData']["average"].toString() + " dB" + "| " + data['sources'][0]}
                   rightIcon={<Icon
                       name="arrow-right"
                       size={15}
@@ -109,7 +107,7 @@ export default class AccountScreen extends React.Component {
                   key={counter}
                   leftAvatar={{ source: require('./../../../assets/medium.png')}}
                   title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
-                  subtitle={data['rawData']["average"].toString() + " dB"}
+                  subtitle={data['rawData']["average"].toString() + " dB" + "| " + data['sources'][0]}
                   rightIcon={<Icon
                       name="arrow-right"
                       size={15}
@@ -124,7 +122,7 @@ export default class AccountScreen extends React.Component {
                 key={counter}
                 leftAvatar={{ source: require('./../../../assets/loud.png')}}
                 title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
-                subtitle={data['rawData']["average"].toString() + " dB"}
+                subtitle={data['rawData']["average"].toString() + " dB" + "| " + data['sources'][0]}
                 rightIcon={<Icon
                     name="arrow-right"
                     size={15}
