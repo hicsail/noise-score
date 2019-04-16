@@ -107,7 +107,28 @@ export default class AccountScreen extends React.Component {
         navigate("Account1");
     }
 
+    reloadButton(){
+        AsyncStorage.getItem('userData').then(function (ret) {
+            if (ret) {
+                var response = JSON.parse(ret);
+                console.log(response);
+                var authHeader = response['authHeader'];
+                const header = {
+                    'Content-Type': 'application/json',
+                    'Authorization' : authHeader
+                };
 
+                    axios.get('http://localhost:9000/api/heatmap', {headers:header, params:{}}).then(function (ret){
+                        console.log(ret);
+                    }).catch(function (error){
+                        alert(error);
+                    });
+
+
+            }
+        }.bind(this));
+
+    }
 
 
 
@@ -158,6 +179,14 @@ export default class AccountScreen extends React.Component {
                         />
                     }onPress = {() => this.accountScreen()}
                                             buttonStyle={styles.headerButton}/>}
+                    rightComponent={<Button  icon={
+                        <Icon
+                            name="arrow-left"
+                            size={15}
+                            color="#323232"
+                        />
+                    }onPress = {() => this.reloadButton()}
+                                             buttonStyle={styles.button}/>}
 
                 />
 
