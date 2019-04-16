@@ -9,7 +9,7 @@ From Android Studio, start an emulator. (Tools -> AVD Manager)
 ``` 
 npm run android
 ```
-Control M on emulator - to set automatic reloads and allow remote debugging
+
 
 
 ## IOS 
@@ -18,7 +18,7 @@ Control M on emulator - to set automatic reloads and allow remote debugging
 1. Node JS 
 1. MongoDB (running on localhost:27017)
 
-To start: cd into the project folder: 
+### To start: cd into the project folder: 
 
 1. Start Metro Bundler
     
