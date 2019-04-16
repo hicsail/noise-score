@@ -40,6 +40,7 @@
     "hapi-auth-cookie": "7.x.x",
     "hapi-auth-jwt2": "7.x.x",
     "hapi-cron": "0.0.3",
+    "heatmap.js": "^2.0.5",
     "hicsail-hapi-mongo-models": "6.x.x",
     "hicsail-mongo-models": "1.4.x",
     "hoek": "4.x.x",

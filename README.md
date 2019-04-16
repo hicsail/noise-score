@@ -12,7 +12,7 @@ npm run android
 
 
 
-## IOS 
+## iOS 
 ### Requirements
 1. XCode 10+
 1. Node JS 

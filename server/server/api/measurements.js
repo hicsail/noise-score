@@ -1,11 +1,10 @@
 'use strict';
-// const Async = require('async');
-// const Boom = require('boom');
-// const Config = require('../../config');
+
 const internals = {};
 const Joi = require('joi');
 const Boom = require('boom');
-// const PasswordComplexity = require('joi-password-complexity');
+const fs = require('fs');
+
 
 
 internals.applyRoutes = function (server, next) {
@@ -120,7 +119,6 @@ internals.applyRoutes = function (server, next) {
       }
     },
     handler: function (request, reply) {
-      console.log(request.state.AuthCookie.userId);
       var userID = request.state.AuthCookie.userId;
       Measurement.find({ userID : userID}, (err, session) => {
         if(err){
@@ -161,18 +159,27 @@ internals.applyRoutes = function (server, next) {
     }
   });
 
-  // server.route({
-  //   method: 'GET',
-  //   path: '/allMeasurements',
-  //   config: {
-  //     auth: {
-  //       strategies: ['simple', 'jwt', 'session']
-  //     }
-  //   },
-  //   handler: function (request, reply) {
-  //
-  //   }
-  // });
+  server.route({
+    method: 'GET',
+    path: '/heatmap',
+    config: {
+      auth: {
+        strategies: ['simple', 'jwt', 'session']
+      }
+    },
+    handler: function (request, reply) {
+
+      fs.readFile('assets/blackBox.jpg', (err, data) => {
+        if(err){
+          console.log(err);
+          reply(500)
+        } else {
+          console.log(data);
+          reply(data);
+        }
+      });
+    }
+  });
 
   next();
 };
