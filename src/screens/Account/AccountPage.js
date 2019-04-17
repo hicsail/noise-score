@@ -88,7 +88,12 @@ export default class AccountScreen extends React.Component {
 
     goBack(){
         const {navigate} = this.props.navigation;
-        navigate("Account1")
+        navigate("Account1");
+    }
+
+    resetPassword(){
+        const {navigate} = this.props.navigation;
+        navigate("Account4");
     }
 
 
@@ -130,8 +135,8 @@ export default class AccountScreen extends React.Component {
                                             buttonStyle={styles.headerButton}/>}
 
                 />
-
-                <ScrollView>
+                <View style={styles.content}>
+                {/*<ScrollView>*/}
 
                     <Button
                     buttonStyle={styles.button}
@@ -140,7 +145,15 @@ export default class AccountScreen extends React.Component {
                     title="Sign Out"
                     onPress={() => this.logout()}
                     />
-                </ScrollView>
+                    <Button
+                        buttonStyle={styles.button}
+                        backgroundColor="transparent"
+                        textStyle={{ color: "#bcbec1" }}
+                        title="Reset Password"
+                        onPress={() => this.resetPassword()}
+                    />
+                {/*</ScrollView>*/}
+                </View>
             </View>
         )
     }
@@ -167,6 +180,14 @@ const styles = StyleSheet.create({
         marginTop: 20,
         backgroundColor: '#323232',
         marginHorizontal: 100
-    }
+    },
+    content : {
+        marginTop : "50%",
+        width: '100%',
+        height: "100%",
+        // alignItems: 'center',
+        // textAlign: 'center'
+
+    },
 
 });

@@ -1,5 +1,5 @@
 import React, { Component }  from 'react';
-import {StyleSheet, View, TextInput, AsyncStorage, Image} from 'react-native';
+import {StyleSheet, View, TextInput, AsyncStorage, Image, Alert} from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -109,6 +109,21 @@ export default class LoginScreen extends React.Component {
                         title="Sign Up"
                         color={'white'}
                         onPress={() => this.props.navigation.navigate("SignUp1")}
+                    />
+
+                    <Button
+                        buttonStyle={styles.button}
+                        backgroundColor={'white'}
+                        title="Forgot Password"
+                        color={'white'}
+                        onPress={() => Alert.alert(
+                            'Welcome to NoiseScore!',
+                            'Click measurements to get started.',
+                            [
+                                {text: 'Lets go!', onPress: () => console.log('OK Pressed')},
+                            ],
+                            {cancelable: false},
+                        )}
                     />
                 </View>
 

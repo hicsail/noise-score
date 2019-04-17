@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button, Picker, ScrollView, AsyncStorage, Slider} from 'react-native';
+import {StyleSheet, Text, View, Button, Picker, ScrollView, AsyncStorage, Slider, Alert} from 'react-native';
 import axios from 'axios';
 
 
@@ -38,8 +38,15 @@ export default class AccountScreen extends React.Component {
             // We need to make the API call to create a new user
             axios.post('http://localhost:9000/api/signup', response).then(function (response){
                 // Lets save relevent information and login!
-                alert("Welcome to Noise-Score!");
-                var ret = response['data'];
+                Alert.alert(
+                    'Welcome to NoiseScore!',
+                    'Click measurements to get started.',
+                    [
+                        {text: 'Lets go!', onPress: () => console.log('OK Pressed')},
+                    ],
+                    {cancelable: false},
+                );
+                let ret = response['data'];
                 AsyncStorage.setItem("userData", JSON.stringify(ret));
                 navigate("SignedIn")
             }).catch(function (error){

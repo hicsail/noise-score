@@ -12,6 +12,7 @@ export default class SignUp extends React.Component {
         this.state = {
             username: 'username',
             password: 'password',
+            password1 : 'password',
             name: 'name',
             email: 'example@example.com',
             city: 'city',
@@ -19,15 +20,7 @@ export default class SignUp extends React.Component {
             zip: 'zipcode'
         };
     }
-validateEmail(email) {
-    if(email == "example@example.com"){
 
-        return false;
-    } else {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    }
-}
 
 passwordStrenghTest(password){
         var ret = true;
@@ -67,6 +60,8 @@ passwordStrenghTest(password){
                 alert("Email already in use")
             } else if (self.passwordStrenghTest(self.state.password) == false) {
                 alert("Please enter a valid password")
+            } else if(this.state.password != this.state.password1){
+                alert("Passwords do not match");
             } else if(self.state.name === "name") {
                 alert("Please enter a valid name");
                 // TODO: Change this do that we verify the city, state, and zip code.
@@ -117,6 +112,13 @@ passwordStrenghTest(password){
                         style={styles.textInput}
                         onChangeText={(password) => this.setState({password})}
                         placeholder='Password'
+                    />
+                    <Input
+                        autoCapitalize = 'none'
+                        secureTextEntry={true}
+                        style={styles.textInput}
+                        onChangeText={(password1) => this.setState({password1})}
+                        placeholder='Confirm Password'
                     />
                     <Text style={styles.text}>Email:</Text>
                     <Input
