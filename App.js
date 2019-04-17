@@ -21,6 +21,7 @@ import LoginScreen from './src/screens/Login/LoginScreen';
 import SignUp from './src/screens/Login/SignUp';
 import SignUp2 from './src/screens/Login/SignUp2';
 import SignUp3 from './src/screens/Login/SignUp3';
+import resetPassword from './src/screens/Account/ResetPassword';
 
 
 console.disableYellowBox = ["Unable to symbolicate"];
@@ -50,6 +51,12 @@ const AccountStack = createStackNavigator({
     },
     Account3 : {
         screen :  moreInfo,
+        navigationOptions:{
+            header:null
+        }
+    },
+    Account4 : {
+        screen :  resetPassword,
         navigationOptions:{
             header:null
         }
