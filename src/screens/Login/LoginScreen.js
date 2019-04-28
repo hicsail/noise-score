@@ -143,13 +143,16 @@ const styles = StyleSheet.create({
         marginTop : 20,
         backgroundColor: '#cccc31',
         position : 'absolute',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height : "100%",
+
     },
     logo : {
         width: 200,
         height: 220
     },
     login : {
-        // width: '75%',
         alignItems: 'center',
         textAlign: 'center',
     },
@@ -164,8 +167,8 @@ const styles = StyleSheet.create({
     },
     wrap : {
         backgroundColor:'#cccc31',
-        resizeMode: 'cover',
         alignItems: 'center',
-        flex : 1
+        flex : 1,
+
     },
 });
