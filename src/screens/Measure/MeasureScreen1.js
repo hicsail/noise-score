@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, Button, AsyncStorage} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, AsyncStorage} from 'react-native';
 import { SelectMultipleGroupButton } from "react-native-selectmultiple-button";
 import NavButtons2 from '../../components/NavButtons2';
 
@@ -119,14 +119,7 @@ export default class MeasureScreen1 extends React.Component {
           />
         </View>
 
-        {/*<View style={styles.padding}>*/}
-          {/*<View style={styles.wrapText}>*/}
-            {/*<Text style={styles.text}>*/}
-              {/*DEV ONLY:{this.state.intensity}{"  "}{this.state.loudness}{"\n"}*/}
-              {/*{this.state.oneWord}{"  "}{this.state.feeling}*/}
-            {/*</Text>*/}
-          {/*</View>*/}
-        {/*</View>*/}
+
 
 
 
@@ -141,11 +134,7 @@ export default class MeasureScreen1 extends React.Component {
 
 
 
-  // setIntensity(value) {
-  //   this.setState({
-  //     intensity: value
-  //   });
-  // }
+
   setLoudness(value) {
     this.setState({
       loudness: value[0]
@@ -166,7 +155,6 @@ export default class MeasureScreen1 extends React.Component {
 
 
 
-const brightGreen = "#31BD4B";
 const lightGreen = '#31BD4B';
 const darkGray = "#383838";
 

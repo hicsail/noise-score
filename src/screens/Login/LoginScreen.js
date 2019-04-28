@@ -1,10 +1,8 @@
-import React, { Component }  from 'react';
-import {StyleSheet, View, TextInput, AsyncStorage, Image, Alert} from 'react-native';
+import React  from 'react';
+import {StyleSheet, View, ScrollView, AsyncStorage, Image, Alert} from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input, Text, SocialIcon, Button} from 'react-native-elements';
-import SplashScreen from 'react-native-splash-screen'
+import { Input, Text, Button} from 'react-native-elements';
 
 
 
@@ -18,6 +16,8 @@ export default class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
         const {navigate} = this.props.navigation;
+        // If we are already logged in (i.e. local storage) then we can make an API call to
+        // Ensure that we still have the credentials and can directly move to the SignedIn Screen
         AsyncStorage.getItem("userData").then(function (ret) {
             var response = JSON.parse(ret);
             if (ret){
@@ -30,7 +30,6 @@ export default class LoginScreen extends React.Component {
                     };
 
                     axios.get('http://localhost:9000/api/sessions/my', {headers: header}).then(function (ret){
-                        console.log(ret);
                         navigate("SignedIn");
                     })
 
@@ -45,6 +44,7 @@ export default class LoginScreen extends React.Component {
     }
 
     componentDidMount() {
+        // Hide the splash screen when the component did mount
         // SplashScreen.hide();
     }
 
@@ -54,6 +54,7 @@ export default class LoginScreen extends React.Component {
                 password: this.state.password
         };
         const {navigate} = this.props.navigation;
+        // change localhost to 10.0.2.2 for android
         axios.post('http://localhost:9000/api/login', requestBody)
             .then(function (response) {
                 // Store the userData:
@@ -73,7 +74,10 @@ export default class LoginScreen extends React.Component {
     render() {
 
         return (
+            <View style={styles.wrap}>
             <View style={styles.container}>
+                <ScrollView>
+
                 <View style={styles.login}>
                     <Image
                         source={require('./../../../assets/logo.png')}
@@ -127,13 +131,8 @@ export default class LoginScreen extends React.Component {
                     />
                 </View>
 
-                {/*<View style={styles.socialIcon}>*/}
-                    {/*<SocialIcon*/}
-                        {/*type='twitter'*/}
-                        {/*iconColor={'white'}*/}
-                        {/*underlayColor={'#323232'}*/}
-                    {/*/>*/}
-                {/*</View>*/}
+            </ScrollView>
+            </View>
             </View>
         );
     }
@@ -141,24 +140,18 @@ export default class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        marginTop : 20,
         backgroundColor: '#cccc31',
-        alignItems: 'center'
-    },
-    socialIcon : {
-        flex: 1,
-        justifyContent: 'flex-end',
-        marginBottom: 36,
+        position : 'absolute',
     },
     logo : {
         width: 200,
         height: 220
     },
     login : {
-        marginTop : 150,
-        width: '75%',
+        // width: '75%',
         alignItems: 'center',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     header : {
         fontFamily: 'Euphemia UCAS',
@@ -168,5 +161,11 @@ const styles = StyleSheet.create({
     button : {
         marginTop: 20,
         backgroundColor: '#323232'
-    }
+    },
+    wrap : {
+        backgroundColor:'#cccc31',
+        resizeMode: 'cover',
+        alignItems: 'center',
+        flex : 1
+    },
 });

@@ -50,24 +50,20 @@ export default class AccountScreen extends React.Component {
     }
 
     logout() {
-
-
+        // Function to log out and clear cookies (i.e. AsyncStorag
         const {navigate} = this.props.navigation;
-
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
+                // Get the auth header from storage
                 var response = JSON.parse(ret);
                 var authHeader = response['authHeader'];
                 const header = {
                     'Content-Type': 'application/json',
                     'Authorization' : authHeader
                 };
-
-
-
+                // Remove the cookie and make API call to log out
                 this.removeItemValue("userData").then(function (ret){
                     if(ret){
-                        // navigate("SignedOut");
                         axios.delete('http://localhost:9000/api/logout', {headers:header})
                             .then(function (response) {
                                 navigate("SignedOut");
@@ -76,7 +72,6 @@ export default class AccountScreen extends React.Component {
                                 console.log(error);
                                 alert("Something went wrong!");
                             });
-
                     } else {
                         alert("Error")
                     }
@@ -87,11 +82,13 @@ export default class AccountScreen extends React.Component {
 
 
     goBack(){
+        // Navigate to Account1 Screen
         const {navigate} = this.props.navigation;
         navigate("Account1");
     }
 
     resetPassword(){
+        // Navigate to Account4 Screen
         const {navigate} = this.props.navigation;
         navigate("Account4");
     }
@@ -106,22 +103,6 @@ export default class AccountScreen extends React.Component {
 
         return (
             <View style={styles.container}>
-
-                {/*<Text>Account page</Text>*/}
-                {/*<Text>Username: {username}</Text>*/}
-
-                {/*<Button*/}
-                {/*buttonStyle={{ marginTop: 20 }}*/}
-                {/*backgroundColor="transparent"*/}
-                {/*textStyle={{ color: "#bcbec1" }}*/}
-                {/*title="Sign Out"*/}
-                {/*onPress={() => this.logout()}*/}
-                {/*/>*/}
-                {/*{iterator}*/}
-                {/*<Button*/}
-                {/*onPress={() => this.reloadButton()}*/}
-                {/*title="Reload"*/}
-                {/*buttonStyle={styles.reload}/>*/}
                 <Header
                     centerComponent={{ text: username, style: { color: '#fff' } }}
                     containerStyle={styles.header}
@@ -136,8 +117,6 @@ export default class AccountScreen extends React.Component {
 
                 />
                 <View style={styles.content}>
-                {/*<ScrollView>*/}
-
                     <Button
                     buttonStyle={styles.button}
                     backgroundColor="transparent"
@@ -152,7 +131,6 @@ export default class AccountScreen extends React.Component {
                         title="Reset Password"
                         onPress={() => this.resetPassword()}
                     />
-                {/*</ScrollView>*/}
                 </View>
             </View>
         )
@@ -163,9 +141,6 @@ export default class AccountScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        // alignItems: 'center',
-        // justifyContent: 'center',
     },
     reload : {
 
@@ -185,8 +160,6 @@ const styles = StyleSheet.create({
         marginTop : "50%",
         width: '100%',
         height: "100%",
-        // alignItems: 'center',
-        // textAlign: 'center'
 
     },
 

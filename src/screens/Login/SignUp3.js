@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button, Picker, ScrollView, AsyncStorage, Slider, Alert} from 'react-native';
+import {StyleSheet, Text, View, Button, ScrollView, AsyncStorage, Slider, Alert} from 'react-native';
 import axios from 'axios';
 
 
@@ -52,8 +52,6 @@ export default class AccountScreen extends React.Component {
             }).catch(function (error){
                 alert(error.message);
             });
-
-            //navigate('SignUp3');
         }.bind(this));
 
 
@@ -393,23 +391,10 @@ const styles = StyleSheet.create({
     button : {
         marginBottom: 30,
         backgroundColor: '#323232',
+        width : "15%",
     },
 });
 
-const brightGreen = "#31BD4B";
 const lightGreen = '#31BD4B';
 const darkGray = "#383838";
 
-const questionButtonsStyle = {
-    borderColor: darkGray,
-    backgroundColor: "transparent",
-    textColor: darkGray,
-    borderTintColor: lightGreen,
-    backgroundTintColor: lightGreen,
-    textTintColor: "black"
-};
-
-const questionButtonSize ={
-    borderRadius: 10,
-    height: 40
-};

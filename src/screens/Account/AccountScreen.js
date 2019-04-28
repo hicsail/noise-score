@@ -20,7 +20,8 @@ export default class AccountScreen extends React.Component {
 
   componentDidMount() {
 
-    // Add listener to notice when we need to reload data
+    // Add listener to notice when we need to reload data. Whenever we move to this screen
+
     this.subs = [
       this.props.navigation.addListener('willFocus', () => this.updateData())
     ];
@@ -48,8 +49,8 @@ export default class AccountScreen extends React.Component {
             self.setState({
               userData : ret['data']
             });
-            // this.generateData(self);
           }).catch(function (error){
+            // If there is an error sign out
             alert(error);
             this.props.navigation("SignedOut");
           });
@@ -72,6 +73,7 @@ export default class AccountScreen extends React.Component {
 
 
   moreInfo (data){
+    // Store data and move to the more info page
     AsyncStorage.setItem("moreInfo", JSON.stringify(data));
     const {navigate} = this.props.navigation;
     navigate("Account3");
@@ -92,7 +94,7 @@ export default class AccountScreen extends React.Component {
                   key={counter}
                   leftAvatar={{ source: require('./../../../assets/soft.png')}}
                   title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
-                  subtitle={data['rawData']["average"].toString() + " dB" + "| " + data['sources'][0]}
+                  subtitle={data['rawData']["average"].toString() + " dB " + "| " + data['sources'][0]}
                   rightIcon={<Icon
                       name="arrow-right"
                       size={15}
@@ -107,7 +109,7 @@ export default class AccountScreen extends React.Component {
                   key={counter}
                   leftAvatar={{ source: require('./../../../assets/medium.png')}}
                   title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
-                  subtitle={data['rawData']["average"].toString() + " dB" + "| " + data['sources'][0]}
+                  subtitle={data['rawData']["average"].toString() + " dB " + "| " + data['sources'][0]}
                   rightIcon={<Icon
                       name="arrow-right"
                       size={15}
@@ -122,7 +124,7 @@ export default class AccountScreen extends React.Component {
                 key={counter}
                 leftAvatar={{ source: require('./../../../assets/loud.png')}}
                 title={dateFormat(data['date'], "ddd, mmm dS, yyyy, h:MM TT")}
-                subtitle={data['rawData']["average"].toString() + " dB" + "| " + data['sources'][0]}
+                subtitle={data['rawData']["average"].toString() + " dB " + "| " + data['sources'][0]}
                 rightIcon={<Icon
                     name="arrow-right"
                     size={15}
