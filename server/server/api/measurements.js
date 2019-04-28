@@ -12,6 +12,48 @@ internals.applyRoutes = function (server, next) {
   const Measurement = server.plugins['hicsail-hapi-mongo-models'].Measurement;
 
   server.route({
+    method: 'GET',
+    path: '/table/measurements',
+    config: {
+      auth: {
+        strategies: ['simple', 'jwt', 'session']
+      },
+      validate: {
+        query: Joi.any()
+      }
+    },
+    handler: function (request, reply) {
+
+
+      const sortOrder = request.query['order[0][dir]'] === 'asc' ? '' : '-';
+      const sort = sortOrder + request.query['columns[' + Number(request.query['order[0][column]']) + '][data]'];
+      const limit = Number(request.query.length);
+      const page = Math.ceil(Number(request.query.start) / limit) + 1;
+      let fields = request.query.fields;
+
+      console.log(sortOrder,sort,limit,page,fields);
+
+
+      Measurement.pagedFind({}, {}, {}, limit, page, (err, results) => {
+
+        if (err) {
+          return reply(err);
+        }
+        console.log(results.data);
+
+        reply({
+          draw: request.query.draw,
+          recordsTotal: results.data.length,
+          recordsFiltered: results.items.total,
+          data: results.data,
+          error: err
+        });
+      });
+    }
+  });
+
+
+  server.route({
     method:'POST',
     path: '/inputMeasurement',
     config: {
@@ -53,15 +95,9 @@ internals.applyRoutes = function (server, next) {
           if (!loudArray.includes(request.payload.loud)) {
             ret = ret + " + Problem with Loud";
           }
-          // if (!locationTypeArray.includes(request.payload.locationType)) {
-          //   ret = ret + " + Problem with Location Type";
-          // }
           if (!describeArray.includes(request.payload.describe)) {
             ret = ret + " + Problem with Describe";
           }
-          // if (!intenseArray.includes(request.payload.intense)) {
-          //   ret = ret + " + Problem with Intense";
-          // }
           if (!feelArray.includes(request.payload.feel)) {
             ret = ret + " + Problem with Feel";
           }
@@ -74,9 +110,7 @@ internals.applyRoutes = function (server, next) {
           if(!request.payload.words.length > 140){
             ret = ret + " + Problem with Words"
           }
-          // if(request.payload.floorLevel < 0){
-          //   ret = ret + " + Problem with floorLevel"
-          // }
+
           if (ret.length > 1) {
             reply(Boom.conflict(ret.substr(3)));
           } else {
@@ -90,11 +124,8 @@ internals.applyRoutes = function (server, next) {
       const userID = request.payload.userID;
       const rawData = request.payload.rawData;
       const location = request.payload.location;
-      // const locationType = request.payload.locationType;
-      // const floorLevel = request.payload.floorLevel;
       const loud = request.payload.loud;
       const describe = request.payload.describe;
-      // const intense = request.payload.intense;
       const feel = request.payload.feel;
       const sources = request.payload.sources;
       const words = request.payload.words;
