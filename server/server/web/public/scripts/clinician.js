@@ -15,7 +15,7 @@ $(document).ready(function() {
     ajax: {
       url: '/api/table/measurements',
       data: function (d) {
-        d.fields = 'name';
+        d.fields = 'userID Location RawData Sound Describe Feel Sources Comments';
       }
     },
 
@@ -25,31 +25,41 @@ $(document).ready(function() {
         defaultContent: ''
       },
       {
-        data: 'Location',
+        data: 'rawData',
+        defaultContent: '',
+        render: function (data, type, row) {
+          return '<span>Min:'+ data['min'] + '\n' +
+            'Max:'+ data['max'] + '\n' +
+            'Avg:'+ data['average'] + '</span>';
+        }
+      },
+      {
+        data: 'location',
+        defaultContent: '',
+        render: function (data, type, row) {
+          return '<span>Longitude:'+ data['lang'] + '\n' +
+            'Latitude'+ data['lat'] + '</span>';
+        }
+
+      },
+      {
+        data: 'loud',
         defaultContent: ''
       },
       {
-        data: 'RawData',
+        data: 'describe',
         defaultContent: ''
       },
       {
-        data: 'Sound',
+        data: 'feel',
         defaultContent: ''
       },
       {
-        data: 'Describe',
+        data: 'sources',
         defaultContent: ''
       },
       {
-        data: 'Feel',
-        defaultContent: ''
-      },
-      {
-        data: 'Sources',
-        defaultContent: ''
-      },
-      {
-        data: 'Comments',
+        data: 'words',
         defaultContent: ''
       }
 
