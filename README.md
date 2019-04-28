@@ -7,7 +7,7 @@ Mobile-app for users to record and comment on community noise levels.
 
 Download and start **React Native Debugger** for help debugging.
 
-## Android (Not working yet)
+## Android 
 ### Requirements
 1. Android Studio
 1. Android Virtual Machine

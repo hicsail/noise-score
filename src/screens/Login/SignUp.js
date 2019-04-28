@@ -1,8 +1,9 @@
-import React,  from 'react';
+import React, { Component }  from 'react';
 import {StyleSheet, View, TextInput, AsyncStorage, Picker, ScrollView} from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
-import { Input, Text, Button} from 'react-native-elements';
+import { Input, Text, SocialIcon, Button} from 'react-native-elements';
+import { Dropdown } from 'react-native-material-dropdown';
 
 export default class SignUp extends React.Component {
 
