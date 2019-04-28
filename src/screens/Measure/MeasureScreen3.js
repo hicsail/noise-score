@@ -4,7 +4,6 @@ import {StyleSheet, Text, ScrollView, View, TextInput, AsyncStorage} from 'react
 import NavButtons from '../../components/NavButtons';
 import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import axios from "axios";
-import updateData from '../Account/AccountScreen';
 
 export default class MeasureScreen3 extends React.Component {
 
@@ -83,7 +82,6 @@ export default class MeasureScreen3 extends React.Component {
         });
         this.props.navigation.dispatch(resetAction);
 
-      // navigate('Measure');
 
       }else {
         alert('Error');
@@ -133,7 +131,6 @@ export default class MeasureScreen3 extends React.Component {
   }
 }
 
-const brightGreen = "#31BD4B";
 const styles = StyleSheet.create({
   container: {
     flex: 1,

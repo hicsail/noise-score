@@ -245,7 +245,8 @@ const manifest = {
     },
     {
       plugin: './server/web/routes/users'
-    }
+    },
+
   ]
 };
 

@@ -1,8 +1,5 @@
 import React from 'react';
 import {StyleSheet, Text, View, Button, Picker, ScrollView, AsyncStorage} from 'react-native';
-import NavButtons2 from "../../components/NavButtons2";
-import SourceButton from '../../components/SourceButton';
-import * as constants from '../../components/constants';
 import {SelectMultipleGroupButton} from "react-native-selectmultiple-button";
 
 export default class AccountScreen extends React.Component {
@@ -311,14 +308,7 @@ export default class AccountScreen extends React.Component {
 
 }
 
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: '#fff',
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//     },
-// });
+
 
 const styles = StyleSheet.create({
     padding: {
@@ -326,6 +316,7 @@ const styles = StyleSheet.create({
     },
     button : {
         marginBottom: 30,
+        width : "15%",
         backgroundColor: '#323232',
     },
     wrapText: {
@@ -365,7 +356,6 @@ const styles = StyleSheet.create({
 
 });
 
-const brightGreen = "#31BD4B";
 const lightGreen = '#31BD4B';
 const darkGray = "#383838";
 

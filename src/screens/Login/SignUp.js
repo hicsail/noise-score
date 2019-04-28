@@ -1,8 +1,8 @@
-import React, { Component }  from 'react';
-import {StyleSheet, View, TextInput, AsyncStorage, Picker} from 'react-native';
+import React,  from 'react';
+import {StyleSheet, View, TextInput, AsyncStorage, Picker, ScrollView} from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
-import { Input, Text, SocialIcon, Button} from 'react-native-elements';
+import { Input, Text, Button} from 'react-native-elements';
 
 export default class SignUp extends React.Component {
 
@@ -23,6 +23,7 @@ export default class SignUp extends React.Component {
 
 
 passwordStrenghTest(password){
+        // Password strength test
         var ret = true;
         if(password.length < 8 ){
             console.log(password.length < 8 );
@@ -52,6 +53,9 @@ passwordStrenghTest(password){
             email : this.state.email,
             username : this.state.username
         };
+
+        // Make an API call to see if the username or email are already in use
+        // Also check other values in the form
         axios.post('http://localhost:9000/api/available', ret).then(function (response){
             if(!response.data['username']){
                 alert("Username already in use")
@@ -60,18 +64,21 @@ passwordStrenghTest(password){
                 alert("Email already in use")
             } else if (self.passwordStrenghTest(self.state.password) == false) {
                 alert("Please enter a valid password")
-            } else if(this.state.password != this.state.password1){
+            } else if(self.state.password != self.state.password1){
                 alert("Passwords do not match");
             } else if(self.state.name === "name") {
                 alert("Please enter a valid name");
                 // TODO: Change this do that we verify the city, state, and zip code.
-            } else if (self.state.city == "city"){
+            } else if (false){
+                // this.cityInput.shake();
                 alert("Please enter a valid city");
             } else if (self.state.state == "state") {
+                // this.stateInput.shake();
                 alert("Please enter a valid state");
             } else if (self.state.zip == "zipcode") {
                 alert("Please enter a valid zipCode");
             } else {
+                // If all test pass, prepare the signUpData and move to the next screen
                 var signUpData = {
                     'username': self.state.username,
                     'password': self.state.password,
@@ -93,74 +100,77 @@ passwordStrenghTest(password){
     }
 
     render() {
+
         return (
             <View style={styles.container}>
-                <View style={styles.content}>
-                    <Text style={styles.header}>Sign Up{"\n"}</Text>
-
-                    <Text style={styles.text}>Username:</Text>
-                    <Input
-                        style={styles.textInput}
-                        autoCapitalize = 'none'
-                        onChangeText={(username) => this.setState({username})}
-                        placeholder='Username'
-                    />
-                    <Text style={styles.text}>Password:</Text>
-                    <Input
-                        autoCapitalize = 'none'
-                        secureTextEntry={true}
-                        style={styles.textInput}
-                        onChangeText={(password) => this.setState({password})}
-                        placeholder='Password'
-                    />
-                    <Input
-                        autoCapitalize = 'none'
-                        secureTextEntry={true}
-                        style={styles.textInput}
-                        onChangeText={(password1) => this.setState({password1})}
-                        placeholder='Confirm Password'
-                    />
-                    <Text style={styles.text}>Email:</Text>
-                    <Input
-                        style={styles.textInput}
-                        autoCapitalize = 'none'
-                        onChangeText={(email) => this.setState({email})}
-                        placeholder='example@example.com'
-                    />
-                    <Text style={styles.text}>Name:</Text>
-                    <Input
-                        style={styles.textInput}
-                        onChangeText={(name) => this.setState({name})}
-                        placeholder='Sam Smith'
-                    />
-                    <Text style={styles.text}>City:</Text>
-                    <Input
-                        style={styles.textInput}
-                        onChangeText={(city) => this.setState({city})}
-                        placeholder='Boston'
-                    />
-                    <Text style={styles.text}>State:</Text>
-                    <Input
-                        style={styles.textInput}
-                        onChangeText={(state) => this.setState({state})}
-                        placeholder='MA'
-                    />
-                    <Text style={styles.text}>Zipcode:</Text>
-                    <Input
-                        style={styles.textInput}
-                        onChangeText={(zip) => this.setState({zip})}
-                        placeholder='02134'
-                    />
+                    <Text style={styles.textHeader}>Sign Up{"\n"}</Text>
+                    <ScrollView>
+                        <Text style={styles.text}>Username</Text>
+                        <Input
+                            style={styles.textInput}
+                            autoCapitalize = 'none'
+                            onChangeText={(username) => this.setState({username})}
+                            placeholder='Username'
+                        />
+                        <Text style={styles.text}>Password</Text>
+                        <Input
+                            autoCapitalize = 'none'
+                            secureTextEntry={true}
+                            style={styles.textInput}
+                            onChangeText={(password) => this.setState({password})}
+                            placeholder='Password'
+                        />
+                        <Input
+                            autoCapitalize = 'none'
+                            secureTextEntry={true}
+                            style={styles.textInput}
+                            onChangeText={(password1) => this.setState({password1})}
+                            placeholder='Confirm Password'
+                        />
+                        <Text style={styles.text}>Email</Text>
+                        <Input
+                            style={styles.textInput}
+                            autoCapitalize = 'none'
+                            onChangeText={(email) => this.setState({email})}
+                            placeholder='example@example.com'
+                        />
+                        <Text style={styles.text}>Name</Text>
+                        <Input
+                            style={styles.textInput}
+                            onChangeText={(name) => this.setState({name})}
+                            placeholder='Sam Smith'
+                        />
+                        <Text style={styles.text}>City</Text>
+                        <Input
+                            style={styles.textInput}
+                            shake={true}
+                            onChangeText={(city) => this.setState({city})}
+                            ref = {input=>this.cityInput = input }
+                            placeholder='Boston'
+                        />
+                        <Text style={styles.text}>State</Text>
+                        <Input
+                            style={styles.textInput}
+                            onChangeText={(state) => this.setState({state})}
+                            ref = {input=>this.stateInput = input }
+                            placeholder='MA'
+                        />
+                        <Text style={styles.text}>Zipcode</Text>
+                        <Input
+                            style={styles.textInput}
+                            onChangeText={(zip) => this.setState({zip})}
+                            placeholder='02134'
+                        />
+                    </ScrollView>
 
                     <Button
-                        // textStyle={{ color: "#bcbec1" }}
                         title="Next"
                         onPress={() => this.next()}
                         buttonStyle={styles.button}
                         backgroundColor={'white'}
                         color={'white'}
                     />
-                </View>
+
             </View>
         );
     }
@@ -170,24 +180,27 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#cccc31',
-        alignItems: 'center'
+        alignItems: 'center',
+        width : "100%",
     },
     text: {
         fontSize: 15,
         color: "black",
         textAlignVertical: "center",
-        textAlign: "left",
+        textAlign: "center",
         fontFamily: 'Euphemia UCAS',
+        paddingHorizontal: 100
     },
     textInput : {
         height: 40,
         borderColor: 'gray',
-        borderWidth: 1
+        borderWidth: 1,
+        alignItems: 'stretch',
+        paddingHorizontal: 50,
+
     },
     content : {
-        marginTop : 100,
-        width: '75%',
-        alignItems: 'center',
+        marginTop : "10%",
         textAlign: 'center'
     },
     header : {
@@ -196,10 +209,24 @@ const styles = StyleSheet.create({
         color: '#323232'
     },
     button : {
+        marginBottom: 30,
         marginTop: 20,
-        backgroundColor: '#323232'
-
-    }
+        backgroundColor: '#323232',
+        alignItems: 'center'
+    },
+    textHeader: {
+        fontSize: 26,
+        marginTop: "10%",
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center"
+    },
+    buttonWrapper : {
+        marginBottom: 30,
+        width : "70%",
+        backgroundColor: '#323232',
+    },
 
 });
 

@@ -1,17 +1,13 @@
 import React from 'react';
-import {AsyncStorage, Platform, StyleSheet, Image, View} from 'react-native';
-import { SearchBar } from 'react-native-elements';
+import {AsyncStorage, Platform, StyleSheet, Image, View, TouchableHighlight} from 'react-native';
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import { Marker, Callout, Overlay, LocalTile } from 'react-native-maps';
 import axios from "axios";
 import {  Text, List } from 'react-native-elements';
+import SearchBar from 'react-native-searchbar'
 
 
-import img from './../../../assets/greenBox.png';
 
-const OVERLAY_TOP_LEFT_COORDINATE = [38, -123];
-const OVERLAY_BOTTOM_RIGHT_COORDINATE = [-37, 122];
-const IMAGE = img;
 
 export default class MapScreen extends React.Component {
     constructor(props) {
@@ -29,11 +25,8 @@ export default class MapScreen extends React.Component {
             },
             points: [],
             authHeader : "",
-            overlay: {
-                bounds: [OVERLAY_TOP_LEFT_COORDINATE, OVERLAY_BOTTOM_RIGHT_COORDINATE],
-                image: IMAGE,
-            },
-            pathTemplate : './../../../assets/greenBox.png'
+            pathTemplate : './../../../assets/greenBox.png',
+            query : "",
         };
 
     }
@@ -43,11 +36,13 @@ export default class MapScreen extends React.Component {
     componentDidMount() {
 
         this.subs = [
-            this.props.navigation.addListener('willFocus', () => this.updateMarkers())
+            this.props.navigation.addListener('willFocus', () => this.updateMarkers()),
+            this.props.navigation.addListener('willFocus', () => this.searchBar.show())
         ];
 
         this.updateMarkers();
         this.getHeatMapPoints();
+
     }
 
 
@@ -89,29 +84,33 @@ export default class MapScreen extends React.Component {
 
     updateMarkers(){
         // Update the location of the maps focus
-        navigator.geolocation.requestAuthorization();
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-
-                var lat = (position.coords.latitude);
-                var long = (position.coords.longitude);
-                var initialRegion ={
-                    latitude: lat,
-                    longitude: long,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.05,
-                };
 
 
-                this.setState({ region: initialRegion});
-            },
-
-            (error) => {alert('Error getting location')
-            },
-            {
-                enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
-            }
-        );
+        // THIS WORKS FOR IOS
+        // navigator.geolocation.requestAuthorization();
+        // navigator.geolocation.getCurrentPosition(
+        //     (position) => {
+        //
+        //         var lat = (position.coords.latitude);
+        //         var long = (position.coords.longitude);
+        //         var initialRegion ={
+        //             latitude: lat,
+        //             longitude: long,
+        //             latitudeDelta: 0.0922,
+        //             longitudeDelta: 0.05,
+        //         };
+        //
+        //
+        //         this.setState({ region: initialRegion});
+        //     },
+        //
+        //     (error) => {alert('Error getting location')
+        //     },
+        //     {
+        //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
+        //     }
+        // );
+        // THIS WORKS FOR ANDROID
 
 
         // Update the markers
@@ -184,6 +183,7 @@ export default class MapScreen extends React.Component {
 
     generateMarkers(data){
         // The iterator used to generate what is displayed for the data.
+        // It will create Marker objects (as a Callout) and append them to the render
         if(data != null){
             return data.map((data) => {
                 var id = data['id'].toString();
@@ -200,11 +200,7 @@ export default class MapScreen extends React.Component {
                    <Marker
                        key={id}
                        coordinate={latlng}
-                       // title={date}
-                       // description={content}
                        tracksViewChanges={false}
-                       // image={require('./mapMarker3.png')}
-
                    >
                        <MapView.Callout>
                            <Text style={styles.calloutHeader}>{date}</Text>
@@ -219,10 +215,60 @@ export default class MapScreen extends React.Component {
         }
     }
 
+    search(results) {
+        // Function to update the query state as a user types
+        this.setState({
+            query : results
+        })
+    }
+
+    searchDriver(){
+        if(this.state.query != "") {
+            AsyncStorage.getItem('userData').then(function (ret) {
+                if (ret) {
+                    var response = JSON.parse(ret);
+                    var username = response['user']['username'];
+                    var userID = response['user']['_id'];
+
+                    // Now we need to get all their measurement information
+                    var params = {
+                        userID: userID,
+                        username: username
+                    };
+                    var authHeader = response['authHeader'];
+                    const header = {
+                        'Content-Type': 'application/json',
+                        'Authorization': authHeader
+                    };
+
+                    axios.get('http://localhost:9000/api/search', {
+                        headers: header,
+                        params: params
+                    }).then(function (ret) {
+                        // Handle the results of the search
+                    }).catch(function(error){
+                        alert("Error Searching");
+                        console.log(error);
+
+                    });
+                }
+            });
+        }
+    }
+
+    searchBarHandler (){
+        // TODO: Make a button to call this function
+        // This function show show and hide the search bar as the user taps the screen
+        this.searchBar.hide()
+    }
+
 
 
   render() {
       var iterator = this.generateMarkers(this.state.markers);
+
+
+
     return (
 
         <View style={styles.container}>
@@ -237,85 +283,21 @@ export default class MapScreen extends React.Component {
                 showsCompass={true}
                 showsPointsOfInterest = {true}
             >
-                <MapView.Overlay
-                    bounds={this.state.overlay.bounds}
-                    image={this.state.overlay.image}
-                    zindex={2}
-                />
+
 
 
                 {iterator}
 
 
-                {/*<MapView.Circle*/}
-                    {/*center={{*/}
-                        {/*latitude: 37.769,*/}
-                        {/*longitude: -122.409999999,*/}
-                    {/*}}*/}
-                    {/*radius={200}*/}
-                    {/*strokeWidth={1}*/}
-                    {/*fillColor={"#f29924"}*/}
-                    {/*strokeColor={"#000"}*/}
-                    {/*zIndex={0}*/}
-                {/*/>*/}
-                {/*<MapView.Circle*/}
-                {/*center={{*/}
-                    {/*latitude: 37.77,*/}
-                    {/*longitude: -122.41,*/}
-                {/*}}*/}
-                {/*radius={200}*/}
-                {/*strokeWidth={1}*/}
-                {/*fillColor={"#f29924"}*/}
-                {/*strokeColor={"#000"}*/}
-                {/*zIndex={0}*/}
-                {/*/>*/}
-                {/*<MapView.Circle*/}
-                    {/*center={{*/}
-                        {/*latitude: 37.774,*/}
-                        {/*longitude: -122.411,*/}
-                    {/*}}*/}
-                    {/*radius={200}*/}
-                    {/*strokeWidth={1}*/}
-                    {/*fillColor={"#f29924"}*/}
-                    {/*strokeColor={"#000"}*/}
-                    {/*zIndex={0}*/}
-                {/*/>*/}
-                {/*<MapView.Circle*/}
-                    {/*center={{*/}
-                        {/*latitude: 37.77,*/}
-                        {/*longitude: -122.414,*/}
-                    {/*}}*/}
-                    {/*radius={200}*/}
-                    {/*strokeWidth={1}*/}
-                    {/*fillColor={"#f29924"}*/}
-                    {/*strokeColor={"#000"}*/}
-                    {/*zIndex={0}*/}
-                {/*/>*/}
-                {/*<MapView.Circle*/}
-                    {/*center={{*/}
-                        {/*latitude: 37.77,*/}
-                        {/*longitude: -122.411,*/}
-                    {/*}}*/}
-                    {/*radius={200}*/}
-                    {/*strokeWidth={1}*/}
-                    {/*fillColor={"#5042f4"}*/}
-                    {/*strokeColor={"#000"}*/}
-                    {/*zIndex={1}*/}
-                {/*/>*/}
-                {/*<MapView.Circle*/}
-                    {/*center={{*/}
-                        {/*latitude: 37.7725,*/}
-                        {/*longitude: -122.411,*/}
-                    {/*}}*/}
-                    {/*radius={200}*/}
-                    {/*strokeWidth={1}*/}
-                    {/*fillColor={"#ff0202"}*/}
-                    {/*strokeColor={"#000"}*/}
-                    {/*zIndex={2}*/}
-                {/*/>*/}
-
-
             </MapView>
+
+            <SearchBar
+                ref={(ref) => this.searchBar = ref}
+                handleSearch={(input) => this.search(input)}
+                showOnLoad
+                onSubmitEditing={() => this.searchDriver()}
+            />
+
         </View>
 
 
@@ -328,9 +310,7 @@ export default class MapScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    backgroundColor: 'white',
   },
     calloutHeader : {
         textAlign: 'center',
@@ -338,6 +318,20 @@ const styles = StyleSheet.create({
     },
     calloutContent : {
         textAlign: 'center'
+    },
+    inputContainerStyle : {
+
+    },
+    containerStyle : {
+        top: '20%',
+        left : "7%",
+        width : '85%',
+        opacity : 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        borderTopWidth: 0, borderBottomWidth: 0,
+
     }
 });
 

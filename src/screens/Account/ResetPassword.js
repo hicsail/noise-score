@@ -1,7 +1,7 @@
 import React from 'react';
-import {AsyncStorage, Picker, StyleSheet, View, ScrollView, Platform} from 'react-native';
+import {AsyncStorage, Picker, StyleSheet, View, ScrollView} from 'react-native';
 import axios from "axios";
-import {ListItem, Button, Text, Header, Input} from 'react-native-elements';
+import {Button, Text, Header, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
@@ -60,6 +60,7 @@ export default class AccountScreen extends React.Component {
 
 
     accountScreen() {
+        // Navigate to account 2
         const {navigate} = this.props.navigation;
         navigate("Account2");
     }
@@ -125,7 +126,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        // justifyContent: 'center',
     },
     backButton : {
         backgroundColor : '#cccc31'
@@ -155,14 +155,9 @@ const styles = StyleSheet.create({
         fontFamily: 'Euphemia UCAS',
     },
     buttonPosition : {
-        // flexDirection: 'row',
-        // marginVertical: 20,
         position: 'absolute',//use absolute position to show button on top of the map
         top: '50%', //for center align
         alignSelf: 'flex-end' //for align to right
-        // position: 'absolute',
-        // justifyContent: 'flex-start',
-        // zIndex : 999,
     },
     button : {
         marginTop: 20,
@@ -191,27 +186,6 @@ const styles = StyleSheet.create({
 });
 
 
-const brightGreen = "#31BD4B";
 const lightGreen = '#31BD4B';
-const darkGray = "#383838";
 
-const questionButtonsStyle = {
-    borderColor: 'white',
-    backgroundColor: "transparent",
-    textColor: 'white',
-    borderTintColor: lightGreen,
-    backgroundTintColor: lightGreen,
-    textTintColor: "white"
-};
-
-const questionButtonSize ={
-    borderRadius: 10,
-    height: 40,
-    borderColor: 'white',
-    backgroundColor: "transparent",
-    textColor: 'white',
-    borderTintColor: lightGreen,
-    backgroundTintColor: lightGreen,
-    textTintColor: "white"
-};
 

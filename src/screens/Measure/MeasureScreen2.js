@@ -110,7 +110,6 @@ export default class MeasureScreen2 extends React.Component {
 
 
 
-const brightGreen = "#31BD4B";
 const styles = StyleSheet.create({
   buttonContainer : {
     flex: 1,

@@ -133,9 +133,10 @@ export default class AccountScreen extends React.Component {
 
 
     render() {
+        // Format and gather all the required info before rendering
         var dateFormat = require('dateformat');
         const loud = this.state.loud;
-        const date = dateFormat(this.state.date, "dddd, mmmm dS")
+        const date = dateFormat(this.state.date, "dddd, mmmm dS");
         const describe = this.state.describe;
         const feel = this.state.feel;
         const sourcesArray = this.state.sources;
@@ -163,8 +164,6 @@ export default class AccountScreen extends React.Component {
             latitude:  this.state.region['latitude'],
             longitude:  this.state.region['longitude']
         };
-        // const lang = location['lang'];
-        // const lat = location['lat'];
         if(sourcesArray){
         return (
             <View style={styles.container}>
@@ -179,22 +178,12 @@ export default class AccountScreen extends React.Component {
                         />
                     }onPress = {() => this.accountScreen()}
                                             buttonStyle={styles.headerButton}/>}
-                    rightComponent={<Button  icon={
-                        <Icon
-                            name="arrow-left"
-                            size={15}
-                            color="#323232"
-                        />
-                    }onPress = {() => this.reloadButton()}
-                                             buttonStyle={styles.button}/>}
+
 
                 />
-
-
             <MapView
                 style={{ ...StyleSheet.absoluteFillObject }}
                 // provider={"google"} // remove if not using Google Maps
-                // style={styles.map}
                 provider={Platform.OS === 'ios' ? null : 'osmdroid'}
                 region={this.state.region}
                 moveOnMarkerPress = {true}
@@ -202,20 +191,15 @@ export default class AccountScreen extends React.Component {
                 showsCompass={true}
                 showsPointsOfInterest = {true}
             >
-
                 <Marker
                     key={1}
                     coordinate={latlng}
                     title={date}
                     tracksViewChanges={false}
                 />
-
             </MapView>
-
-
                 <View style={styles.bottomHalf}>
                     <ScrollView>
-
                         <Text style={styles.textHeader}>How loud were the sounds?</Text>
                         <Text style={styles.text}>{loud}</Text>
                         <Text style={styles.textHeader}>Which words best describe the sound?</Text>
@@ -229,29 +213,9 @@ export default class AccountScreen extends React.Component {
                         <Text style={styles.textHeader}>Raw Data:</Text>
                         <Text style={styles.text}>Average : {average}db</Text>
                         <Text style={styles.text}>Min:{min}db - Max:{max}db</Text>
-
-
-
-
                     </ScrollView>
                 </View>
-
-                {/*<View style={styles.buttonPosition}>*/}
-                    {/*<Button  icon={*/}
-                        {/*<Icon*/}
-                            {/*name="user-circle"*/}
-                            {/*size={15}*/}
-                            {/*color="#323232"*/}
-                        {/*/>*/}
-                    {/*}onPress = {() => this.accountScreen()}*/}
-                             {/*buttonStyle={styles.button}/>*/}
-                {/*</View>*/}
-
-
-
             </View>
-
-
         )
         } else {
             return null;
@@ -266,8 +230,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        // alignItems: 'center',
-        // justifyContent: 'center',
     },
     backButton : {
         backgroundColor : '#cccc31'
@@ -295,14 +257,9 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     buttonPosition : {
-        // flexDirection: 'row',
-        // marginVertical: 20,
         position: 'absolute',//use absolute position to show button on top of the map
         top: '50%', //for center align
         alignSelf: 'flex-end' //for align to right
-        // position: 'absolute',
-        // justifyContent: 'flex-start',
-        // zIndex : 999,
     },
     button : {
         backgroundColor : '#cccc31',
@@ -319,27 +276,5 @@ const styles = StyleSheet.create({
 });
 
 
-const brightGreen = "#31BD4B";
 const lightGreen = '#31BD4B';
-const darkGray = "#383838";
-
-const questionButtonsStyle = {
-    borderColor: 'white',
-    backgroundColor: "transparent",
-    textColor: 'white',
-    borderTintColor: lightGreen,
-    backgroundTintColor: lightGreen,
-    textTintColor: "white"
-};
-
-const questionButtonSize ={
-    borderRadius: 10,
-    height: 40,
-    borderColor: 'white',
-    backgroundColor: "transparent",
-    textColor: 'white',
-    borderTintColor: lightGreen,
-    backgroundTintColor: lightGreen,
-    textTintColor: "white"
-};
 

@@ -63,11 +63,18 @@ const AccountStack = createStackNavigator({
     }
 });
 
+const MapStack = createStackNavigator({
+        normalMap : {
+            screen: MapScreen,
+            navigationOptions: { header: null }
+        }
+});
+
 const brightGreen = "#31BD4B";
 
 const home = createBottomTabNavigator(
     {
-        Map: MapScreen,
+        Map: MapStack,
         Measure: MeasureStack,
         Account: AccountStack
     },
