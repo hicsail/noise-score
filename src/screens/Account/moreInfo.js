@@ -1,12 +1,10 @@
 import React from 'react';
 import {AsyncStorage, Picker, StyleSheet, View, ScrollView, Platform} from 'react-native';
 import axios from "axios";
-import { ListItem , Button, Text, Header} from 'react-native-elements';
-import PTRView from 'react-native-pull-to-refresh';
+import { Button, Text, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
-import { Marker, Callout } from 'react-native-maps';
-import {SelectMultipleGroupButton} from "react-native-selectmultiple-button";
+import { Marker } from 'react-native-maps';
 
 
 export default class AccountScreen extends React.Component {
@@ -38,8 +36,10 @@ export default class AccountScreen extends React.Component {
 
 
     componentDidMount() {
-
         // Add listener to notice when we need to reload data
+        // Also load the measurement information from local storage (AsyncStorage) and save it as
+        // a local variable
+
         this.subs = [
             this.props.navigation.addListener('willFocus', () => this.updateData())
         ];
@@ -70,7 +70,7 @@ export default class AccountScreen extends React.Component {
         }.bind(this));
     }
 
-
+    // Helper function to remove local storage
     async removeItemValue(key) {
         try {
             await AsyncStorage.removeItem(key);
@@ -80,9 +80,9 @@ export default class AccountScreen extends React.Component {
         }
     }
 
-
+    // Function to get the measurement data from local storage (AsynStorage)
+    // and save it as a local variable
     updateData() {
-
         AsyncStorage.getItem('moreInfo').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
@@ -101,39 +101,14 @@ export default class AccountScreen extends React.Component {
         }.bind(this));
     }
 
-
     accountScreen() {
+        // Function to move to AccountScreen.js
         const {navigate} = this.props.navigation;
         navigate("Account1");
     }
 
-    reloadButton(){
-        AsyncStorage.getItem('userData').then(function (ret) {
-            if (ret) {
-                var response = JSON.parse(ret);
-                console.log(response);
-                var authHeader = response['authHeader'];
-                const header = {
-                    'Content-Type': 'application/json',
-                    'Authorization' : authHeader
-                };
-
-                    axios.get('http://localhost:9000/api/heatmap', {headers:header, params:{}}).then(function (ret){
-                        console.log(ret);
-                    }).catch(function (error){
-                        alert(error);
-                    });
-
-
-            }
-        }.bind(this));
-
-    }
-
-
-
     render() {
-        // Format and gather all the required info before rendering
+        // Format and gather all the required info before rendering from local variables
         var dateFormat = require('dateformat');
         const loud = this.state.loud;
         const date = dateFormat(this.state.date, "dddd, mmmm dS");
@@ -159,7 +134,6 @@ export default class AccountScreen extends React.Component {
             max  = this.state.rawData['max'];
             min = this.state.rawData['min'];
         }
-        var loudGroup = [{value : loud}];
         const latlng = {
             latitude:  this.state.region['latitude'],
             longitude:  this.state.region['longitude']
@@ -168,13 +142,13 @@ export default class AccountScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <Header
-                    centerComponent={{ text: date, style: { color: '#fff' } }}
+                    centerComponent={{ text: date, style: { color: '#323232' } }}
                     containerStyle={styles.header}
                     leftComponent={<Button  icon={
                         <Icon
                             name="arrow-left"
                             size={15}
-                            color="#323232"
+                            color="white"
                         />
                     }onPress = {() => this.accountScreen()}
                                             buttonStyle={styles.headerButton}/>}
@@ -235,7 +209,7 @@ const styles = StyleSheet.create({
         backgroundColor : '#cccc31'
     },
     bottomHalf : {
-        backgroundColor: '#323232',
+        backgroundColor: 'white',
         height: '30%',
         position: 'absolute', //Here is the trick
         bottom: 0, //Here is the trick
@@ -248,12 +222,12 @@ const styles = StyleSheet.create({
     textHeader: {
         fontSize: 20,
         fontWeight : 'bold',
-        color: "white",
+        color: "#323232",
         textAlign: 'center'
     },
     text: {
         fontSize: 20,
-        color: "white",
+        color: "#323232",
         textAlign: 'center'
     },
     buttonPosition : {
@@ -262,15 +236,15 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end' //for align to right
     },
     button : {
-        backgroundColor : '#cccc31',
+        backgroundColor : '#323232',
         width : '30%'
     },
     header : {
-        backgroundColor:  '#323232',
+        backgroundColor:  '#31BD4B',
         zIndex: 999
     },
     headerButton : {
-        backgroundColor : '#cccc31'
+        backgroundColor : '#323232'
     },
 
 });

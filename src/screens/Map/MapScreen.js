@@ -6,7 +6,7 @@ import axios from "axios";
 import {  Text, List } from 'react-native-elements';
 import SearchBar from 'react-native-searchbar'
 
-
+const currentLocationImage = require('./mapMarker3.png');
 
 
 export default class MapScreen extends React.Component {
@@ -27,6 +27,7 @@ export default class MapScreen extends React.Component {
             authHeader : "",
             pathTemplate : './../../../assets/greenBox.png',
             query : "",
+            searchBarShown : true,
         };
 
     }
@@ -34,7 +35,53 @@ export default class MapScreen extends React.Component {
 
 
     componentDidMount() {
+        // Update the location of the maps focus
+        const map = this.mapView;
 
+        // THIS WORKS FOR IOS
+        navigator.geolocation.requestAuthorization();
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+
+                var lat = (position.coords.latitude);
+                var long = (position.coords.longitude);
+                var initialRegion ={
+                    latitude: lat,
+                    longitude: long,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.05,
+                };
+                map.animateToRegion(initialRegion, 2000);
+                this.setState({ region: initialRegion});
+            },
+            (error) => {alert('Error getting location')
+            },
+            {
+                enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
+            }
+        );
+        // THIS WORKS FOR ANDROID
+        // navigator.geolocation.getCurrentPosition((position) => {
+        //         var lat = (position.coords.latitude);
+        //         var long = (position.coords.longitude);
+        //         var initialRegion ={
+        //             latitude: lat,
+        //             longitude: long,
+        //             latitudeDelta: 0.0922,
+        //             longitudeDelta: 0.05,
+        //         };
+        //         map.animateToRegion(initialRegion, 2000);
+        //         this.setState({ region: initialRegion});
+        //     },
+        //     (error) => {alert('Error getting location')
+        //     },
+        //     {
+        //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
+        //     }
+        // );
+
+
+        // Add listeners to update the markers (in the situation that a user takes a new measurements)
         this.subs = [
             this.props.navigation.addListener('willFocus', () => this.updateMarkers()),
             this.props.navigation.addListener('willFocus', () => this.searchBar.show())
@@ -47,6 +94,10 @@ export default class MapScreen extends React.Component {
 
 
     getHeatMapPoints(){
+        // Function that can be used to make a call 'allMeasurement'
+        // Could be used to help with the heatmap
+        // Currently unused
+
         var self = this;
 
         AsyncStorage.getItem('userData').then(function (ret) {
@@ -83,37 +134,9 @@ export default class MapScreen extends React.Component {
 
 
     updateMarkers(){
-        // Update the location of the maps focus
+        // Update the marker. Make the call to the backend to get the markers as an array data
+        // Save the array as a local variable
 
-
-        // THIS WORKS FOR IOS
-        // navigator.geolocation.requestAuthorization();
-        // navigator.geolocation.getCurrentPosition(
-        //     (position) => {
-        //
-        //         var lat = (position.coords.latitude);
-        //         var long = (position.coords.longitude);
-        //         var initialRegion ={
-        //             latitude: lat,
-        //             longitude: long,
-        //             latitudeDelta: 0.0922,
-        //             longitudeDelta: 0.05,
-        //         };
-        //
-        //
-        //         this.setState({ region: initialRegion});
-        //     },
-        //
-        //     (error) => {alert('Error getting location')
-        //     },
-        //     {
-        //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
-        //     }
-        // );
-        // THIS WORKS FOR ANDROID
-
-
-        // Update the markers
         var self = this;
         var newMarkers = [];
         AsyncStorage.getItem('userData').then(function (ret) {
@@ -156,7 +179,6 @@ export default class MapScreen extends React.Component {
                         if(error.response.status==500){
                             AsyncStorage.removeItem("userData").then(function (ret){
                                 if(ret){
-                                    // navigate("SignedOut");
                                     axios.delete('http://localhost:9000/api/logout', {headers:header})
                                         .then(function (response) {
                                             this.props.navigation("SignedOut");
@@ -184,6 +206,7 @@ export default class MapScreen extends React.Component {
     generateMarkers(data){
         // The iterator used to generate what is displayed for the data.
         // It will create Marker objects (as a Callout) and append them to the render
+
         if(data != null){
             return data.map((data) => {
                 var id = data['id'].toString();
@@ -223,17 +246,22 @@ export default class MapScreen extends React.Component {
     }
 
     searchDriver(){
+        // Function that takes in the search bar query and makes a call to the backend to get
+        // the coordinates of the result of the query
+
+        const map = this.mapView;
+        const query = this.state.query;
         if(this.state.query != "") {
             AsyncStorage.getItem('userData').then(function (ret) {
                 if (ret) {
                     var response = JSON.parse(ret);
                     var username = response['user']['username'];
                     var userID = response['user']['_id'];
-
                     // Now we need to get all their measurement information
                     var params = {
                         userID: userID,
-                        username: username
+                        username: username,
+                        query : query
                     };
                     var authHeader = response['authHeader'];
                     const header = {
@@ -241,11 +269,23 @@ export default class MapScreen extends React.Component {
                         'Authorization': authHeader
                     };
 
+
                     axios.get('http://localhost:9000/api/search', {
                         headers: header,
                         params: params
                     }).then(function (ret) {
                         // Handle the results of the search
+                        var lanLat = ret.data;
+                        let r = {
+                            latitude: ret.data['lat'],
+                            longitude: ret.data['lng'],
+                            latitudeDelta: 7.5,
+                            longitudeDelta: 7.5,
+                        };
+                        console.log(r);
+
+                        map.animateToRegion(r, 2000);
+
                     }).catch(function(error){
                         alert("Error Searching");
                         console.log(error);
@@ -257,9 +297,22 @@ export default class MapScreen extends React.Component {
     }
 
     searchBarHandler (){
-        // TODO: Make a button to call this function
         // This function show show and hide the search bar as the user taps the screen
-        this.searchBar.hide()
+        // Currently configured to always try and show the search bar
+
+        // Code if want to tap the screen to show/hide the search bar
+        // if(this.state.searchBarShown){
+        //     this.searchBar.hide();
+        //     this.setState({
+        //         searchBarShown : false
+        //     });
+        // } else {
+        //     this.searchBar.show();
+        //     this.setState({
+        //         searchBarShown : true
+        //     });
+        // }
+        this.searchBar.show();
     }
 
 
@@ -273,7 +326,8 @@ export default class MapScreen extends React.Component {
 
         <View style={styles.container}>
             <MapView
-                style={{ left:0, right: 0, top:0, bottom: 0, position: 'absolute' }}
+                ref={ref => { this.mapView = ref; }}
+                style={styles.mapView}
                     // provider={"google"} // remove if not using Google Maps
                     // style={styles.map}
                     provider={Platform.OS === 'ios' ? null : 'osmdroid'}
@@ -282,15 +336,23 @@ export default class MapScreen extends React.Component {
                 showsUserLocation={true}
                 showsCompass={true}
                 showsPointsOfInterest = {true}
+                onPress={() => this.searchBarHandler()}
             >
-
-
-
                 {iterator}
+
+                {/*Marker to show users location in Android*/}
+                {/*<Marker*/}
+                    {/*key={-1}*/}
+                    {/*coordinate={{*/}
+                        {/*latitude: this.state.region['latitude'],*/}
+                        {/*longitude : this.state.region['longitude']*/}
+                    {/*}}*/}
+                    {/*tracksViewChanges={false}*/}
+                    {/*image={currentLocationImage}*/}
+                {/*/>*/}
 
 
             </MapView>
-
             <SearchBar
                 ref={(ref) => this.searchBar = ref}
                 handleSearch={(input) => this.search(input)}
@@ -312,6 +374,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+    mapView : {
+      left:0,
+        right: 0,
+        top:0,
+        bottom: 0,
+        position: 'absolute',
+    },
     calloutHeader : {
         textAlign: 'center',
         fontSize: 20

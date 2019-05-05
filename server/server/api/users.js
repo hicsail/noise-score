@@ -4,7 +4,7 @@ const Clinician = require('../models/clinician');
 const Config = require('../../config');
 const Joi = require('joi');
 const PasswordComplexity = require('joi-password-complexity');
-
+const zipcodes = require('zipcodes');
 const internals = {};
 
 
@@ -79,6 +79,8 @@ internals.applyRoutes = function (server, next) {
       });
     }
   });
+
+
 
 
   server.route({
@@ -1328,6 +1330,19 @@ internals.applyRoutes = function (server, next) {
     }
   });
 
+  server.route({
+    method: 'POST',
+    path: '/validateZip',
+    handler: function (request, reply) {
+      var zip = request.payload.zip;
+      var ret = zipcodes.lookup(zip);
+        reply({
+          city : ret['city'],
+          state : ret['state']
+        });
+
+    }
+  });
 
   next();
 };

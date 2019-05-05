@@ -23,6 +23,7 @@ export default class MeasureScreen2 extends React.Component {
     };
   }
 
+  // Helper function to add source
   addSource = (source) => {
     this.setState({
       sources : [...this.state.sources, source]
@@ -30,7 +31,7 @@ export default class MeasureScreen2 extends React.Component {
 
   };
 
-
+  // Helper function to remove source
   removeSource = (source) => {
     let sourcesArray = [...this.state.sources];
     const index = sourcesArray.indexOf(source);
@@ -43,9 +44,9 @@ export default class MeasureScreen2 extends React.Component {
   };
 
   next(){
+    // used to move to the next screen (MeasureScreen3.js)
     const {navigate} = this.props.navigation;
-
-    // Need to add information about sources
+    // Need to add information about sources, save to local storage before moving
     if (this.state.sources.length == 0){
       alert("Please select one source.");
     } else if (this.state.sources.length > 5){
@@ -81,31 +82,20 @@ export default class MeasureScreen2 extends React.Component {
       count += 1;
     });
 
-
     return (
       <ScrollView>
-
         <View style={styles.textContainer}>
-          <Text style={styles.text}>Select all major</Text>
-          <Text style={styles.text}>noise sources.</Text>
+          <Text style={styles.text}>Select all major sound sources: </Text>
         </View>
-
         <View style={styles.buttonContainer}>
             {buttons}
         </View>
-
-
         <NavButtons2 navigation={this.props.navigation}
                      back={'Measure1'}
                      next={this.next.bind(this)}/>
-
-
       </ScrollView>
     );
   }
-
-
-
 }
 
 
@@ -119,6 +109,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
+    marginTop : 20,
     alignItems: 'center',
     justifyContent: 'space-evenly'
   },

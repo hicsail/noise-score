@@ -19,13 +19,12 @@ export default class AccountScreen extends React.Component {
   }
 
   componentDidMount() {
-
     // Add listener to notice when we need to reload data. Whenever we move to this screen
+    // Also make API call to get all the users measurements and save it as a local variable
 
     this.subs = [
       this.props.navigation.addListener('willFocus', () => this.updateData())
     ];
-
     var self = this;
     // Get the information for the Account Screen
     AsyncStorage.getItem('userData').then(function (ret) {
@@ -59,8 +58,6 @@ export default class AccountScreen extends React.Component {
     }.bind(this));
   }
 
-
-
   async removeItemValue(key) {
     try {
       await AsyncStorage.removeItem(key);
@@ -73,18 +70,18 @@ export default class AccountScreen extends React.Component {
 
 
   moreInfo (data){
-    // Store data and move to the more info page
+    // Store the data we already have (the specific measurement)  and move to moreInfo.js
     AsyncStorage.setItem("moreInfo", JSON.stringify(data));
     const {navigate} = this.props.navigation;
     navigate("Account3");
   }
 
   generateData(data){
-    // The iterator used to generate what is displayed for the data.
+    // Function that creates the iterator used to
+    // generate what is displayed for the data. Used in the final render
+
     var dateFormat = require('dateformat');
-
     if(data != null){
-
       var counter = -1;
       return data.reverse().map((data) => {
         counter += 1;
@@ -135,12 +132,15 @@ export default class AccountScreen extends React.Component {
         )
         }
       });
-
     }
   }
 
 
   updateData(){
+    // Function to update the data to show to the user
+    // Makes API call '/api/userMeasurements' and
+    // stores in local storage (AsyncStorage)
+
     // If we have the data to make the correct API call
     if(this.state.userID != -1 && this.state.username != "temp"){
       var self = this;
@@ -174,39 +174,30 @@ export default class AccountScreen extends React.Component {
 
 
   reloadButton() {
-
     // Simple function to reload the data
     this.updateData();
     this.forceUpdate();
-    //this.state.userData = null;
-    // console.log(this.state.userData);
   }
   accountPage(){
+    // Function to move to AccountPage.js
     const {navigate} = this.props.navigation;
     navigate("Account2");
   }
 
   render() {
-
     const { username } = this.state;
     var data = this.state.userData;
-    // var iterator = this.generateData(data);
-   // var iterator = null;
     var list = this.generateData(data);
-
-
     return (
       <View style={styles.container}>
-
-
         <Header
-            centerComponent={{ text: username, style: { color: '#fff' } }}
+            centerComponent={{ text: username, style: { color: '#323232' } }}
             containerStyle={styles.header}
             leftComponent={<Button  icon={
               <Icon
                   name="user-circle"
                   size={15}
-                  color="#323232"
+                  color="white"
               />
             }onPress = {() => this.accountPage()}
             buttonStyle={styles.button}/>}
@@ -214,12 +205,11 @@ export default class AccountScreen extends React.Component {
               <Icon
                   name="retweet"
                   size={15}
-                  color="#323232"
+                  color="white"
               />
             }onPress = {() => this.reloadButton()}
                                      buttonStyle={styles.button}/>}
         />
-
         <ScrollView>
         <View>
           {list}
@@ -230,21 +220,15 @@ export default class AccountScreen extends React.Component {
   }
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-  reload : {
-
   },
   header : {
-    backgroundColor:  '#323232',
+    backgroundColor:  '#31BD4B',
   },
   button : {
-    backgroundColor : '#cccc31'
+    backgroundColor : '#323232'
   }
 });

@@ -9,7 +9,6 @@ const MongoModels = require('hicsail-mongo-models');
 class Measurement extends MongoModels {
   static create (username, userID, rawData, location, loud, describe, feel, sources, words, date){
     const self = this;
-
     const document = {
       username: username,
       userID : userID,
@@ -17,17 +16,13 @@ class Measurement extends MongoModels {
         min: rawData[1],
         max : rawData[0],
         average : rawData[2]
-        // median: rawData[3],
       },
       location : {
         lang: location[0],
         lat : location[1]
       },
-      // locationType : locationType,
-      // floorLevel : floorLevel,
       loud : loud,
       describe : describe,
-      // intense: intense,
       feel : feel,
       sources : sources,
       words: words,
@@ -37,10 +32,8 @@ class Measurement extends MongoModels {
     self.insertOne(document, function (error, response){
       if(error) {
         console.log('Error occurred while inserting');
-       // return
     } else {
        console.log('inserted record', response);
-      // return
     }
     });
 
@@ -61,11 +54,8 @@ Measurement.schema = Joi.object({
     lang: Joi.number().required(),
     lat: Joi.number().required()
   },
-  // locationType: Joi.string(),
-  // floorLevel : Joi.number(),
   loud: Joi.string(),
   describe : Joi.string(),
-  // intense: Joi.string(),
   feel :Joi.string(),
   sources : Joi.array(),
   words : Joi.string(),

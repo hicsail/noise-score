@@ -1,16 +1,57 @@
 'use strict';
-
 const internals = {};
 const Joi = require('joi');
 const Boom = require('boom');
 const fs = require('fs');
 
+const opencage = require('opencage-api-client');
 
 
 internals.applyRoutes = function (server, next) {
 
   const Measurement = server.plugins['hicsail-hapi-mongo-models'].Measurement;
 
+  // Search function for the MapScreen component
+  // Uses OpenCageData.com API to search for the coordinates
+  // There is a 420 daily limit to the free tier
+  server.route({
+    method: 'GET',
+    path: '/search',
+    config: {
+      auth: {
+        strategies: ['simple', 'jwt', 'session']
+      },
+      validate: {
+        query: Joi.any()
+      }
+    },
+    handler: function (request, reply) {
+      // Get latidude & longitude from address.
+      opencage.geocode({q: request.query['query']}).then(data => {
+        if (data.status.code == 200) {
+          if (data.results.length > 0) {
+            var place = data.results[0];
+            reply(place.geometry);
+          }
+        } else if (data.status.code == 402) {
+          console.log('hit free-trial daily limit');
+          console.log('become a customer: https://opencagedata.com/pricing');
+        } else {
+          // other possible response codes:
+          // https://opencagedata.com/api#codes
+          console.log('error', data.status.message);
+        }
+      }).catch(error => {
+        console.log('error', error.message);
+      });
+
+
+
+    }
+  });
+
+
+  // Function to return measurements for Anchor backend
   server.route({
     method: 'GET',
     path: '/table/measurements',
@@ -23,24 +64,12 @@ internals.applyRoutes = function (server, next) {
       }
     },
     handler: function (request, reply) {
-
-
-      const sortOrder = request.query['order[0][dir]'] === 'asc' ? '' : '-';
-      const sort = sortOrder + request.query['columns[' + Number(request.query['order[0][column]']) + '][data]'];
       const limit = Number(request.query.length);
       const page = Math.ceil(Number(request.query.start) / limit) + 1;
-      let fields = request.query.fields;
-
-      console.log(sortOrder,sort,limit,page,fields);
-
-
       Measurement.pagedFind({}, {}, {}, limit, page, (err, results) => {
-
         if (err) {
           return reply(err);
         }
-        console.log(results.data);
-
         reply({
           draw: request.query.draw,
           recordsTotal: results.data.length,
@@ -52,7 +81,7 @@ internals.applyRoutes = function (server, next) {
     }
   });
 
-
+  // Function to input a user measurement
   server.route({
     method:'POST',
     path: '/inputMeasurement',
@@ -106,11 +135,9 @@ internals.applyRoutes = function (server, next) {
               ret = ret + " + Problem with Sources";
             }
           }
-
           if(!request.payload.words.length > 140){
             ret = ret + " + Problem with Words"
           }
-
           if (ret.length > 1) {
             reply(Boom.conflict(ret.substr(3)));
           } else {
@@ -132,15 +159,14 @@ internals.applyRoutes = function (server, next) {
       const date = request.payload.date;
       try {
         Measurement.create(username, userID, rawData, location, loud, describe, feel, sources, words,date);
-} catch (error){
-  reply(error);
-}
+      } catch (error){
+          reply(error);
+      }
       reply(200);
-
-
     }
   });
 
+  // Function to get all a users measurements
   server.route({
     method: 'GET',
     path: '/userMeasurements',
@@ -162,6 +188,7 @@ internals.applyRoutes = function (server, next) {
     }
   });
 
+  // Function to get all measurements
   server.route({
     method: 'GET',
     path: '/allMeasurements',
@@ -185,28 +212,6 @@ internals.applyRoutes = function (server, next) {
             ret.push(pointData);
           }
               reply(ret);
-        }
-      });
-    }
-  });
-
-  server.route({
-    method: 'GET',
-    path: '/heatmap',
-    config: {
-      auth: {
-        strategies: ['simple', 'jwt', 'session']
-      }
-    },
-    handler: function (request, reply) {
-
-      fs.readFile('assets/blackBox.jpg', (err, data) => {
-        if(err){
-          console.log(err);
-          reply(500)
-        } else {
-          console.log(data);
-          reply(data);
         }
       });
     }

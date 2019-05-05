@@ -1,12 +1,10 @@
 import React, { Component }  from 'react';
-import {StyleSheet, View, TextInput, AsyncStorage, Picker, ScrollView} from 'react-native';
+import {StyleSheet, View, AsyncStorage, ScrollView, Alert} from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
 import { Input, Text, SocialIcon, Button} from 'react-native-elements';
-import { Dropdown } from 'react-native-material-dropdown';
 
 export default class SignUp extends React.Component {
-
 
     constructor(props) {
         super(props);
@@ -14,7 +12,6 @@ export default class SignUp extends React.Component {
             username: 'username',
             password: 'password',
             password1 : 'password',
-            name: 'name',
             email: 'example@example.com',
             city: 'city',
             state: 'state',
@@ -22,9 +19,9 @@ export default class SignUp extends React.Component {
         };
     }
 
-
 passwordStrenghTest(password){
-        // Password strength test
+        // Function to conduct a basic password check
+
         var ret = true;
         if(password.length < 8 ){
             console.log(password.length < 8 );
@@ -45,16 +42,51 @@ passwordStrenghTest(password){
         }
         return ret;
 }
+    locationValidate(city, state, zip){
+        // Function to validate teh city, state, and zip of a certain location
+        // Makes backend call to verify
+        var city1 = city;
+        var state1 = state;
+        var ret = {
+            city : city,
+            state : state,
+            zip : zip
+        };
+        axios.post('http://localhost:9000/api/validateZip', ret).then(function (response){
+           // If we have not prompted a change in city and state we're good to go and return true.
+           if(response.data.city == (city1) && response.data.state ==(state1)){
+               return true;
+           } else {
+               var city = response.data.city;
+               var state = response.data.state;
+               Alert.alert(
+                   'It looks like we had a problem verifying your location',
+                   'Did you mean ' + city + ", " + state + "?",
+                   [
+                       {text: 'Go back'},
+                   ],
+                   {cancelable: false},
+               );
+               return false;
+           }
+
+        }).catch(function (error){
+            alert("Whoops. Something went wrong validating your location!");
+            console.log(error);
+        });
+        return true;
+    }
 
 
     next(){
+        // Store relevant information and move to the next screen (SignUp2.js)
+
         const {navigate} = this.props.navigation;
         const self = this;
         var ret = {
             email : this.state.email,
             username : this.state.username
         };
-
         // Make an API call to see if the username or email are already in use
         // Also check other values in the form
         axios.post('http://localhost:9000/api/available', ret).then(function (response){
@@ -67,41 +99,27 @@ passwordStrenghTest(password){
                 alert("Please enter a valid password")
             } else if(self.state.password != self.state.password1){
                 alert("Passwords do not match");
-            } else if(self.state.name === "name") {
-                alert("Please enter a valid name");
-                // TODO: Change this do that we verify the city, state, and zip code.
-            } else if (false){
-                // this.cityInput.shake();
-                alert("Please enter a valid city");
-            } else if (self.state.state == "state") {
-                // this.stateInput.shake();
-                alert("Please enter a valid state");
-            } else if (self.state.zip == "zipcode") {
-                alert("Please enter a valid zipCode");
+            } else if (!self.locationValidate(self.state.city, self.state.state, self.state.zip)){
+                // Do nothing, locationValidate will handle the alert
+                console.log("here");
             } else {
                 // If all test pass, prepare the signUpData and move to the next screen
                 var signUpData = {
                     'username': self.state.username,
                     'password': self.state.password,
                     'email': self.state.email,
-                    'name': self.state.name,
                     'location': [self.state.city, self.state.state, self.state.zip]
                 };
                 AsyncStorage.setItem("formData", JSON.stringify(signUpData)).then(function(){
                     navigate('SignUp2');
                 });
             }
-
-
         }).catch(function (error){
             alert("Whoops. Something went wrong. Error: " + error);
         });
-
-
     }
 
     render() {
-
         return (
             <View style={styles.container}>
                     <Text style={styles.textHeader}>Sign Up{"\n"}</Text>
@@ -135,35 +153,28 @@ passwordStrenghTest(password){
                             onChangeText={(email) => this.setState({email})}
                             placeholder='example@example.com'
                         />
-                        <Text style={styles.text}>Name</Text>
-                        <Input
-                            style={styles.textInput}
-                            onChangeText={(name) => this.setState({name})}
-                            placeholder='Sam Smith'
-                        />
-                        <Text style={styles.text}>City</Text>
+                        <Text style={styles.text}>City of Residence</Text>
                         <Input
                             style={styles.textInput}
                             shake={true}
                             onChangeText={(city) => this.setState({city})}
                             ref = {input=>this.cityInput = input }
-                            placeholder='Boston'
+                            placeholder='Allston'
                         />
-                        <Text style={styles.text}>State</Text>
+                        <Text style={styles.text}>State of Residence</Text>
                         <Input
                             style={styles.textInput}
                             onChangeText={(state) => this.setState({state})}
                             ref = {input=>this.stateInput = input }
                             placeholder='MA'
                         />
-                        <Text style={styles.text}>Zipcode</Text>
+                        <Text style={styles.text}>Zipcode of Residence</Text>
                         <Input
                             style={styles.textInput}
                             onChangeText={(zip) => this.setState({zip})}
                             placeholder='02134'
                         />
                     </ScrollView>
-
                     <Button
                         title="Next"
                         onPress={() => this.next()}
@@ -171,7 +182,6 @@ passwordStrenghTest(password){
                         backgroundColor={'white'}
                         color={'white'}
                     />
-
             </View>
         );
     }
@@ -180,7 +190,7 @@ passwordStrenghTest(password){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#cccc31',
+        backgroundColor: 'white',
         alignItems: 'center',
         width : "100%",
     },

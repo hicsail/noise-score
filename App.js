@@ -139,9 +139,9 @@ export const login = createStackNavigator({
         screen: SignUp,
         navigationOptions: {
             title: "",
-            headerTintColor: '#cccc31',
+            headerTintColor: '#323232',
             headerStyle: {
-                backgroundColor: '#323232'
+                backgroundColor: '#31BD4B'
             },
             // tintColor: '#cccc31'
         }
@@ -150,9 +150,9 @@ export const login = createStackNavigator({
         screen: SignUp2,
         navigationOptions: {
             title: "",
-            headerTintColor: '#cccc31',
+            headerTintColor: '#323232',
             headerStyle: {
-                backgroundColor: '#323232'
+                backgroundColor: '#31BD4B'
             },
         }
     },
@@ -160,9 +160,9 @@ export const login = createStackNavigator({
         screen: SignUp3,
         navigationOptions: {
             title: "",
-            headerTintColor: '#cccc31',
+            headerTintColor: '#323232',
             headerStyle: {
-                backgroundColor: '#323232'
+                backgroundColor: '#31BD4B'
             },
         }
     }
