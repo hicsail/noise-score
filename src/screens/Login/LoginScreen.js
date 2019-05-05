@@ -4,16 +4,15 @@ import { home } from "../../../App";
 import axios from 'axios';
 import { Input, Text, Button} from 'react-native-elements';
 
-
-
 export default class LoginScreen extends React.Component {
-
 
     static navigationOptions = {
         title: 'Home',
     };
 
     constructor(props) {
+        // Check if we already are logged in (navigate to MapScreen.js)
+        // Otherwise do nothing
         super(props);
         const {navigate} = this.props.navigation;
         // If we are already logged in (i.e. local storage) then we can make an API call to
@@ -31,12 +30,13 @@ export default class LoginScreen extends React.Component {
 
                     axios.get('http://localhost:9000/api/sessions/my', {headers: header}).then(function (ret){
                         navigate("SignedIn");
+                    }).catch(function (error) {
+                        console.log("error validating user", error);
                     })
 
                 }
             }
         });
-
         this.state = {
             username: 'username',
             password: ''
@@ -44,11 +44,13 @@ export default class LoginScreen extends React.Component {
     }
 
     componentDidMount() {
-        // Hide the splash screen when the component did mount
-        // SplashScreen.hide();
+
     }
 
     submit(){
+        // Submit a username and password combination
+        // Makes API call and navigates to MapScreen.js on success
+
         const requestBody = {
                 username: this.state.username,
                 password: this.state.password
@@ -66,13 +68,11 @@ export default class LoginScreen extends React.Component {
                 console.log(error);
                 alert("Invalid Username or Password");
             });
-
     }
 
 
 
     render() {
-
         return (
             <View style={styles.wrap}>
             <View style={styles.container}>
@@ -83,7 +83,7 @@ export default class LoginScreen extends React.Component {
                         source={require('./../../../assets/logo.png')}
                         style={styles.logo}
                     />
-                        <Text style={styles.header}>NOISESCORE{"\n"}</Text>
+                        <Text style={styles.header}>NOISE SCORE{"\n"}</Text>
                         <Input
                             autoCapitalize = 'none'
                             placeholder='Username'

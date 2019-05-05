@@ -1,9 +1,8 @@
 import React from 'react';
-import {AsyncStorage, Picker, StyleSheet, View, ScrollView} from 'react-native';
+import {AsyncStorage, StyleSheet, View} from 'react-native';
 import axios from "axios";
 import {Button, Text, Header, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 
 export default class AccountScreen extends React.Component {
 
@@ -14,14 +13,10 @@ export default class AccountScreen extends React.Component {
             userID: -1,
             password: null
         };
-
     }
 
-
     componentDidMount() {
-
-        var self = this;
-        // Get the information for the Account Screen
+        // Get the information for the Account Screen from local storage (AsyncStorage)
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
@@ -43,10 +38,9 @@ export default class AccountScreen extends React.Component {
                 });
             }
         }.bind(this));
-
     }
 
-
+    // Helper function to delete local storage
     async removeItemValue(key) {
         try {
             await AsyncStorage.removeItem(key);
@@ -56,30 +50,23 @@ export default class AccountScreen extends React.Component {
         }
     }
 
-
-
-
     accountScreen() {
-        // Navigate to account 2
+        // Navigate to AccountScreen.js
         const {navigate} = this.props.navigation;
         navigate("Account2");
     }
 
-
-
-
     render() {
-
             return (
                 <View style={styles.container}>
                     <Header
-                        centerComponent={{ text: this.state.username, style: { color: '#fff' } }}
+                        centerComponent={{ text: this.state.username, style: { color: '#323232' } }}
                         containerStyle={styles.header}
                         leftComponent={<Button  icon={
                             <Icon
                                 name="arrow-left"
                                 size={15}
-                                color="#323232"
+                                color="white"
                             />
                         }onPress = {() => this.accountScreen()}
                                                 buttonStyle={styles.headerButton}/>}
@@ -108,18 +95,11 @@ export default class AccountScreen extends React.Component {
                             title="Submit"
                             onPress={() => this.resetPassword()}
                         />
-
                     </View>
-
                 </View>
-
-
             )
     }
-
 }
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -165,11 +145,11 @@ const styles = StyleSheet.create({
         marginHorizontal: 100
     },
     header : {
-        backgroundColor:  '#323232',
+        backgroundColor:  '#31BD4B',
         zIndex: 999
     },
     headerButton : {
-        backgroundColor : '#cccc31'
+        backgroundColor : '#323232'
     },
     content : {
         marginTop : "50%",

@@ -6,7 +6,6 @@ export default class AccountScreen extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             yearBorn : -1,
             pronouns : "undefined",
@@ -20,6 +19,8 @@ export default class AccountScreen extends React.Component {
     }
 
     next(){
+        // Store relevant information and move to the next screen (SignUp3.js)
+
         const {navigate} = this.props.navigation;
         // First we have to check if all the inputs are valid
         if(this.state.pronouns === "undefined"){
@@ -39,7 +40,6 @@ export default class AccountScreen extends React.Component {
         }else if (this.state.health === "undefined") {
             alert("Please enter a valid health.");
         }else {
-
             // Else we need to add it to form data
             AsyncStorage.getItem('formData').then(function(ret){
                 var response = JSON.parse(ret);
@@ -54,16 +54,16 @@ export default class AccountScreen extends React.Component {
             }.bind(this)).then(function(){
                 navigate('SignUp3');
             }.bind(this));
-
-
             }
     }
 
 
     yearsIter(){
+        // Returns an iterator that is used to select the year for the user
+
         // Need to create some code to generate all the years (for the date you were born)
         var years = [];
-        for (var y = 1940; y <= 2019; y++) {
+        for (var y = 2019; y >= 1920; y--) {
             years.push([y]);
         }
         // Iterator to display all the options
@@ -75,16 +75,17 @@ export default class AccountScreen extends React.Component {
     }
 
     render() {
-
         return (
             <View style={styles.container}>
             <ScrollView>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                      <Text style={styles.text}>Welcome to Noise-Score! Just a couple more questions to get started</Text>
+                      <Text style={styles.textHeader}>Thank you for registering and welcome to NoiseScore! </Text>
+                        <Text style={styles.subText}> Before you start using NoiseScore,
+                            we would like to gather a little more information about who you are, your attitudes about community noise
+                            and sound issues, your general health, and time activity during a typical week.</Text>
                     </View>
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
                         <Text style={styles.text}>What pronouns would you like to use?</Text>
@@ -100,10 +101,9 @@ export default class AccountScreen extends React.Component {
                             <Picker.Item label="They/Them" value="They/Them" />
                         </Picker>
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>What year were you born in?</Text>
+                        <Text style={styles.text}>What year were you born?</Text>
                     </View>
                     <Picker
                         selectedValue={this.state.yearBorn}
@@ -115,13 +115,11 @@ export default class AccountScreen extends React.Component {
 
                     </Picker>
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>I Identify As:</Text>
-                        <Text style={styles.text}>(Select all that apply)</Text>
+                        <Text style={styles.text}>I Identify as:</Text>
+                        <Text style={styles.text}>(select all that apply)</Text>
                     </View>
-
                     <SelectMultipleGroupButton
                         multiple={true}
                         group={[
@@ -140,7 +138,6 @@ export default class AccountScreen extends React.Component {
                         }
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
                         <Text style={styles.text}>Compared to people around you, do you consider yourself sensitive to noise?</Text>
@@ -162,7 +159,6 @@ export default class AccountScreen extends React.Component {
                         }
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
                         <Text style={styles.text}>How would you rate the noise levels in your home? </Text>
@@ -184,13 +180,11 @@ export default class AccountScreen extends React.Component {
                         }
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
                         <Text style={styles.text}>How would you rate the noise levels in your community?  </Text>
-                        <Text style={styles.text}>(community defined as a radius around your home)</Text>
+                        <Text style={styles.subText}>(community defined as a radius around your home)</Text>
                     </View>
-
                     <SelectMultipleGroupButton
                         multiple={false}
                         group={[
@@ -207,10 +201,9 @@ export default class AccountScreen extends React.Component {
                         }
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels at work? </Text>
+                        <Text style={styles.text}>How would you rate the noise levels at your place of employment? </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -229,10 +222,9 @@ export default class AccountScreen extends React.Component {
                         }
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>In general, how is your health? </Text>
+                        <Text style={styles.text}>In general, how would you describe your health? </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -251,9 +243,6 @@ export default class AccountScreen extends React.Component {
                         }
                     />
                 </View>
-
-
-
             </ScrollView>
                 <View style={styles.button}>
                     <Button
@@ -264,12 +253,11 @@ export default class AccountScreen extends React.Component {
                         color={'white'}
                     />
                 </View>
-
             </View>
-
         );
     }
 
+    // Helper function to setState of values passed in
     setEthnicity(value) {
         this.setState({
             ethnicity: value[0]
@@ -305,10 +293,7 @@ export default class AccountScreen extends React.Component {
             health: value[0]
         });
     }
-
 }
-
-
 
 const styles = StyleSheet.create({
     padding: {
@@ -316,8 +301,8 @@ const styles = StyleSheet.create({
     },
     button : {
         marginBottom: 30,
-        width : "15%",
         backgroundColor: '#323232',
+        alignItems: 'center'
     },
     wrapText: {
         flex: 1,
@@ -326,11 +311,28 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#cccc31',
-        alignItems: 'center'
+        backgroundColor: 'white',
+        alignItems: 'center',
+        width : "100%"
+    },
+    textHeader : {
+        fontSize: 26,
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center",
+        fontWeight: 'bold',
     },
     text: {
-        fontSize: 26,
+        fontSize: 25,
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center",
+        fontWeight: 'bold',
+    },
+    subText: {
+        fontSize: 20,
         color: "black",
         justifyContent: 'center',
         textAlignVertical: "center",
@@ -344,7 +346,6 @@ const styles = StyleSheet.create({
     content : {
         marginTop : 100,
         width: '75%',
-        // TODO: THIS IS THE PROBLEM
         alignItems: 'center',
         textAlign: 'center'
     },
@@ -360,7 +361,7 @@ const lightGreen = '#31BD4B';
 const darkGray = "#383838";
 
 const questionButtonsStyle = {
-    borderColor: darkGray,
+    borderColor: '#383838',
     backgroundColor: "transparent",
     textColor: darkGray,
     borderTintColor: lightGreen,

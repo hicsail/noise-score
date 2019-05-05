@@ -30,11 +30,12 @@ export default class MeasureScreen3 extends React.Component {
   };
 
   submit() {
+    // Function to handle submitting a measurement
+    // Get all needed data from local storage (AsyncStorage)
+    // Make API call to input the measurement ('/api/inputMeasurement')
     const {navigate} = this.props.navigation;
-
-    var sucsess = true;
+    var success = true;
     AsyncStorage.getItem('formData').then(function (ret) {
-
       var response = JSON.parse(ret);
       if (this.state.comment.length > 0){
       response["words"] = this.state.comment;
@@ -42,7 +43,6 @@ export default class MeasureScreen3 extends React.Component {
         response["words"] = " ";
       }
       response['date'] =  new Date();
-
       AsyncStorage.getItem('userData').then(function (ret2) {
         var userData = JSON.parse(ret2);
         response["username"] = userData['user']['username'];
@@ -50,7 +50,6 @@ export default class MeasureScreen3 extends React.Component {
 
         navigator.geolocation.getCurrentPosition(
             position => {
-
               var longitude = position['coords']['latitude'];
               var latitude = position['coords']['longitude'];
               response['location'] = [latitude,longitude];
@@ -65,24 +64,15 @@ export default class MeasureScreen3 extends React.Component {
             error => Alert.alert(error.message),
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
         );
-
-
-
-
-
       });
     }.bind(this)).then(function(){
-      if(sucsess){
+      if(success){
         alert('Submitted measurement.');
-
-
         const resetAction = StackActions.reset({
           index: 0,
           actions: [NavigationActions.navigate({ routeName: 'Measure' })],
         });
         this.props.navigation.dispatch(resetAction);
-
-
       }else {
         alert('Error');
       }
@@ -94,18 +84,14 @@ export default class MeasureScreen3 extends React.Component {
 
 
   render() {
-
     return (
       <ScrollView>
-
           <View style={styles.textContainer}>
             <Text style={styles.text}>Add a comment.</Text>
           </View>
-
           <View style={styles.textContainer}>
             <Text style={styles.text}>(up to 140 characters)</Text>
           </View>
-
           <TextInput
             multiline = {true}
             style={styles.textInput}
@@ -113,19 +99,14 @@ export default class MeasureScreen3 extends React.Component {
             value={this.state.comment}
             maxLength={140}
           />
-
-
         <ClearSubmitButtons
           clear={this.clear}
           submit={this.submit.bind(this)}
           />
-
-
           <NavButtons
             navigation = {this.props.navigation}
                       back={'Measure2'}
                       next={null}/>
-
       </ScrollView>
     );
   }

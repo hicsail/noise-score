@@ -1,8 +1,7 @@
 import React from 'react';
 import {AsyncStorage, Picker, StyleSheet, View, ScrollView} from 'react-native';
 import axios from "axios";
-import { ListItem , Button, Text, Header} from 'react-native-elements';
-import PTRView from 'react-native-pull-to-refresh';
+import { Button, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
@@ -20,6 +19,8 @@ export default class AccountScreen extends React.Component {
     }
 
     componentDidMount() {
+        // When the component mounts, gather the user data from local storage (AsyncStorage)
+        // Store the data as a local variable
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
@@ -34,11 +35,9 @@ export default class AccountScreen extends React.Component {
                 });
             }
         }.bind(this));
-
     }
 
-
-
+    // Helper function to remove local storage
     async removeItemValue(key) {
         try {
             await AsyncStorage.removeItem(key);
@@ -50,7 +49,8 @@ export default class AccountScreen extends React.Component {
     }
 
     logout() {
-        // Function to log out and clear cookies (i.e. AsyncStorag
+        // Function to log out and clear cookies (i.e. AsyncStorag)
+        // Moves to LoginScreen.js
         const {navigate} = this.props.navigation;
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
@@ -80,37 +80,30 @@ export default class AccountScreen extends React.Component {
         }.bind(this));
     }
 
-
     goBack(){
-        // Navigate to Account1 Screen
+        // Navigate to AccountScreen.js
         const {navigate} = this.props.navigation;
         navigate("Account1");
     }
 
     resetPassword(){
-        // Navigate to Account4 Screen
+        // Navigate to ResetPassword.js
         const {navigate} = this.props.navigation;
         navigate("Account4");
     }
 
-
-
-
     render() {
-
         const { username } = this.state;
-
-
         return (
             <View style={styles.container}>
                 <Header
-                    centerComponent={{ text: username, style: { color: '#fff' } }}
+                    centerComponent={{ text: username, style: { color: '#323232' } }}
                     containerStyle={styles.header}
                     leftComponent={<Button  icon={
                         <Icon
                             name="arrow-left"
                             size={15}
-                            color="#323232"
+                            color="white"
                         />
                     }onPress = {() => this.goBack()}
                                             buttonStyle={styles.headerButton}/>}
@@ -146,10 +139,10 @@ const styles = StyleSheet.create({
 
     },
     header : {
-        backgroundColor:  '#323232',
+        backgroundColor:  '#31BD4B',
     },
     headerButton : {
-        backgroundColor : '#cccc31'
+        backgroundColor : '#323232'
     },
     button : {
         marginTop: 20,

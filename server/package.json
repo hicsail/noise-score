@@ -55,11 +55,13 @@
     "nodemailer": "4.x.x",
     "nodemailer-markdown": "1.0.2",
     "object-assign": "4.x.x",
+    "opencage-api-client": "^0.5.0",
     "slug": "0.9.x",
     "useragent": "2.x.x",
     "uuid": "3.x.x",
     "vision": "4.x.x",
-    "visionary": "6.x.x"
+    "visionary": "6.x.x",
+    "zipcodes": "^8.0.0"
   },
   "devDependencies": {
     "code": "4.x.x",

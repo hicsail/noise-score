@@ -27,9 +27,10 @@ export default class MeasureScreen1 extends React.Component {
 
 
   next(){
+      // Move to the next screen (MeasureScreen2.js)
       const {navigate} = this.props.navigation;
 
-      // Need to add information Loud, Describe, Feel
+      // Need to add information Loud, Describe, Feel, save to local storage before moviing
       if (this.state.loudness == '' || this.state.oneWord == '' || this.state.feeling == ''){
           alert("Please answer every question.");
       } else {
@@ -45,12 +46,8 @@ export default class MeasureScreen1 extends React.Component {
       }
   }
   render() {
-
     return (
       <ScrollView>
-
-
-
         <View style={styles.padding}>
           <View style={styles.wrapText}>
             <Text style={styles.text}>How loud</Text>
@@ -72,7 +69,6 @@ export default class MeasureScreen1 extends React.Component {
             }
           />
         </View>
-
         <View style={styles.padding}>
           <View style={styles.wrapText}>
             <Text style={styles.text}>Which word best</Text>
@@ -94,7 +90,6 @@ export default class MeasureScreen1 extends React.Component {
             }
           />
         </View>
-
         <View style={styles.padding}>
           <View style={styles.wrapText}>
             <Text style={styles.text}>How did the sounds</Text>
@@ -118,23 +113,15 @@ export default class MeasureScreen1 extends React.Component {
             }
           />
         </View>
-
-
-
-
-
-
         <NavButtons2 navigation={this.props.navigation}
                     back={'Measure'}
                     next={this.next.bind(this)}/>
-
       </ScrollView>
     );
   }
 
 
-
-
+// Function used to set the state
   setLoudness(value) {
     this.setState({
       loudness: value[0]

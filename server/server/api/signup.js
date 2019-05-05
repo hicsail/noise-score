@@ -5,6 +5,7 @@ const Config = require('../../config');
 const internals = {};
 const Joi = require('joi');
 const PasswordComplexity = require('joi-password-complexity');
+var zipcodes = require('zipcodes');
 
 internals.applyRoutes = function (server, next) {
 
@@ -21,10 +22,8 @@ internals.applyRoutes = function (server, next) {
           username: Joi.string().token().lowercase().invalid('root').required(),
           password: Joi.string().required(),
           email: Joi.string().email().lowercase().required(),
-          name: Joi.string().required(),
           invite: Joi.string().optional(),
           location : Joi.array(),
-          // pushFrequency: Joi.string(),
           recodingIds: Joi.string(),
           pronouns: Joi.string(),
           ethnicity: Joi.string(),
@@ -105,9 +104,6 @@ internals.applyRoutes = function (server, next) {
           const workArray = ["Very quiet", "Quiet", "Neutral", "Loud", "Very Loud"];
           const healthArray = ["Very poor", "Poor", "Fair", "Good", "Excellent"];
 
-          // if (!pushFrequencyArray.includes(request.payload.pushFrequency)) {
-          //   ret = ret + " + Problem with Loud";
-          // }
           if (!pronounsArray.includes(request.payload.pronouns)) {
             ret = ret + " + Problem with pronouns";
           }
@@ -156,10 +152,8 @@ internals.applyRoutes = function (server, next) {
           const username = request.payload.username;
           const password = request.payload.password;
           const email = request.payload.email;
-          const name = request.payload.name;
           // Location is an array [city, state, zip]
           const location = request.payload.location;
-          // const pushFrequency = request.payload.pushFrequency;
           const pronouns = request.payload.pronouns;
           const ethnicity = request.payload.ethnicity;
           const sensitive = request.payload.sensitive;
@@ -175,7 +169,7 @@ internals.applyRoutes = function (server, next) {
 
 
           const form = [location, pronouns, ethnicity, sensitive, home, community, work, health, weekday, weekend];
-          User.create(username, password, email, name, form, done);
+          User.create(username, password, email, form, done);
         },
         // welcome: ['user', function (results, done) {
         //
@@ -242,6 +236,8 @@ internals.applyRoutes = function (server, next) {
     }
   });
 
+
+  // Function to check if an email/username combination is available
   server.route({
     method: 'POST',
     path: '/available',
@@ -323,6 +319,7 @@ internals.applyRoutes = function (server, next) {
       });
     }
   });
+
   next();
 };
 
@@ -335,7 +332,7 @@ exports.register = function (server, options, next) {
 };
 
 
-// Function for parameters check - Sid
+// Function for parameters check
 function isBelowThreshold(currentValue) {
   return (currentValue <= 100 && currentValue >= 0);
 }

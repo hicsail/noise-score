@@ -7,7 +7,6 @@ export default class AccountScreen extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             weekdayCommuting : 50,
             weekdayActivities : 50,
@@ -21,14 +20,17 @@ export default class AccountScreen extends React.Component {
             weekendSleeping : 50,
             weekendPhysical: 50,
             weekendRunning : 50
-
         };
     }
 
     next(){
+        // Make API call to verify that we can create a user
+        // Then navigate to MapScreen.js
+
         const {navigate} = this.props.navigation;
         // We know all inputs will be valid
         // Now we need to add it to form data
+
         AsyncStorage.getItem('formData').then(function(ret){
             var response = JSON.parse(ret);
             var weekdayArray = [this.state.weekdayCommuting, this.state.weekdayActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekdayRunning];
@@ -39,7 +41,7 @@ export default class AccountScreen extends React.Component {
             axios.post('http://localhost:9000/api/signup', response).then(function (response){
                 // Lets save relevent information and login!
                 Alert.alert(
-                    'Welcome to NoiseScore!',
+                    'Welcome to Noise Score!',
                     'Click measurements to get started.',
                     [
                         {text: 'Lets go!', onPress: () => console.log('OK Pressed')},
@@ -53,34 +55,31 @@ export default class AccountScreen extends React.Component {
                 alert(error.message);
             });
         }.bind(this));
-
-
-
     }
 
-
     render() {
-
         return (
             <View style={styles.container}>
             <ScrollView>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Last couple of Questions!</Text>
+                        <Text style={styles.text}>Last few questions! </Text>
                     </View>
                 </View>
                 <View style={styles.padding}>
-                    <Text style={styles.text}>On a general weekday what percentage of time do you spend:</Text>
+                    <Text>
+                        <Text style={styles.text}>On a general </Text>
+                        <Text style={styles.innerText}>weekday </Text>
+                        <Text style={styles.text}>what percentage of time do you spend:</Text>
+                    </Text>
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Commuting</Text>
+                        <Text style={styles.text}>Commuting: {this.state.weekdayCommuting}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekdayCommuting}
@@ -88,15 +87,14 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekdayCommuting(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Activities at school or work</Text>
+                        <Text style={styles.text}>Activities at school or work: {this.state.weekdayActivities}%</Text>
                     </View>
 
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekdayActivities}
@@ -104,15 +102,13 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekdayActivities(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>At home</Text>
+                        <Text style={styles.text}>At home: {this.state.weekdayHome}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekdayHome}
@@ -120,15 +116,14 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekdayHome(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Sleeping</Text>
+                        <Text style={styles.text}>Sleeping: {this.state.weekdaySleeping}%</Text>
                     </View>
 
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekdaySleeping}
@@ -136,15 +131,13 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekdaySleeping(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Physical Activity</Text>
+                        <Text style={styles.text}>Physical Activity: {this.state.weekdayPhysical}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekdayPhysical}
@@ -152,15 +145,13 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekdayPhysical(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Running errands</Text>
+                        <Text style={styles.text}>Running errands: {this.state.weekdayRunning}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekdayRunning}
@@ -168,20 +159,21 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekdayRunning(val)}
                     />
                 </View>
-
-
                 <View style={styles.padding}>
-                    <Text style={styles.text}>On a general weekend what percentage of time do you spend:</Text>
+                    <Text>
+                        <Text style={styles.text}>On a general </Text>
+                        <Text style={styles.innerText}>weekend </Text>
+                        <Text style={styles.text}>what percentage of time do you spend:</Text>
+                    </Text>
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Commuting</Text>
+                        <Text style={styles.text}>Commuting: {this.state.weekendCommuting}%</Text>
                     </View>
 
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekendCommuting}
@@ -189,15 +181,13 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekendCommuting(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Activities at school or work</Text>
+                        <Text style={styles.text}>Activities at school or work: {this.state.weekendActivities}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekendActivities}
@@ -205,15 +195,13 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekendActivities(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>At home</Text>
+                        <Text style={styles.text}>At home: {this.state.weekendHome}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekendHome}
@@ -221,15 +209,13 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekendHome(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Sleeping</Text>
+                        <Text style={styles.text}>Sleeping: {this.state.weekendSleeping}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekendSleeping}
@@ -237,15 +223,13 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekendSleeping(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Physical Activity</Text>
+                        <Text style={styles.text}>Physical Activity: {this.state.weekendPhysical}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekendPhysical}
@@ -253,15 +237,13 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekendPhysical(val)}
                     />
                 </View>
-
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Running errands</Text>
+                        <Text style={styles.text}>Running errands: {this.state.weekendRunning}%</Text>
                     </View>
-
                     <Slider
                         style={{ width: 300 }}
-                        step={1}
+                        step={20}
                         minimumValue={0}
                         maximumValue={100}
                         value={this.state.weekendRunning}
@@ -269,13 +251,7 @@ export default class AccountScreen extends React.Component {
                         onSlidingComplete={ val => this.setweekendRunning(val)}
                     />
                 </View>
-
-
-
-
-
-
-            </ScrollView>
+                </ScrollView>
                 <View style={styles.button}>
                     <Button
                         title="Next"
@@ -286,7 +262,6 @@ export default class AccountScreen extends React.Component {
                     />
                 </View>
             </View>
-
         );
     }
 
@@ -360,11 +335,7 @@ export default class AccountScreen extends React.Component {
             weekendRunning: value
         });
     }
-
-
 }
-
-
 
 const styles = StyleSheet.create({
     padding: {
@@ -384,17 +355,22 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#cccc31',
-        // TODO: THIS IS THE PROBLEM
+        backgroundColor: 'white',
         alignItems: 'center'
     },
     button : {
         marginBottom: 30,
         backgroundColor: '#323232',
-        width : "15%",
     },
+    innerText : {
+        fontSize: 26,
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center",
+        fontStyle : 'italic'
+    }
 });
 
-const lightGreen = '#31BD4B';
-const darkGray = "#383838";
+
 

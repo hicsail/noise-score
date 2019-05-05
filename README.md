@@ -31,6 +31,8 @@ Download and start **React Native Debugger** for help debugging.
     ```npm run android```
 
 The app should now open up in the Android simulator. Check the Metro Bundler tab to check if the app is being deployed.
+### Notes
+- Remember to change 'localhost' to '10.0.2.2' if you are running android on a local server. 
 
 ## iOS 
 ### Requirements
@@ -64,3 +66,7 @@ Control D on emulator (Control M on Android) - to set automatic reloads and allo
 
 Download React Native Debugger [here](https://github.com/jhen0409/react-native-debugger) for more options. 
 
+
+## Notes
+
+1. You will need up update the API Key for the Geolocator under server/.env
