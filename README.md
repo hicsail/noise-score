@@ -16,6 +16,8 @@ Download and start **React Native Debugger** for help debugging.
     
 1. Follow the prompts on the console. Once finished you follow the instructions below. 
 
+    Note: The email and password you set up as the root user is what will be used to view the data in the backend.
+
 ## Android 
 ### Requirements
 1. Android Studio
