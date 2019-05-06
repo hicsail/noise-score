@@ -39,29 +39,10 @@ export default class MapScreen extends React.Component {
         const map = this.mapView;
 
         // THIS WORKS FOR IOS
-        navigator.geolocation.requestAuthorization();
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-
-                var lat = (position.coords.latitude);
-                var long = (position.coords.longitude);
-                var initialRegion ={
-                    latitude: lat,
-                    longitude: long,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.05,
-                };
-                map.animateToRegion(initialRegion, 2000);
-                this.setState({ region: initialRegion});
-            },
-            (error) => {alert('Error getting location')
-            },
-            {
-                enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
-            }
-        );
-        // THIS WORKS FOR ANDROID
-        // navigator.geolocation.getCurrentPosition((position) => {
+        // navigator.geolocation.requestAuthorization();
+        // navigator.geolocation.getCurrentPosition(
+        //     (position) => {
+        //
         //         var lat = (position.coords.latitude);
         //         var long = (position.coords.longitude);
         //         var initialRegion ={
@@ -79,6 +60,25 @@ export default class MapScreen extends React.Component {
         //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
         //     }
         // );
+        // THIS WORKS FOR ANDROID - uncomment out marker in render
+        navigator.geolocation.getCurrentPosition((position) => {
+                var lat = (position.coords.latitude);
+                var long = (position.coords.longitude);
+                var initialRegion ={
+                    latitude: lat,
+                    longitude: long,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.05,
+                };
+                map.animateToRegion(initialRegion, 2000);
+                this.setState({ region: initialRegion});
+            },
+            (error) => {alert('Error getting location')
+            },
+            {
+                enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
+            }
+        );
 
 
         // Add listeners to update the markers (in the situation that a user takes a new measurements)
@@ -282,8 +282,6 @@ export default class MapScreen extends React.Component {
                             latitudeDelta: 7.5,
                             longitudeDelta: 7.5,
                         };
-                        console.log(r);
-
                         map.animateToRegion(r, 2000);
 
                     }).catch(function(error){
@@ -341,6 +339,7 @@ export default class MapScreen extends React.Component {
                 {iterator}
 
                 {/*Marker to show users location in Android*/}
+                {/*Comment out when using on IOS */}
                 {/*<Marker*/}
                     {/*key={-1}*/}
                     {/*coordinate={{*/}

@@ -30,7 +30,8 @@ $(document).ready(function() {
         render: function (data, type, row) {
           return '<span>Min:'+ data['min'] + '\n' +
             'Max:'+ data['max'] + '\n' +
-            'Avg:'+ data['average'] + '</span>';
+            'Avg:'+ data['average'] + '\n' +
+            'Median' + data['median'] + '</span>';
         }
       },
       {

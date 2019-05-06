@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackActions, NavigationActions } from 'react-navigation';
-import {StyleSheet, Text, ScrollView, View, TextInput, AsyncStorage} from 'react-native';
+import {StyleSheet, Text, ScrollView, View, TextInput, AsyncStorage, Alert} from 'react-native';
 import NavButtons from '../../components/NavButtons';
 import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import axios from "axios";
@@ -67,7 +67,14 @@ export default class MeasureScreen3 extends React.Component {
       });
     }.bind(this)).then(function(){
       if(success){
-        alert('Submitted measurement.');
+        Alert.alert(
+            'Submitted Measurement',
+            'Thanks for contributing to the project!',
+            [
+              {text: 'Continue'},
+            ],
+            {cancelable: false},
+        );
         const resetAction = StackActions.reset({
           index: 0,
           actions: [NavigationActions.navigate({ routeName: 'Measure' })],
