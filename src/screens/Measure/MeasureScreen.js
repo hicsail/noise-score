@@ -83,9 +83,25 @@ export default class MeasureScreen extends React.Component {
   });
   };
 
+  median(values){
+    // Helper function to calculate median
+    // Taken from -> https://stackoverflow.com/questions/45309447/calculating-median-javascript
+    if(values.length ===0) return 0;
+
+    values.sort(function(a,b){
+      return a-b;
+    });
+
+    var half = Math.floor(values.length / 2);
+
+    if (values.length % 2)
+      return values[half];
+
+    return (values[half - 1] + values[half]) / 2.0;
+  }
   submit = () => {
     // We need to gather the data
-    var data = [-Math.min(...this.state.decibels).toFixed(2),  -Math.max(...this.state.decibels).toFixed(2),-this.aveDecibel().toFixed(2) ];
+    var data = [-Math.min(...this.state.decibels).toFixed(2),  -Math.max(...this.state.decibels).toFixed(2),-this.aveDecibel().toFixed(2), this.median(this.state.decibels).toFixed(2)];
     var form = {
         'rawData' : data
       };

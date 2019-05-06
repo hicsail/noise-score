@@ -15,7 +15,8 @@ class Measurement extends MongoModels {
       rawData : {
         min: rawData[1],
         max : rawData[0],
-        average : rawData[2]
+        average : rawData[2],
+        median : rawData[3]
       },
       location : {
         lang: location[0],
@@ -48,7 +49,8 @@ Measurement.schema = Joi.object({
   rawData: {
     min: Joi.number().required(),
     max: Joi.number().required(),
-    average: Joi.number().required()
+    average: Joi.number().required(),
+    median : Joi.number().required(),
   },
    location: {
     lang: Joi.number().required(),
