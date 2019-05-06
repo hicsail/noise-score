@@ -7,6 +7,15 @@ Mobile-app for users to record and comment on community noise levels.
 
 Download and start **React Native Debugger** for help debugging.
 
+## Setting Up The Server 
+1. cd into the server folder: ```cd server/```
+
+1. Run the first time setup command: 
+    
+    ```npm run first-time-setup```
+    
+1. Follow the prompts on the console. Once finished you follow the instructions below. 
+
 ## Android 
 ### Requirements
 1. Android Studio
