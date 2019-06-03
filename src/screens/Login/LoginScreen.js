@@ -28,7 +28,7 @@ export default class LoginScreen extends React.Component {
                         'Authorization' : authHeader
                     };
 
-                    axios.get('http://localhost:9000/api/sessions/my', {headers: header}).then(function (ret){
+                    axios.get('http://10.0.2.2:9000/api/sessions/my', {headers: header}).then(function (ret){
                         navigate("SignedIn");
                     }).catch(function (error) {
                         console.log("error validating user", error);
@@ -56,8 +56,8 @@ export default class LoginScreen extends React.Component {
                 password: this.state.password
         };
         const {navigate} = this.props.navigation;
-        // change localhost to 10.0.2.2 for android
-        axios.post('http://localhost:9000/api/login', requestBody)
+        // change 10.0.2.2 to 10.0.2.2 for android
+        axios.post('http://10.0.2.2:9000/api/login', requestBody)
             .then(function (response) {
                 // Store the userData:
                 var ret = response['data'];

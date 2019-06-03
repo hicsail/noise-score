@@ -64,7 +64,7 @@ export default class AccountScreen extends React.Component {
                 // Remove the cookie and make API call to log out
                 this.removeItemValue("userData").then(function (ret){
                     if(ret){
-                        axios.delete('http://localhost:9000/api/logout', {headers:header})
+                        axios.delete('http://10.0.2.2:9000/api/logout', {headers:header})
                             .then(function (response) {
                                 navigate("SignedOut");
                             })
