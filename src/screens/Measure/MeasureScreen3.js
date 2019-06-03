@@ -53,7 +53,7 @@ export default class MeasureScreen3 extends React.Component {
               var longitude = position['coords']['latitude'];
               var latitude = position['coords']['longitude'];
               response['location'] = [latitude,longitude];
-              axios.post('http://localhost:9000/api/inputMeasurement', response)
+              axios.post('http://10.0.2.2:9000/api/inputMeasurement', response)
                   .then(function (response1) {
                     // Done!
                   })

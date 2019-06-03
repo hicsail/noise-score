@@ -52,7 +52,7 @@ passwordStrenghTest(password){
             state : state,
             zip : zip
         };
-        axios.post('http://localhost:9000/api/validateZip', ret).then(function (response){
+        axios.post('http://10.0.2.2:9000/api/validateZip', ret).then(function (response){
            // If we have not prompted a change in city and state we're good to go and return true.
            if(response.data.city == (city1) && response.data.state ==(state1)){
                return true;
@@ -89,7 +89,7 @@ passwordStrenghTest(password){
         };
         // Make an API call to see if the username or email are already in use
         // Also check other values in the form
-        axios.post('http://localhost:9000/api/available', ret).then(function (response){
+        axios.post('http://10.0.2.2:9000/api/available', ret).then(function (response){
             if(!response.data['username']){
                 alert("Username already in use")
             }

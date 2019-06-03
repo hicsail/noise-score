@@ -108,7 +108,7 @@ export default class MapScreen extends React.Component {
                     'Content-Type': 'application/json',
                     'Authorization' : authHeader
                 };
-                axios.get('http://localhost:9000/api/allMeasurements', {headers:header, params:{}}).then(function (ret){
+                axios.get('http://10.0.2.2:9000/api/allMeasurements', {headers:header, params:{}}).then(function (ret){
                     self.setState({
                         points:  ret['data']
                     })
@@ -156,7 +156,7 @@ export default class MapScreen extends React.Component {
                     'Authorization' : authHeader
                 };
 
-                    axios.get('http://localhost:9000/api/userMeasurements', {headers:header, params:params}).then(function (ret){
+                    axios.get('http://10.0.2.2:9000/api/userMeasurements', {headers:header, params:params}).then(function (ret){
                         var dateFormat = require('dateformat');
                         for(var i = 0; i < ret['data'].length; i++){
                             newMarkers = newMarkers.concat([
@@ -179,7 +179,7 @@ export default class MapScreen extends React.Component {
                         if(error.response.status==500){
                             AsyncStorage.removeItem("userData").then(function (ret){
                                 if(ret){
-                                    axios.delete('http://localhost:9000/api/logout', {headers:header})
+                                    axios.delete('http://10.0.2.2:9000/api/logout', {headers:header})
                                         .then(function (response) {
                                             this.props.navigation("SignedOut");
                                         })
@@ -270,7 +270,7 @@ export default class MapScreen extends React.Component {
                     };
 
 
-                    axios.get('http://localhost:9000/api/search', {
+                    axios.get('http://10.0.2.2:9000/api/search', {
                         headers: header,
                         params: params
                     }).then(function (ret) {
