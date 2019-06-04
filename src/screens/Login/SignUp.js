@@ -47,14 +47,7 @@ export default class SignUp extends React.Component {
         // Function to validate teh city, state, and zip of a certain location
         // Makes backend call to verify
 
-        //SK - These 2 variables might not be needed, review with Sarah
-        let city1 = city;
-        let state1 = state;
-        
-
-        let result = false;
-
-
+        //Check if user provided all the inputs, return appropriate error/tip message
         if (this.state.city === '') {
             alert('You need to fill your current city');
             return false;
@@ -69,33 +62,28 @@ export default class SignUp extends React.Component {
         }
 
 
-        let
-            location = {
-                city: cit,
-                state: stat,
-                zip: zp
-            };
+        let location = {
+            city: city,
+            state: state,
+            zip: zip
+        };
 
-        console.log(location);
-
-        result = await axios.post('http://10.0.2.2:9000/api/validateZip', location).then(
+        // ------------ Final check for validity of location provided, call on the backend, return result of post ------------
+        return await axios.post('http://10.0.2.2:9000/api/validateZip', location).then(
             function (response) {
                 // If we have not prompted a change in city and state we're good to go and return true.
-                if (response.data.city === (city1) && response.data.state === (state1))
+                if (response.data.city === (city) && response.data.state === (state))
                     return true;
 
-                //SK - these 2 variables might not be needed as well.
-                var city = response.data.city;
-                var state = response.data.state;
-                alert(
-                    'It looks like we had a problem verifying your location' +
-                    'Did you mean ' + /*response.data*/city + ", " + /*response.data*/state + "?" +
-                    [
-                        {text: 'Go back'},
-
-                        {cancelable: false}],
+                Alert.alert(
+                    //Alert title
+                    'Validation Error\n',
+                    //Alert message
+                    'Your Zipcode does not match your City and State\n' +
+                    'Did you mean ' + response.data.city + ", " + response.data.state + "?\n",
+                    [{text: 'Ok'}],
+                    {cancelable: false},
                 );
-                console.log("huuuh ?");
                 return false;
             }
         ).catch(
@@ -105,8 +93,6 @@ export default class SignUp extends React.Component {
                 return false;
             }
         );
-        console.log(result);
-        return result;
     }
 
 
@@ -128,15 +114,15 @@ export default class SignUp extends React.Component {
             else if (!response.data['email']) {
                 alert("Email already in use")
             }
-            else if (self.passwordStrenghTest(self.state.password) == false) {
+            else if (!self.passwordStrenghTest(self.state.password)) {
                 alert("Please enter a valid password");
             }
-            else if (self.state.password != self.state.password1) {
+            else if (self.state.password !== self.state.password1) {
                 alert("Passwords do not match");
             }
             else if (!(await self.locationValidate(self.state.city, self.state.state, self.state.zip))) {
                 // Do nothing, locationValidate will handle the alert
-                console.log("here");
+                // console.log("here");
             }
             else {
                 // If all test pass, prepare the signUpData and move to the next screen
