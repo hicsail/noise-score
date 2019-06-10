@@ -62,8 +62,10 @@ const config = {
     port: 465,
     secure: true,
     auth: {
-      user: process.env.SMTP_USERNAME,
-      pass: process.env.SMTP_PASSWORD
+      // user: process.env.SMTP_USERNAME,
+      // pass: process.env.SMTP_PASSWORD
+      user: 'noisescore@gmail.com',
+      pass: '3.J(Yph-MkM74C8N'
     }
   },
   system: {
