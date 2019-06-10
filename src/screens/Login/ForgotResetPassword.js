@@ -128,7 +128,7 @@ class ForgotResetPassword extends React.Component {
                     <View>
 
                         <Header
-                            // centerComponent={{text: username, style: {color: '#323232'}}}
+                            // centerComponent={{text: username,F style: {color: '#323232'}}}
                             // containerStyle={styles.header}
                             leftComponent={<Button icon={
                                 <Icon
