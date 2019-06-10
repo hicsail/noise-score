@@ -7,8 +7,9 @@ import {
     createSwitchNavigator
 } from 'react-navigation';
 
-
-import { AsyncStorage } from "react-native";
+import { Input, Text, Button } from 'react-native-elements';
+import { StyleSheet, View, ScrollView, AsyncStorage, Image, Alert } from 'react-native';
+// import { AsyncStorage } from "react-native";
 import MapScreen from './src/screens/Map/MapScreen';
 import MeasureScreen from './src/screens/Measure/MeasureScreen';
 import MeasureScreen1 from './src/screens/Measure/MeasureScreen1';
@@ -23,6 +24,7 @@ import SignUp2 from './src/screens/Login/SignUp2';
 import SignUp3 from './src/screens/Login/SignUp3';
 import resetPassword from './src/screens/Account/ResetPassword';
 import ForgotResetPassword from "./src/screens/Login/ForgotResetPassword";
+import axios from "axios";
 
 
 console.disableYellowBox = ["Unable to symbolicate"];
@@ -180,26 +182,26 @@ export const login = createStackNavigator({
 });
 
 
-export const USER_KEY = "auth-demo-key";
-
-export const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
-
-export const onSignOut = () => AsyncStorage.removeItem(USER_KEY);
-
-export const isSignedIn = () => {
-    // return false;
-    return new Promise((resolve, reject) => {
-        AsyncStorage.getItem(USER_KEY)
-            .then(res => {
-                if (res !== null) {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            })
-            .catch(err => reject(err));
-    });
-};
+// export const USER_KEY = "auth-demo-key";
+//
+// export const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
+//
+// export const onSignOut = () => AsyncStorage.removeItem(USER_KEY);
+//
+// export const isSignedIn = () => {
+//     // return false;
+//     return new Promise((resolve, reject) => {
+//         AsyncStorage.getItem(USER_KEY)
+//             .then(res => {
+//                 if (res !== null) {
+//                     resolve(true);
+//                 } else {
+//                     resolve(false);
+//                 }
+//             })
+//             .catch(err => reject(err));
+//     });
+// };
 
 
 var signedIn = false;
@@ -219,10 +221,135 @@ export const root = createSwitchNavigator({
 );
 
 
-const first = createAppContainer(root);
+const First = createAppContainer(root);
+
 // const home = createAppContainer(bottomNav);
 
+// class AuthLoading extends React.Component() {
+//     constructor(props){
+//         super(props);
+//         this.fetchStatus();
+//     }
+//
+//     fetchStatus = async () => {
+//         const loggedIn = await
+//     }
+// }
 
-export default first;
+
+export class Authentication extends React.Component {
+
+}
+
+export class SplashScreen extends React.Component {
+    performTimeConsumingTask = async () => {
+        return new Promise((resolve) =>
+            setTimeout(
+                () => {
+                    resolve('result')
+                },
+                2000
+            )
+        )
+    };
+
+    async AuthenticateUser() {
+        return await (
+            AsyncStorage.getItem("userData", null).then(function (ret) {
+                let response = JSON.parse(ret);
+                console.log(ret);
+
+                if (ret) {
+                    if (response['authHeader'] != null) {
+                        // Verify user with sessions
+                        var authHeader = response['authHeader'];
+                        const header = {
+                            'Content-Type': 'application/json',
+                            'Authorization': authHeader
+                        };
+
+                        axios.get('http://10.0.2.2:9000/api/sessions/my', { headers: header }).then(function (ret) {
+                            // navigate("SignedIn");
+                            return true;
+                        }).catch(function (error) {
+                            console.log("error validating user", error);
+                        })
+
+                    }
+
+                }
+                return false;
+            })
+
+        )
+    };
+
+    async componentDidMount() {
+        // Preload data from an external API
+        // Preload data using AsyncStorage
+        const data = await this.performTimeConsumingTask();
+
+        const data2 = await this.AuthenticateUser();
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        console.log(data2);
+
+        if (data !== null) {
+            this.props.navigation.navigate('App');
+        }
+    }
+
+    render() {
+        return (
+            <View style={styles.viewStyles}>
+                <Image
+                    source={require('./assets/splash_logo.jpeg')}
+                    style={{
+                        flex: 1,
+                        alignSelf: 'stretch',
+                        width: undefined,
+                        height: undefined
+                    }}
+                />
+                <Image
+                    source={require('./assets/splash-image.jpeg')}
+                    style={{
+                        flex: 1,
+                        alignSelf: 'stretch',
+                        width: undefined,
+                        height: undefined
+                    }}
+                />
+            </View>
+        );
+    }
+}
+
+const styles = {
+    viewStyles: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // backgroundColor: 'orange'
+    },
+    textStyles: {
+        color: 'white',
+        fontSize: 40,
+        fontWeight: 'bold'
+    }
+};
+
+const Second = createSwitchNavigator({
+    Splash: SplashScreen,
+    App: First
+});
+
+// export default createAppContainer(InitialNavigator);
+//
+// export default class App extends React.Component {
+//     render() {
+//         return <Second/>
+//     }
+// }
 
 
+export default createAppContainer(Second);
