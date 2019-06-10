@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 20,
+        borderRadius: 30,
         // borderRadius:3,
         backgroundColor: '#323232'
     },
