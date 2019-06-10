@@ -157,8 +157,8 @@ export default class AccountScreen extends React.Component {
                 />
             <MapView
                 style={{ ...StyleSheet.absoluteFillObject }}
-                // provider={"google"} // remove if not using Google Maps
-                provider={Platform.OS === 'ios' ? null : 'osmdroid'}
+                provider={"google"} // remove if not using Google Maps
+                // provider={Platform.OS === 'ios' ? null : 'osmdroid'}
                 region={this.state.region}
                 moveOnMarkerPress = {true}
                 showsUserLocation={true}

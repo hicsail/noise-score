@@ -1,9 +1,9 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
-  createBottomTabNavigator,
-  createStackNavigator,
-  createAppContainer,
+    createBottomTabNavigator,
+    createStackNavigator,
+    createAppContainer,
     createSwitchNavigator
 } from 'react-navigation';
 
@@ -22,52 +22,53 @@ import SignUp from './src/screens/Login/SignUp';
 import SignUp2 from './src/screens/Login/SignUp2';
 import SignUp3 from './src/screens/Login/SignUp3';
 import resetPassword from './src/screens/Account/ResetPassword';
+import ForgotResetPassword from "./src/screens/Login/ForgotResetPassword";
 
 
 console.disableYellowBox = ["Unable to symbolicate"];
 
 const MeasureStack = createStackNavigator({
-  Measure: MeasureScreen,
-  Measure1: MeasureScreen1,
-  Measure2: MeasureScreen2,
-  Measure3: MeasureScreen3,
+    Measure: MeasureScreen,
+    Measure1: MeasureScreen1,
+    Measure2: MeasureScreen2,
+    Measure3: MeasureScreen3,
 });
 
 
 const AccountStack = createStackNavigator({
-    Account1 : {
+    Account1: {
         screen: AccountScreen,
         navigationOptions: {
             header: null
 
         }
     },
-    Account2 : {
+    Account2: {
         screen: AccountPage,
         navigationOptions: {
             header: null
 
         }
     },
-    Account3 : {
-        screen :  moreInfo,
-        navigationOptions:{
-            header:null
+    Account3: {
+        screen: moreInfo,
+        navigationOptions: {
+            header: null
         }
     },
-    Account4 : {
-        screen :  resetPassword,
-        navigationOptions:{
-            header:null
+    Account4: {
+        screen: resetPassword,
+        navigationOptions: {
+            header: null
         }
     }
 });
 
 const MapStack = createStackNavigator({
-        normalMap : {
-            screen: MapScreen,
-            navigationOptions: { header: null }
-        }
+    normalMap: {
+        screen: MapScreen,
+        navigationOptions: { header: null }
+    }
 });
 
 const brightGreen = "#31BD4B";
@@ -79,9 +80,9 @@ const home = createBottomTabNavigator(
         Account: AccountStack
     },
     {
-        defaultNavigationOptions: ({navigation}) => ({
-            tabBarIcon: ({focused, horizontal, tintColor}) => {
-                const {routeName} = navigation.state;
+        defaultNavigationOptions: ({ navigation }) => ({
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+                const { routeName } = navigation.state;
                 let iconName;
                 if (routeName === 'Account') {
                     iconName = `user`;
@@ -165,14 +166,18 @@ export const login = createStackNavigator({
                 backgroundColor: '#31BD4B'
             },
         }
+    },
+    ForgotResetPassword: {
+        screen: ForgotResetPassword,
+        navigationOptions: {
+            title: "Forgot Password",
+            headerTintColor: '#323232',
+            headerStyle: {
+                backgroundColor: '#31BD4B'
+            },
+        }
     }
 });
-
-
-
-
-
-
 
 
 export const USER_KEY = "auth-demo-key";
@@ -200,25 +205,22 @@ export const isSignedIn = () => {
 var signedIn = false;
 
 
-
 export const root = createSwitchNavigator({
         SignedIn: {
-                screen: home
-            },
-        SignedOut: {
-                screen: login
-            }
+            screen: home
         },
-        {
-            initialRouteName: signedIn ? "SignedIn" : "SignedOut"
+        SignedOut: {
+            screen: login
         }
+    },
+    {
+        initialRouteName: signedIn ? "SignedIn" : "SignedOut"
+    }
 );
 
 
 const first = createAppContainer(root);
 // const home = createAppContainer(bottomNav);
-
-
 
 
 export default first;
