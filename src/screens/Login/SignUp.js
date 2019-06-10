@@ -121,8 +121,6 @@ export default class SignUp extends React.Component {
                 alert("Passwords do not match");
             }
             else if (!(await self.locationValidate(self.state.city, self.state.state, self.state.zip))) {
-                // Do nothing, locationValidate will handle the alert
-                // console.log("here");
             }
             else {
                 // If all test pass, prepare the signUpData and move to the next screen

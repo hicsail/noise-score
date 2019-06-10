@@ -56,6 +56,10 @@ export default class AccountScreen extends React.Component {
         navigate("Account2");
     }
 
+    async resetPassword(){
+
+    }
+
     render() {
             return (
                 <View style={styles.container}>
@@ -68,7 +72,7 @@ export default class AccountScreen extends React.Component {
                                 size={15}
                                 color="white"
                             />
-                        }onPress = {() => this.accountScreen()}
+                        } onPress = {() => this.accountScreen()}
                                                 buttonStyle={styles.headerButton}/>}
                     />
                     <View style={styles.content}>
@@ -160,7 +164,8 @@ const styles = StyleSheet.create({
     textInput : {
         height: 40,
         borderColor: 'gray',
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius : 2
     },
 
 });

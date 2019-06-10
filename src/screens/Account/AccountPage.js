@@ -1,9 +1,8 @@
 import React from 'react';
-import {AsyncStorage, Picker, StyleSheet, View, ScrollView} from 'react-native';
+import { AsyncStorage, Picker, StyleSheet, View, ScrollView } from 'react-native';
 import axios from "axios";
-import { Button, Header} from 'react-native-elements';
+import { Button, Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 
 
 export default class AccountScreen extends React.Component {
@@ -12,8 +11,8 @@ export default class AccountScreen extends React.Component {
         super(props);
         this.state = {
             username: "temp",
-            userID : -1,
-            userData : null
+            userID: -1,
+            userData: null
         };
 
     }
@@ -27,11 +26,11 @@ export default class AccountScreen extends React.Component {
                 var authHeader = response['authHeader'];
                 const header = {
                     'Content-Type': 'application/json',
-                    'Authorization' : authHeader
+                    'Authorization': authHeader
                 };
                 this.setState({
-                    username : response['user']['username'],
-                    userID : response['user']['_id']
+                    username: response['user']['username'],
+                    userID: response['user']['_id']
                 });
             }
         }.bind(this));
@@ -43,7 +42,7 @@ export default class AccountScreen extends React.Component {
             await AsyncStorage.removeItem(key);
             return true;
         }
-        catch(exception) {
+        catch (exception) {
             return false;
         }
     }
@@ -51,7 +50,7 @@ export default class AccountScreen extends React.Component {
     logout() {
         // Function to log out and clear cookies (i.e. AsyncStorag)
         // Moves to LoginScreen.js
-        const {navigate} = this.props.navigation;
+        const { navigate } = this.props.navigation;
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
                 // Get the auth header from storage
@@ -59,12 +58,12 @@ export default class AccountScreen extends React.Component {
                 var authHeader = response['authHeader'];
                 const header = {
                     'Content-Type': 'application/json',
-                    'Authorization' : authHeader
+                    'Authorization': authHeader
                 };
                 // Remove the cookie and make API call to log out
-                this.removeItemValue("userData").then(function (ret){
-                    if(ret){
-                        axios.delete('http://10.0.2.2:9000/api/logout', {headers:header})
+                this.removeItemValue("userData").then(function (ret) {
+                    if (ret) {
+                        axios.delete('http://10.0.2.2:9000/api/logout', { headers: header })
                             .then(function (response) {
                                 navigate("SignedOut");
                             })
@@ -80,15 +79,15 @@ export default class AccountScreen extends React.Component {
         }.bind(this));
     }
 
-    goBack(){
+    goBack() {
         // Navigate to AccountScreen.js
-        const {navigate} = this.props.navigation;
+        const { navigate } = this.props.navigation;
         navigate("Account1");
     }
 
-    resetPassword(){
+    resetPassword() {
         // Navigate to ResetPassword.js
-        const {navigate} = this.props.navigation;
+        const { navigate } = this.props.navigation;
         navigate("Account4");
     }
 
@@ -99,23 +98,23 @@ export default class AccountScreen extends React.Component {
                 <Header
                     centerComponent={{ text: username, style: { color: '#323232' } }}
                     containerStyle={styles.header}
-                    leftComponent={<Button  icon={
+                    leftComponent={<Button icon={
                         <Icon
                             name="arrow-left"
                             size={15}
                             color="white"
                         />
-                    }onPress = {() => this.goBack()}
-                                            buttonStyle={styles.headerButton}/>}
+                    } onPress={() => this.goBack()} buttonStyle={styles.headerButton}/>}
+
 
                 />
                 <View style={styles.content}>
                     <Button
-                    buttonStyle={styles.button}
-                    backgroundColor="transparent"
-                    textStyle={{ color: "#bcbec1" }}
-                    title="Sign Out"
-                    onPress={() => this.logout()}
+                        buttonStyle={styles.button}
+                        backgroundColor="transparent"
+                        textStyle={{ color: "#bcbec1" }}
+                        title="Sign Out"
+                        onPress={() => this.logout()}
                     />
                     <Button
                         buttonStyle={styles.button}
@@ -135,22 +134,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    reload : {
-
+    reload: {},
+    header: {
+        backgroundColor: '#31BD4B',
     },
-    header : {
-        backgroundColor:  '#31BD4B',
+    headerButton: {
+        backgroundColor: '#323232'
     },
-    headerButton : {
-        backgroundColor : '#323232'
-    },
-    button : {
+    button: {
         marginTop: 20,
         backgroundColor: '#323232',
         marginHorizontal: 100
     },
-    content : {
-        marginTop : "50%",
+    content: {
+        marginTop: "50%",
         width: '100%',
         height: "100%",
 
