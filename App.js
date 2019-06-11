@@ -38,32 +38,15 @@ const MeasureStack = createStackNavigator({
 
 
 const AccountStack = createStackNavigator({
-    Account1: {
-        screen: AccountScreen,
-        navigationOptions: {
-            header: null
+    Account1: AccountScreen,
+    Account2: AccountPage,
+    Account3: moreInfo,
+    // Account4: resetPassword,
+});
 
-        }
-    },
-    Account2: {
-        screen: AccountPage,
-        navigationOptions: {
-            header: null
-
-        }
-    },
-    Account3: {
-        screen: moreInfo,
-        navigationOptions: {
-            header: null
-        }
-    },
-    Account4: {
-        screen: resetPassword,
-        navigationOptions: {
-            header: null
-        }
-    }
+const ForgotPassStack = createStackNavigator({
+    LoginScreen: LoginScreen,
+    ForgotPass: ForgotResetPassword
 });
 
 const MapStack = createStackNavigator({
@@ -79,7 +62,8 @@ const home = createBottomTabNavigator(
     {
         Map: MapStack,
         Measure: MeasureStack,
-        Account: AccountStack
+        Account: AccountStack,
+        ForgotPass: ForgotPassStack
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
@@ -255,7 +239,7 @@ export class SplashScreen extends React.Component {
 
     async AuthenticateUser() {
         return await (
-            AsyncStorage.getItem("userData", null).then(function (ret) {
+            AsyncStorage.getItem("userData", null).then(async function (ret) {
                 let response = JSON.parse(ret);
                 console.log(ret);
 
@@ -268,13 +252,14 @@ export class SplashScreen extends React.Component {
                             'Authorization': authHeader
                         };
 
-                        axios.get('http://10.0.2.2:9000/api/sessions/my', { headers: header }).then(function (ret) {
-                            // navigate("SignedIn");
-                            return true;
-                        }).catch(function (error) {
-                            console.log("error validating user", error);
-                        })
 
+                        return axios.get('http://10.0.2.2:9000/api/sessions/my', { headers: header })
+                            .then(function () {
+                                return true;
+                            })
+                            .catch(function () {
+                                return false;
+                            })
                     }
 
                 }
@@ -284,17 +269,19 @@ export class SplashScreen extends React.Component {
         )
     };
 
-    async componentDidMount() {
+    componentDidMount() {
         // Preload data from an external API
         // Preload data using AsyncStorage
-        const data = await this.performTimeConsumingTask();
+        // const data = await this.performTimeConsumingTask();
 
-        const data2 = await this.AuthenticateUser();
+        const data2 = this.AuthenticateUser();
         console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        console.log(data2);
-
-        if (data !== null) {
+        console.log("data is " + data2);
+        if (data2) {
             this.props.navigation.navigate('App');
+        }
+        else {
+            this.props.navigation.navigate("UserLogin")
         }
     }
 
@@ -340,7 +327,8 @@ const styles = {
 
 const Second = createSwitchNavigator({
     Splash: SplashScreen,
-    App: First
+    App: First,
+    UserLogin: LoginScreen
 });
 
 // export default createAppContainer(InitialNavigator);
