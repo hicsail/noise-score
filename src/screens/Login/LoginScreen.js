@@ -18,8 +18,11 @@ export default class LoginScreen extends React.Component {
         const { navigate } = this.props.navigation;
         // If we are already logged in (i.e. local storage) then we can make an API call to
         // Ensure that we still have the credentials and can directly move to the SignedIn Screen
+
+
         AsyncStorage.getItem("userData", null).then(function (ret) {
             let response = JSON.parse(ret);
+
             console.log(ret);
 
             if (ret) {
@@ -40,13 +43,12 @@ export default class LoginScreen extends React.Component {
                 }
             }
         });
-        this.state = {
-            username: 'username',
-            password: '',
 
+        this.state = {
+            username: '',
+            password: '',
             forgotPass: false
-        }
-        ;
+        };
     }
 
     componentDidMount() {
@@ -57,17 +59,17 @@ export default class LoginScreen extends React.Component {
         // Submit a username and password combination
         // Makes API call and navigates to MapScreen.js on success
 
-        const requestBody = {
+        const userCredentials = {
             username: this.state.username,
             password: this.state.password
         };
+
         const { navigate } = this.props.navigation;
         // change 10.0.2.2 to 10.0.2.2 for android
-        console.log(this.state);
-        axios.post('http://10.0.2.2:9000/api/login', requestBody)
+        axios.post('http://10.0.2.2:9000/api/login', userCredentials)
             .then(function (response) {
                 // Store the userData:
-                var ret = response['data'];
+                let ret = response['data'];
                 AsyncStorage.setItem("userData", JSON.stringify(ret));
                 navigate("SignedIn")
             })
@@ -129,33 +131,13 @@ export default class LoginScreen extends React.Component {
                                     backgroundColor={'white'}
                                     title="Forgot Password"
                                     color={'white'}
-                                    onPress={() => this.setState({ forgotPass: true })}//this.props.navigation.navigate("ForgotResetPassword")}
+                                    onPress={() => /*this.setState({ forgotPass: true })}*/this.props.navigation.navigate("ForgotResetPassword")}
                                 />
                             </View>
 
                         </ScrollView>
                         :
-
                         <ForgotResetPassword/>
-                        /* <View>
-                             <Text style={styles.text}>Email</Text>
-                             <Input
-                                 style={styles.textInput}
-                                 autoCapitalize='none'
-                                 onChangeText={(email) => this.setState({email})}
-                                 placeholder='example@example.com'
-                             />
-                             <Button
-                                 buttonStyle={styles.button}
-                                 backgroundColor={'white'}
-                                 title="Forgot Password"
-                                 color={'white'}
-                                 onPress={() => {
-                                     alert("HI");
-                                     this.props.navigation.navigate("ForgotResetPassword");
-                                 }}//this.props.navigation.navigate("ForgotResetPassword")}
-                             />
-                         </View>*/
                     }
                 </View>
             </View>
