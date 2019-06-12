@@ -10,7 +10,7 @@ export default class AccountScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "temp",
+            username: '',
             userID: -1,
             userData: null
         };
@@ -20,7 +20,7 @@ export default class AccountScreen extends React.Component {
     componentDidMount() {
         // When the component mounts, gather the user data from local storage (AsyncStorage)
         // Store the data as a local variable
-        AsyncStorage.getItem('userData').then(function (ret) {
+        AsyncStorage.getItem('userData', null).then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
                 var authHeader = response['authHeader'];
@@ -51,7 +51,7 @@ export default class AccountScreen extends React.Component {
         // Function to log out and clear cookies (i.e. AsyncStorag)
         // Moves to LoginScreen.js
         const { navigate } = this.props.navigation;
-        AsyncStorage.getItem('userData').then(function (ret) {
+        AsyncStorage.getItem('userData', null).then(function (ret) {
             if (ret) {
                 // Get the auth header from storage
                 var response = JSON.parse(ret);
@@ -64,8 +64,8 @@ export default class AccountScreen extends React.Component {
                 this.removeItemValue("userData").then(function (ret) {
                     if (ret) {
                         axios.delete('http://10.0.2.2:9000/api/logout', { headers: header })
-                            .then(function (response) {
-                                navigate("SignedOut");
+                            .then(function () {
+                                navigate("UserLogin");
                             })
                             .catch(function (error) {
                                 console.log(error);

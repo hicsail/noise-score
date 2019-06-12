@@ -4,6 +4,7 @@ import { home } from "../../../App";
 import axios from 'axios';
 import { Input, Text, Button } from 'react-native-elements';
 import ForgotResetPassword from "./ForgotResetPassword";
+import AccountScreen from "../Account/AccountScreen";
 
 export default class LoginScreen extends React.Component {
 
@@ -16,33 +17,33 @@ export default class LoginScreen extends React.Component {
         // Otherwise do nothing
         super(props);
         const { navigate } = this.props.navigation;
-        // If we are already logged in (i.e. local storage) then we can make an API call to
+               // If we are already logged in (i.e. local storage) then we can make an API call to
         // Ensure that we still have the credentials and can directly move to the SignedIn Screen
 
 
-        AsyncStorage.getItem("userData", null).then(function (ret) {
-            let response = JSON.parse(ret);
-
-            console.log(ret);
-
-            if (ret) {
-                if (response['authHeader'] != null) {
-                    // Verify user with sessions
-                    var authHeader = response['authHeader'];
-                    const header = {
-                        'Content-Type': 'application/json',
-                        'Authorization': authHeader
-                    };
-
-                    axios.get('http://10.0.2.2:9000/api/sessions/my', { headers: header }).then(function (ret) {
-                        navigate("SignedIn");
-                    }).catch(function (error) {
-                        console.log("error validating user", error);
-                    })
-
-                }
-            }
-        });
+        // AsyncStorage.getItem("userData", null).then(function (ret) {
+        //     let response = JSON.parse(ret);
+        //
+        //     console.log(ret);
+        //
+        //     if (ret) {
+        //         if (response['authHeader'] != null) {
+        //             // Verify user with sessions
+        //             var authHeader = response['authHeader'];
+        //             const header = {
+        //                 'Content-Type': 'application/json',
+        //                 'Authorization': authHeader
+        //             };
+        //
+        //             axios.get('http://10.0.2.2:9000/api/sessions/my', { headers: header }).then(function (ret) {
+        //                 navigate("SignedIn");
+        //             }).catch(function (error) {
+        //                 console.log("error validating user", error);
+        //             })
+        //
+        //         }
+        //     }
+        // });
 
         this.state = {
             username: '',
@@ -63,15 +64,16 @@ export default class LoginScreen extends React.Component {
             username: this.state.username,
             password: this.state.password
         };
-
+        console.log("In here 1");
         const { navigate } = this.props.navigation;
         // change 10.0.2.2 to 10.0.2.2 for android
         axios.post('http://10.0.2.2:9000/api/login', userCredentials)
             .then(function (response) {
                 // Store the userData:
                 let ret = response['data'];
+                console.log("In here 2");
                 AsyncStorage.setItem("userData", JSON.stringify(ret));
-                navigate("SignedIn")
+                navigate("App")
             })
             .catch(function (error) {
                 console.log(error);
@@ -84,61 +86,55 @@ export default class LoginScreen extends React.Component {
         return (
             <View style={styles.wrap}>
                 <View style={styles.container}>
-                    {!this.state.forgotPass ?
 
-                        <ScrollView>
+                    <ScrollView>
+                        <View style={styles.login}>
+                            <Image
+                                source={require('./../../../assets/logo.png')}
+                                style={styles.logo}
+                            />
+                            {/*< Image source={require('./../../../assets/NoiseScore1.2.png')} style={styles.logo}/>*/}
+                            {/*< Image source={require('./../../../assets/NoiseScore1.png')} style={styles.logo}/>*/}
 
-                            <View style={styles.login}>
-                                <Image
-                                    source={require('./../../../assets/logo.png')}
-                                    style={styles.logo}
-                                />
-                                {/*< Image source={require('./../../../assets/NoiseScore1.2.png')} style={styles.logo}/>*/}
-                                {/*< Image source={require('./../../../assets/NoiseScore1.png')} style={styles.logo}/>*/}
+                            <Input
+                                autoCapitalize='none'
+                                placeholder='Username'
+                                rightIcon={{ type: 'font-awesome', name: 'user' }}
+                                onChangeText={(username) => this.setState({ username })}
+                            />
 
-                                <Input
-                                    autoCapitalize='none'
-                                    placeholder='Username'
-                                    rightIcon={{ type: 'font-awesome', name: 'user' }}
-                                    onChangeText={(username) => this.setState({ username })}
-                                />
+                            <Input
+                                secureTextEntry={true}
+                                autoCapitalize='none'
+                                placeholder='Password'
+                                rightIcon={{ type: 'font-awesome', name: 'lock' }}
+                                onChangeText={(password) => this.setState({ password })}
+                            />
+                        </View>
+                        <View>
+                            <Button
+                                buttonStyle={styles.button}
+                                title="Sign In"
+                                onPress={() => this.submit()}
+                            />
 
-                                <Input
-                                    secureTextEntry={true}
-                                    autoCapitalize='none'
-                                    placeholder='Password'
-                                    rightIcon={{ type: 'font-awesome', name: 'lock' }}
-                                    onChangeText={(password) => this.setState({ password })}
-                                />
-                            </View>
-                            <View>
-                                <Button
-                                    buttonStyle={styles.button}
-                                    title="Sign In"
-                                    onPress={() => this.submit()}
-                                />
+                            <Button
+                                buttonStyle={styles.button}
+                                backgroundColor={'white'}
+                                title="Sign Up"
+                                color={'white'}
+                                onPress={() => this.props.navigation.navigate("SignUp1")}
+                            />
 
-                                <Button
-                                    buttonStyle={styles.button}
-                                    backgroundColor={'white'}
-                                    title="Sign Up"
-                                    color={'white'}
-                                    onPress={() => this.props.navigation.navigate("SignUp1")}
-                                />
-
-                                <Button
-                                    buttonStyle={styles.button}
-                                    backgroundColor={'white'}
-                                    title="Forgot Password"
-                                    color={'white'}
-                                    onPress={() => /*this.setState({ forgotPass: true })}*/this.props.navigation.navigate("ForgotResetPassword")}
-                                />
-                            </View>
-
-                        </ScrollView>
-                        :
-                        <ForgotResetPassword/>
-                    }
+                            <Button
+                                buttonStyle={styles.button}
+                                backgroundColor={'white'}
+                                title="Forgot Password"
+                                color={'white'}
+                                onPress={() => this.props.navigation.navigate("ForgotResetPassword")}
+                            />
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
         );
