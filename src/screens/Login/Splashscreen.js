@@ -95,10 +95,12 @@ const styles = {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: 'orange'
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: 'orange'
     },
     textStyles: {
-        color: 'white',
+        // color: 'white',
         fontSize: 40,
         fontWeight: 'bold'
     }
