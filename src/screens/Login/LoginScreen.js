@@ -1,11 +1,24 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, AsyncStorage, Image, Alert } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    ScrollView,
+    AsyncStorage,
+    Image,
+    Alert,
+    TouchableHighlight,
+    KeyboardAvoidingView
+} from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
 import { Input, Text, Button } from 'react-native-elements';
 import ForgotResetPassword from "./ForgotResetPassword";
 import AccountScreen from "../Account/AccountScreen";
+import CustomButton from "../../Base/CustomButton"
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Dimensions } from "react-native";
 
+const { width, height } = Dimensions.get('window');
 export default class LoginScreen extends React.Component {
 
     static navigationOptions = {
@@ -17,7 +30,7 @@ export default class LoginScreen extends React.Component {
         // Otherwise do nothing
         super(props);
         const { navigate } = this.props.navigation;
-               // If we are already logged in (i.e. local storage) then we can make an API call to
+        // If we are already logged in (i.e. local storage) then we can make an API call to
         // Ensure that we still have the credentials and can directly move to the SignedIn Screen
 
 
@@ -84,96 +97,116 @@ export default class LoginScreen extends React.Component {
 
     render() {
         return (
-            <View style={styles.wrap}>
-                <View style={styles.container}>
 
-                    <ScrollView>
-                        <View style={styles.login}>
-                            <Image
-                                source={require('./../../../assets/logo.png')}
-                                style={styles.logo}
-                            />
-                            {/*< Image source={require('./../../../assets/NoiseScore1.2.png')} style={styles.logo}/>*/}
-                            {/*< Image source={require('./../../../assets/NoiseScore1.png')} style={styles.logo}/>*/}
+            <ScrollView contentContainerStyle={styles.scrollWrapper}>
+                <View style={styles.wrapper}>
 
-                            <Input
-                                autoCapitalize='none'
-                                placeholder='Username'
-                                rightIcon={{ type: 'font-awesome', name: 'user' }}
-                                onChangeText={(username) => this.setState({ username })}
-                            />
+                    <View style={styles.imgWrapper}>
+                        <Image style={styles.imgStyle}
+                               source={require('./../../../assets/NoiseScore1.2.1.png')}
+                        />
+                    </View>
 
-                            <Input
-                                secureTextEntry={true}
-                                autoCapitalize='none'
-                                placeholder='Password'
-                                rightIcon={{ type: 'font-awesome', name: 'lock' }}
-                                onChangeText={(password) => this.setState({ password })}
-                            />
-                        </View>
-                        <View>
-                            <Button
-                                buttonStyle={styles.button}
-                                title="Sign In"
-                                onPress={() => this.submit()}
-                            />
+                    <View style={styles.inputs}>
 
-                            <Button
-                                buttonStyle={styles.button}
-                                backgroundColor={'white'}
-                                title="Sign Up"
-                                color={'white'}
-                                onPress={() => this.props.navigation.navigate("SignUp1")}
-                            />
+                        <Input
+                            // autoCapitalize='none'
+                            placeholder='Username'
+                            rightIcon={{ type: 'font-awesome', name: 'user' }}
+                            onChangeText={(username) => this.setState({ username })}
+                        />
 
-                            <Button
-                                buttonStyle={styles.button}
-                                backgroundColor={'white'}
-                                title="Forgot Password"
-                                color={'white'}
-                                onPress={() => this.props.navigation.navigate("ForgotResetPassword")}
-                            />
-                        </View>
-                    </ScrollView>
+                        <Input
+                            secureTextEntry={true}
+                            autoCapitalize='none'
+                            placeholder='Password'
+                            rightIcon={{ type: 'font-awesome', name: 'lock' }}
+                            onChangeText={(password) => this.setState({ password })}
+                        />
+
+                        <CustomButton
+                            // buttonStyle={styles.button}
+                            text="Sign In"
+                            onPress={() => this.submit()}
+                        />
+
+                        <CustomButton
+                            // style={styles.button}
+                            text="Sign Up"
+                            onPress={() => this.props.navigation.navigate("SignUp1")}
+                        />
+
+                        <Text style={styles.forgotStyle}
+                              onPress={() => this.props.navigation.navigate("ForgotResetPassword")}>
+                            Forgot your password ? Click here !
+                        </Text>
+                    </View>
+                    <View style={styles.imgWrapper}>
+                        <Image style={styles.imgStyle}
+                               source={require('./../../../assets/Splash-image-mini3.png')}
+                        />
+                    </View>
                 </View>
-            </View>
-        );
+            </ScrollView>
+        )
+            ;
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: 20,
-        backgroundColor: '#cccc31',
-        position: 'absolute',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: "100%",
+
+    wrapper: {
+        flexGrow: 1,
+        minHeight: height-25,
+        alignItems: 'stretch',
+        paddingLeft: 30,
+        paddingRight: 30,
+        paddingTop: 30,
+        alignContent: 'center',
+        // backgroundColor: "#e9eeec",
+        // minHeight: 600,
 
     },
-    logo: {
-        width: 200,
-        height: 220
-    },
-    login: {
-        alignItems: 'center',
-        textAlign: 'center',
-    },
-    header: {
-        fontFamily: 'Euphemia UCAS',
-        fontSize: 40,
-        color: '#323232'
-    },
-    button: {
-        marginTop: 20,
-        borderRadius: 30,
-        // borderRadius:3,
-        backgroundColor: '#323232'
-    },
-    wrap: {
-        backgroundColor: '#cccc31',
-        alignItems: 'center',
-        flex: 1,
 
+    imgWrapper: {
+        flexGrow: 3,
+        // alignItems: 'stretch',
+        // alignContent: 'center',
+        // position: 'absolute',
+        // top: 0,
+    },
+
+    scrollWrapper: {
+        // flexGrow: 1,
+        // justifyContent: "space-between",
+        height: height-25,
+        // alignItems: 'stretch',
+        // // padding: 80,
+        // flexWrap: 'wrap',
+        // alignContent: 'center'
+    },
+
+    imgStyle: {
+        flexGrow: 1,
+        alignSelf: 'stretch',
+        width: undefined,
+        height: undefined
+
+        // top: 0,
+        // left: 0,
+    },
+
+    inputs: {
+        flexGrow: 2,
+        justifyContent: "space-between",
+        alignItems: 'stretch',
+        // padding: 80,
+        // flexWrap: 'wrap',
+        alignContent: 'center',
+    },
+
+    forgotStyle: {
+        // justifyContent: "space-between",
+        alignSelf: 'center'
     },
 });
