@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, AsyncStorage, ScrollView, Alert, TextInput, Dimensions } from 'react-native';
+import { StyleSheet, View, ScrollView, Alert, TextInput, Dimensions } from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
 import { Input, Text, SocialIcon, Button } from 'react-native-elements';
 import t from 'tcomb-form-native';
 import CustomInput from '../../Base/CustomInput'
 // import { styles } from "./LoginScreen";
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class SignUp extends React.Component {
 
@@ -130,7 +130,8 @@ export default class SignUp extends React.Component {
         };
 
         // ------------ Final check for validity of location provided, call on the backend, return result of post ------------
-        return await axios.post('http://10.0.2.2:9000/api/validateZip', location).then(
+        return await axios.post('http://localhost:9000/api/validateZip', location).then(
+        // return await axios.post('http://10.0.2.2:9000/api/validateZip', location).then(
             function (response) {
                 // If we have not prompted a change in city and state we're good to go and return true.
                 if (response.data.city === (city) && response.data.state === (state))
@@ -167,7 +168,8 @@ export default class SignUp extends React.Component {
         };
         // Make an API call to see if the username or email are already in use
         // Also check other values in the form
-        axios.post('http://10.0.2.2:9000/api/available', ret).then(async function (response) {
+        axios.post('http://localhost:9000/api/available', ret).then(async function (response) {
+        // axios.post('http://10.0.2.2:9000/api/available', ret).then(async function (response) {
             if (!response.data['username']) {
                 alert("Username already in use")
             }

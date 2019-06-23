@@ -1,8 +1,9 @@
 import React from 'react';
-import {AsyncStorage, StyleSheet, View} from 'react-native';
+import { StyleSheet, View} from 'react-native';
 import axios from "axios";
 import {Button, Text, Header, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class AccountScreen extends React.Component {
 

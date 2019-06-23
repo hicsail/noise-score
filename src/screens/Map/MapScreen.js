@@ -1,10 +1,11 @@
 import React from 'react';
-import {AsyncStorage, Platform, StyleSheet, Image, View, TouchableHighlight} from 'react-native';
-import MapView from 'react-native-maps';
+import { Platform, StyleSheet, Image, View, TouchableHighlight} from 'react-native';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {Marker, Callout, Overlay, LocalTile} from 'react-native-maps';
 import axios from "axios";
 import {Text, List} from 'react-native-elements';
 import SearchBar from 'react-native-searchbar'
+import AsyncStorage from '@react-native-community/async-storage';
 
 const currentLocationImage = require('./mapMarker3.png');
 
@@ -107,7 +108,8 @@ export default class MapScreen extends React.Component {
                     'Content-Type': 'application/json',
                     'Authorization': authHeader
                 };
-                axios.get('http://10.0.2.2:9000/api/allMeasurements', {
+                axios.get('http://localhost:9000/api/allMeasurements', {
+                // axios.get('http://10.0.2.2:9000/api/allMeasurements', {
                     headers: header,
                     params: {}
                 }).then(function (ret) {
@@ -157,7 +159,8 @@ export default class MapScreen extends React.Component {
                     'Authorization': authHeader
                 };
 
-                axios.get('http://10.0.2.2:9000/api/userMeasurements', {
+                axios.get('http://localhost:9000/api/userMeasurements', {
+                // axios.get('http://10.0.2.2:9000/api/userMeasurements', {
                     headers: header,
                     params: params
                 }).then(function (ret) {
@@ -183,7 +186,8 @@ export default class MapScreen extends React.Component {
                     if (error.response.status == 500) {
                         AsyncStorage.removeItem("userData").then(function (ret) {
                             if (ret) {
-                                axios.delete('http://10.0.2.2:9000/api/logout', {headers: header})
+                                axios.delete('http://localhost:9000/api/logout', {headers: header})
+                                // axios.delete('http://10.0.2.2:9000/api/logout', {headers: header})
                                     .then(function (response) {
                                         this.props.navigation("SignedOut");
                                     })
@@ -272,7 +276,8 @@ export default class MapScreen extends React.Component {
                     };
 
 
-                    axios.get('http://10.0.2.2:9000/api/search', {
+                    axios.get('http://localhost:9000/api/search', {
+                    // axios.get('http://10.0.2.2:9000/api/search', {
                         headers: header,
                         params: params
                     }).then(function (ret) {
@@ -328,7 +333,8 @@ export default class MapScreen extends React.Component {
                     }}
 
                     style={styles.mapView}
-                    provider={"google"} // remove if not using Google Maps
+                  //provider={"google"} // remove if not using Google Maps
+                    provider={PROVIDER_GOOGLE}
 
                     // style={styles.map}
                     // provider={Platform.OS === 'ios' ? null : 'osmdroid'}

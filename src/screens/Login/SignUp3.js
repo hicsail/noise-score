@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button, ScrollView, AsyncStorage, Slider, Alert} from 'react-native';
+import {StyleSheet, Text, View, Button, ScrollView, Slider, Alert} from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export default class AccountScreen extends React.Component {
@@ -38,7 +39,8 @@ export default class AccountScreen extends React.Component {
             response['weekday'] = weekdayArray;
             response['weekend'] = weekendArray;
             // We need to make the API call to create a new user
-            axios.post('http://10.0.2.2:9000/api/signup', response).then(function (response){
+            axios.post('http://localhost:9000/api/signup', response).then(function (response){
+            // axios.post('http://10.0.2.2:9000/api/signup', response).then(function (response){
                 // Lets save relevent information and login!
                 Alert.alert(
                     'Welcome to Noise Score!',

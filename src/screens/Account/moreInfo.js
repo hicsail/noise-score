@@ -1,11 +1,11 @@
 import React from 'react';
-import {AsyncStorage, Picker, StyleSheet, View, ScrollView, Platform} from 'react-native';
+import { Picker, StyleSheet, View, ScrollView, Platform} from 'react-native';
 import axios from "axios";
 import { Button, Text, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class AccountScreen extends React.Component {
 

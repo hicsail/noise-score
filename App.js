@@ -44,10 +44,13 @@ const AccountStack = createStackNavigator({
     Account3: moreInfo,
 });
 
-// const ForgotPassStack = createStackNavigator({
-//     Account: AccountStack,
-//     ForgotPass: ForgotResetPassword
-// });
+
+
+const SignUpStack = createStackNavigator({
+    SignUp: SignUp,
+    SignUp1: SignUp2,
+    SignUp3: SignUp3,
+});
 
 
 const MapStack = createStackNavigator({
@@ -56,6 +59,18 @@ const MapStack = createStackNavigator({
         navigationOptions: { header: null }
     }
 });
+
+
+const ForgotPassStack = createStackNavigator({
+    ForgotResetPassword: { screen: ForgotResetPassword },
+    ResetPassword: { screen: ResetPassword },
+});
+
+// const ForgotPassStack = createStackNavigator({
+//     Account: AccountStack,
+//     ForgotPass: ForgotResetPassword
+// });
+
 
 const home = createBottomTabNavigator(
     {
@@ -105,27 +120,7 @@ const home = createBottomTabNavigator(
     }
 );
 
-const SignUpStack = createStackNavigator({
-    SignUp: SignUp,
-    SignUp1: SignUp2,
-    SignUp3: SignUp3,
-});
 
-const ForgotPassStack = createStackNavigator({
-    ForgotResetPassword: { screen: ForgotResetPassword },
-    ResetPassword: { screen: ResetPassword },
-});
-
-
-function getHeader(title = "", tintcolor = '#323232', headbgcolor = '#31BD4B') {
-    return {
-        title: title,
-        headerTintColor: tintcolor,
-        headerStyle: {
-            backgroundColor: headbgcolor
-        }
-    }
-}
 
 const login = createStackNavigator({
     SignIn: {
@@ -158,29 +153,6 @@ const login = createStackNavigator({
 
 });
 
-
-// export const USER_KEY = "auth-demo-key";
-//
-// export const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
-//
-// export const onSignOut = () => AsyncStorage.removeItem(USER_KEY);
-//
-// export const isSignedIn = () => {
-//     // return false;
-//     return new Promise((resolve, reject) => {
-//         AsyncStorage.getItem(USER_KEY)
-//             .then(res => {
-//                 if (res !== null) {
-//                     resolve(true);
-//                 } else {
-//                     resolve(false);
-//                 }
-//             })
-//             .catch(err => reject(err));
-//     });
-// };
-
-
 export const root = createStackNavigator({
         SignedIn: { screen: home },
         SignedOut: { screen: login }
@@ -188,13 +160,21 @@ export const root = createStackNavigator({
 );
 
 
-// const First = createAppContainer(root);
-
 const Second = createSwitchNavigator({
     Splash: Splashscreen,
     App: home,
     UserLogin: login
 });
 
+
+function getHeader(title = "", tintcolor = '#323232', headbgcolor = '#31BD4B') {
+    return {
+        title: title,
+        headerTintColor: tintcolor,
+        headerStyle: {
+            backgroundColor: headbgcolor
+        }
+    }
+}
 
 export default createAppContainer(Second);

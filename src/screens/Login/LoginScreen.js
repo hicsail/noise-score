@@ -80,7 +80,8 @@ export default class LoginScreen extends React.Component {
         console.log("In here 1");
         const { navigate } = this.props.navigation;
         // change 10.0.2.2 to 10.0.2.2 for android
-        axios.post('http://10.0.2.2:9000/api/login', userCredentials)
+        axios.post('http://localhost:9000/api/login', userCredentials)
+        // axios.post('http://10.0.2.2:9000/api/login', userCredentials)
             .then(function (response) {
                 // Store the userData:
                 let ret = response['data'];

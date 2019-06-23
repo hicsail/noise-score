@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button, Picker, ScrollView, AsyncStorage} from 'react-native';
+import {StyleSheet, Text, View, Button, Picker, ScrollView } from 'react-native';
 import {SelectMultipleGroupButton} from "react-native-selectmultiple-button";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class AccountScreen extends React.Component {
 

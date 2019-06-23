@@ -71,7 +71,8 @@ export default class ResetPassword extends React.Component {
                 };
                 console.log(this.state);
                 //axios post for reset password
-                await axios.post('http://10.0.2.2:9000/api/login/reset', userCredentials).then(function (ret) {
+                await axios.post('http://localhost:9000/api/login/reset', userCredentials).then(function (ret) {
+                // await axios.post('http://10.0.2.2:9000/api/login/reset', userCredentials).then(function (ret) {
                     alert("Hello");
                     this.props.navigation.navigate("SignIn")
                 }).catch(function (error) {
