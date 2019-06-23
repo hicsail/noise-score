@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, AsyncStorage, ScrollView, Alert, TextInput } from 'react-native';
+import { StyleSheet, View, ScrollView, Alert, TextInput } from 'react-native';
 import PropTypes from 'prop-types';
 // import { home } from "../../../App";
 // import axios from 'axios';
 import { Input, Text, SocialIcon, Button } from 'react-native-elements';
+// import AsyncStorage from '@react-native-community/async-storage';
 
 export default class CustomInput extends Component {
 

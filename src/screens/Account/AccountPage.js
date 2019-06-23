@@ -1,9 +1,9 @@
 import React from 'react';
-import { AsyncStorage, Picker, StyleSheet, View, ScrollView } from 'react-native';
+import { Picker, StyleSheet, View, ScrollView } from 'react-native';
 import axios from "axios";
 import { Button, Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class AccountScreen extends React.Component {
 
@@ -63,7 +63,8 @@ export default class AccountScreen extends React.Component {
                 // Remove the cookie and make API call to log out
                 this.removeItemValue("userData").then(function (ret) {
                     if (ret) {
-                        axios.delete('http://10.0.2.2:9000/api/logout', { headers: header })
+                        axios.delete('http://localhost:9000/api/logout', { headers: header })
+                        // axios.delete('http://10.0.2.2:9000/api/logout', { headers: header })
                             .then(function () {
                                 navigate("UserLogin");
                             })

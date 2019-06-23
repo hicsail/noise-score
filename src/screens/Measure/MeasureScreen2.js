@@ -1,9 +1,9 @@
 import React from 'react';
-import {AsyncStorage, ScrollView, StyleSheet, Text, View} from 'react-native';
+import { ScrollView, StyleSheet, Text, View} from 'react-native';
 import SourceButton from '../../components/SourceButton';
 import * as constants from '../../components/constants';
 import NavButtons2 from '../../components/NavButtons2';
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class MeasureScreen2 extends React.Component {
 

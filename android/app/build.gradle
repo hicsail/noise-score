@@ -140,9 +140,10 @@ android {
 configurations.all {exclude group: 'com.android.support', module: 'support-v4'}
 
 dependencies {
+    implementation project(':@react-native-community_async-storage')
+    implementation project(':react-native-svg')
     compile project(':react-native-splash-screen')
 //    compile project(':react-native-maps')
-    compile project(':react-native-svg')
     compile project(':react-native-sound-level')
     compile project(':react-native-vector-icons')
     compile project(':react-native-gesture-handler')

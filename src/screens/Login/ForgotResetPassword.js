@@ -37,7 +37,8 @@ class ForgotResetPassword extends React.Component {
         const data = { email: this.state.email };
         // If mail exists, send verification token and return true, else return false;
         let result = false;
-        result = await axios.post('http://10.0.2.2:9000/api/login/forgot', data)
+        result = await axios.post('http://localhost:9000/api/login/forgot', data)
+        // result = await axios.post('http://10.0.2.2:9000/api/login/forgot', data)
             .then(function () {
                 return true;
             })

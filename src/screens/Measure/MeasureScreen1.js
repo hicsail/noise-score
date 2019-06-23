@@ -1,7 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, AsyncStorage} from 'react-native';
+import {StyleSheet, Text, View, ScrollView } from 'react-native';
 import { SelectMultipleGroupButton } from "react-native-selectmultiple-button";
 import NavButtons2 from '../../components/NavButtons2';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export default class MeasureScreen1 extends React.Component {

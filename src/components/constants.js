@@ -1,7 +1,3 @@
-// let items = ["aircraft", "alarm", "dog", "carMusic", "construction", "fireworks", "footsteps", "horn", "hvac",
-// "leafBlower", "trash", "music", "neighbor", "party", "delivery", "pickup", "quiet", "restaurant", "traffic",
-// "trains", "voices", "other"]
-
 export const NOISE_SOURCES = [
 
   {val: 'airplane', text:'airplane', icon:'airplane'},
@@ -32,3 +28,4 @@ export const NOISE_SOURCES = [
   {val: 'other', text:'other', icon:'checkbox-blank-circle-outline'}
 
 ];
+

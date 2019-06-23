@@ -4,7 +4,7 @@ import {
   PermissionsAndroid,
   ScrollView,
   StyleSheet,
-  View, AsyncStorage
+  View
 } from 'react-native';
 import RNSoundLevelModule from 'react-native-sound-level';
 import Table from '../../components/Table';
@@ -14,6 +14,7 @@ import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import StartMicrophone from '../../components/StartMicrophone';
 import StopMicrophone from '../../components/StopMicrophone';
 import ReferenceDecibels from '../../components/ReferenceDecibels';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export default class MeasureScreen extends React.Component {
