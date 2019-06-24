@@ -5,6 +5,7 @@ import NavButtons from '../../components/NavButtons';
 import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import axios from "axios";
 import AsyncStorage from '@react-native-community/async-storage';
+import * as constants from '../../components/constants';
 
 export default class MeasureScreen3 extends React.Component {
 
@@ -54,8 +55,7 @@ export default class MeasureScreen3 extends React.Component {
               var longitude = position['coords']['latitude'];
               var latitude = position['coords']['longitude'];
               response['location'] = [latitude,longitude];
-              axios.post('http://localhost:9000/api/inputMeasurement', response)
-              // axios.post('http://10.0.2.2:9000/api/inputMeasurement', response)
+              axios.post('http://' + constants.IP_ADDRESS + '/api/inputMeasurement', response)
                   .then(function (response1) {
                     // Done!
                   })

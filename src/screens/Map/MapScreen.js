@@ -6,6 +6,7 @@ import axios from "axios";
 import {Text, List} from 'react-native-elements';
 import SearchBar from 'react-native-searchbar'
 import AsyncStorage from '@react-native-community/async-storage';
+import * as constants from '../../components/constants';
 
 const currentLocationImage = require('./mapMarker3.png');
 
@@ -108,8 +109,8 @@ export default class MapScreen extends React.Component {
                     'Content-Type': 'application/json',
                     'Authorization': authHeader
                 };
-                axios.get('http://localhost:9000/api/allMeasurements', {
-                // axios.get('http://10.0.2.2:9000/api/allMeasurements', {
+
+                axios.get('http://' + constants.IP_ADDRESS + '/api/allMeasurements', {
                     headers: header,
                     params: {}
                 }).then(function (ret) {
@@ -159,8 +160,8 @@ export default class MapScreen extends React.Component {
                     'Authorization': authHeader
                 };
 
-                axios.get('http://localhost:9000/api/userMeasurements', {
-                // axios.get('http://10.0.2.2:9000/api/userMeasurements', {
+
+                axios.get('http://' + constants.IP_ADDRESS + '/api/userMeasurements', {
                     headers: header,
                     params: params
                 }).then(function (ret) {
@@ -186,8 +187,7 @@ export default class MapScreen extends React.Component {
                     if (error.response.status == 500) {
                         AsyncStorage.removeItem("userData").then(function (ret) {
                             if (ret) {
-                                axios.delete('http://localhost:9000/api/logout', {headers: header})
-                                // axios.delete('http://10.0.2.2:9000/api/logout', {headers: header})
+                                axios.delete('http://' + constants.IP_ADDRESS + '/api/logout', {headers: header})
                                     .then(function (response) {
                                         this.props.navigation("SignedOut");
                                     })
@@ -276,8 +276,7 @@ export default class MapScreen extends React.Component {
                     };
 
 
-                    axios.get('http://localhost:9000/api/search', {
-                    // axios.get('http://10.0.2.2:9000/api/search', {
+                    axios.get('http://' + constants.IP_ADDRESS + '/api/search', {
                         headers: header,
                         params: params
                     }).then(function (ret) {
