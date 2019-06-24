@@ -3,7 +3,6 @@ import {
     StyleSheet,
     View,
     ScrollView,
-    AsyncStorage,
     Image,
     Alert,
     TouchableHighlight,
@@ -17,6 +16,8 @@ import AccountScreen from "../Account/AccountScreen";
 import CustomButton from "../../Base/CustomButton"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Dimensions } from "react-native";
+import * as constants from '../../components/constants';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const { width, height } = Dimensions.get('window');
 export default class LoginScreen extends React.Component {
@@ -79,9 +80,8 @@ export default class LoginScreen extends React.Component {
         };
         console.log("In here 1");
         const { navigate } = this.props.navigation;
-        // change 10.0.2.2 to 10.0.2.2 for android
-        axios.post('http://localhost:9000/api/login', userCredentials)
-        // axios.post('http://10.0.2.2:9000/api/login', userCredentials)
+        let url = 'http://' + constants.IP_ADDRESS + '/api/login';
+        axios.post(url, userCredentials)
             .then(function (response) {
                 // Store the userData:
                 let ret = response['data'];

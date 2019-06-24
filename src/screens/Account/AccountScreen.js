@@ -4,7 +4,7 @@ import axios from "axios";
 import { ListItem , Button, Text, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import * as constants from '../../components/constants';
 
 export default class AccountScreen extends React.Component {
 
@@ -44,8 +44,7 @@ export default class AccountScreen extends React.Component {
             userID : this.state.userID,
             username : this.state.username
           };
-          axios.get('http://localhost:9000/api/userMeasurements', {headers:header, params:params}).then(function (ret){
-          // axios.get('http://10.0.2.2:9000/api/userMeasurements', {headers:header, params:params}).then(function (ret){
+          axios.get('http://' + constants.IP_ADDRESS + '/api/userMeasurements', {headers:header, params:params}).then(function (ret){
             self.setState({
               userData : ret['data']
             });
@@ -158,8 +157,7 @@ export default class AccountScreen extends React.Component {
             'Content-Type': 'application/json',
             'Authorization' : authHeader
           };
-          axios.get('http://localhost:9000/api/userMeasurements', {headers: header, params:params}).then(function (ret){
-          // axios.get('http://10.0.2.2:9000/api/userMeasurements', {headers: header, params:params}).then(function (ret){
+          axios.get('http://' + constants.IP_ADDRESS + '/api/userMeasurements', {headers: header, params:params}).then(function (ret){
             self.setState({
               userData : ret['data']
             });

@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 export const NOISE_SOURCES = [
 
   {val: 'airplane', text:'airplane', icon:'airplane'},
@@ -28,4 +30,8 @@ export const NOISE_SOURCES = [
   {val: 'other', text:'other', icon:'checkbox-blank-circle-outline'}
 
 ];
+
+export const IP_ADDRESS = (Platform.OS === 'ios') ? 'localhost:9000' : '10.0.2.2:9000';
+
+
 

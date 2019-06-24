@@ -2,6 +2,7 @@ import React from "react";
 import { Image, View, Text } from "react-native";
 import axios from "axios";
 import AsyncStorage from '@react-native-community/async-storage';
+import * as constants from '../../components/constants';
 
 // export let authStatus = false;
 export default class Splashscreen extends React.Component {
@@ -34,8 +35,7 @@ export default class Splashscreen extends React.Component {
                             'Authorization': authHeader
                         };
 
-                        return axios.get('http://localhost:9000/api/sessions/my', { headers: header })
-                        // return axios.get('http://10.0.2.2:9000/api/sessions/my', { headers: header })
+                        return axios.get('http://' + constants.IP_ADDRESS + '/api/sessions/my', { headers: header })
                             .then(function () {
                                 return true;
                             })
