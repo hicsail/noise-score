@@ -34,31 +34,14 @@ export default class MapScreen extends React.Component {
     }
 
     componentDidMount() {
+
         // Update the location of the maps focus
         const map = this.mapView;
 
-        // THIS WORKS FOR IOS
-        // navigator.geolocation.requestAuthorization();
-        // navigator.geolocation.getCurrentPosition(
-        //     (position) => {
-        //
-        //         var lat = (position.coords.latitude);
-        //         var long = (position.coords.longitude);
-        //         var initialRegion ={
-        //             latitude: lat,
-        //             longitude: long,
-        //             latitudeDelta: 0.0922,
-        //             longitudeDelta: 0.05,
-        //         };
-        //         map.animateToRegion(initialRegion, 2000);
-        //         this.setState({ region: initialRegion});
-        //     },
-        //     (error) => {alert('Error getting location')
-        //     },
-        //     {
-        //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
-        //     }
-        // );
+        // TODO - is this necessary for IOS?
+        if (Platform.OS === "ios"){
+            navigator.geolocation.requestAuthorization();
+        }
 
         // THIS WORKS FOR ANDROID - uncomment out marker in render
         navigator.geolocation.getCurrentPosition((position) => {
@@ -94,38 +77,36 @@ export default class MapScreen extends React.Component {
 
     }
 
-    getHeatMapPoints() {
-        // Function that can be used to make a call 'allMeasurement'
-        // Could be used to help with the heatmap
-        // Currently unused
-
-        var self = this;
-
-        AsyncStorage.getItem('userData').then(function (ret) {
-            if (ret) {
-                var response = JSON.parse(ret);
-                var authHeader = response['authHeader'];
-                const header = {
-                    'Content-Type': 'application/json',
-                    'Authorization': authHeader
-                };
-
-                axios.get('http://' + constants.IP_ADDRESS + '/api/allMeasurements', {
-                    headers: header,
-                    params: {}
-                }).then(function (ret) {
-                    self.setState({
-                        points: ret['data']
-                    })
-                    // this.generateData(self);
-                }).catch(function (error) {
-                    alert(error);
-                });
-            }
-        });
-
-
-    }
+    // getHeatMapPoints() {
+    //     // Function that can be used to make a call 'allMeasurement'
+    //     // Could be used to help with the heatmap
+    //     // Currently unused
+    //
+    //     var self = this;
+    //
+    //     AsyncStorage.getItem('userData').then(function (ret) {
+    //         if (ret) {
+    //             var response = JSON.parse(ret);
+    //             var authHeader = response['authHeader'];
+    //             const header = {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': authHeader
+    //             };
+    //
+    //             axios.get('http://' + constants.IP_ADDRESS + '/api/allMeasurements', {
+    //                 headers: header,
+    //                 params: {}
+    //             }).then(function (ret) {
+    //                 self.setState({
+    //                     points: ret['data']
+    //                 })
+    //                 // this.generateData(self);
+    //             }).catch(function (error) {
+    //                 alert(error);
+    //             });
+    //         }
+    //     });
+    // }
 
     async removeItemValue(key) {
         try {

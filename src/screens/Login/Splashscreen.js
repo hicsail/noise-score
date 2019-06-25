@@ -52,6 +52,7 @@ export default class Splashscreen extends React.Component {
     };
 
     async componentDidMount() {
+
         // Preload data from an external API
         // Preload data using AsyncStorage
         const loadTime = this.performTimeConsumingTask();

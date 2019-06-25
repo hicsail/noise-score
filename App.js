@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
     createBottomTabNavigator,
@@ -160,11 +161,21 @@ export const root = createStackNavigator({
 );
 
 
-const Second = createSwitchNavigator({
+let Second = createSwitchNavigator({
     Splash: Splashscreen,
     App: home,
     UserLogin: login
 });
+
+
+// iOS uses LaunchScreen.xib as splashscreen
+if (Platform.OS === 'ios'){
+    Second = createSwitchNavigator({
+        UserLogin: login,
+        App: home
+    });
+}
+
 
 
 function getHeader(title = "", tintcolor = '#323232', headbgcolor = '#31BD4B') {
