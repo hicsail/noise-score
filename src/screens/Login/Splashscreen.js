@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, View, Text } from "react-native";
+import { Dimensions, Image, View } from "react-native";
 import axios from "axios";
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
@@ -66,12 +66,11 @@ export default class Splashscreen extends React.Component {
         return (
             <View style={styles.viewStyles}>
                 <Image
-                    source={require('../../../assets/splash_logo.jpeg')}
+                    source={require('../../../assets/logo-bright-green.png')}
                     style={{
                         flex: 1,
-                        alignSelf: 'stretch',
-                        width: undefined,
-                        height: undefined
+                        alignSelf: 'center',
+                        width: width - 40,
                     }}
                 />
                 <Image
@@ -87,6 +86,7 @@ export default class Splashscreen extends React.Component {
         );
     }
 }
+const { width, height } = Dimensions.get('window');
 
 const styles = {
     viewStyles: {

@@ -29,7 +29,7 @@ export default class MapScreen extends React.Component {
             authHeader: "",
             pathTemplate: './../../../assets/greenBox.png',
             query: "",
-            searchBarShown: true,
+            searchBarShown: false,
         };
     }
 
@@ -69,7 +69,7 @@ export default class MapScreen extends React.Component {
         // Add listeners to update the markers (in the situation that a user takes a new measurements)
         this.subs = [
             this.props.navigation.addListener('willFocus', () => this.updateMarkers()),
-            this.props.navigation.addListener('willFocus', () => this.searchBar.show())
+            // this.props.navigation.addListener('willFocus', () => this.searchBar.show())
         ];
 
         this.updateMarkers();
@@ -297,7 +297,7 @@ export default class MapScreen extends React.Component {
         //         searchBarShown : true
         //     });
         // }
-        this.searchBar.show();
+        // this.searchBar.show();
     }
 
     render() {
@@ -342,12 +342,12 @@ export default class MapScreen extends React.Component {
                 </MapView>
 
                 {/*------------- Search bar funcionality - will incure costs to our PI if used -------------*/}
-                <SearchBar
-                    ref={(ref) => this.searchBar = ref}
-                    handleSearch={(input) => this.search(input)}
-                    showOnLoad
-                    onSubmitEditing={() => this.searchDriver()}
-                />
+                {/*<SearchBar*/}
+                    {/*ref={(ref) => this.searchBar = ref}*/}
+                    {/*handleSearch={(input) => this.search(input)}*/}
+                    {/*showOnLoad*/}
+                    {/*onSubmitEditing={() => this.searchDriver()}*/}
+                {/*/>*/}
 
             </View>
 
