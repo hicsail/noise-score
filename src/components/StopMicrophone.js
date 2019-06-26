@@ -1,37 +1,52 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import IconFA from 'react-native-vector-icons/FontAwesome';
-
+// import styles from './StartMicrophone'
 
 
 const stopMicrophone = (props) => (
 
-  <View style = {styles.button}>
-      <IconFA.Button
-        name={'stop'}
-        size={30}
-        borderRadius={30}
-        color="white"
-        backgroundColor={red}
-        onPress={()=> props.stopMeasurement()}>
-        <Text style = {styles.text}>Stop</Text>
-      </IconFA.Button>
-  </View>
+
+    <TouchableOpacity style={[styles.button, stopStyle.buttonColor]} onPress={() => props.stopMeasurement()}>
+
+        <IconFA
+            name={'pause'}
+            size={width / 6}
+            // borderRadius={300}
+            color='red'
+            // backgroundColor='transparent'
+        >
+
+        </IconFA>
+    </TouchableOpacity>
 
 );
-
-const red = '#FF0000';
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    padding: 20
-  },
-  text: {
-    color: 'white',
-    fontSize: 20
-  },
+    button: {
+        // flex: 1,
+        // flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+        height: width / 3,
+        width: width / 3,  //The Width must be the same as the height
+        borderRadius: 2 * width / 3, //Then Make the Border Radius twice the size of width or Height
+        borderWidth: 8,
+        borderColor: 'red'
+
+    },
+    text: {
+        color: 'white',
+        fontSize: 30,
+        // flex: 1,
+    },
 });
 
+const stopStyle = StyleSheet.create({
+    buttonColor: {
+        backgroundColor: 'white',
+    }
+});
 
 export default stopMicrophone;
