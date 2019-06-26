@@ -1,12 +1,10 @@
-// let items = ["aircraft", "alarm", "dog", "carMusic", "construction", "fireworks", "footsteps", "horn", "hvac",
-// "leafBlower", "trash", "music", "neighbor", "party", "delivery", "pickup", "quiet", "restaurant", "traffic",
-// "trains", "voices", "other"]
+import { Platform } from 'react-native';
 
 export const NOISE_SOURCES = [
 
   {val: 'airplane', text:'airplane', icon:'airplane'},
   {val: 'alarm', text:'alarm', icon:'alarm-light'},
-  {val: 'carMusic', text:'car music', icon:'car-wash'},
+  {val: 'car music', text:'car music', icon:'car-wash'},
   {val: 'construction', text:'construction', icon:'wrench'},
 
   {val: 'delivery', text:'delivery', icon:'truck-delivery'},
@@ -16,7 +14,7 @@ export const NOISE_SOURCES = [
   {val: 'horn', text:'horn', icon:'bullhorn'},
   {val: 'hvac', text:'hvac', icon:'air-conditioner'},
 
-  {val: 'leafBlower', text:'leaf blower', icon:'leaf'},
+  {val: 'leaf blower', text:'leaf blower', icon:'leaf'},
   {val: 'music', text:'music', icon:'music'},
   {val: 'neighbor', text:'neighbor', icon:'human-male'},
   {val: 'party', text:'party', icon:'glass-cocktail'},
@@ -32,3 +30,8 @@ export const NOISE_SOURCES = [
   {val: 'other', text:'other', icon:'checkbox-blank-circle-outline'}
 
 ];
+
+export const IP_ADDRESS = (Platform.OS === 'ios') ? 'localhost:9000' : '10.0.2.2:9000';
+
+
+
