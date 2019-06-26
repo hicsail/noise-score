@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, AsyncStorage, ScrollView, Alert, TextInput } from 'react-native';
+import { StyleSheet, View, AsyncStorage, ScrollView, Alert, TextInput, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 // import { home } from "../../../App";
 // import axios from 'axios';
 import { Input, Text, SocialIcon, Button } from 'react-native-elements';
+
+const { width, height } = Dimensions.get('window');
+
 
 export default class CustomInput extends Component {
 
@@ -19,6 +22,7 @@ export default class CustomInput extends Component {
         isPassword: PropTypes.bool,
         isEmail: PropTypes.bool,
         value: PropTypes.string,
+        errorMessage: PropTypes.string,
     };
 
     constructor(props) {
@@ -32,21 +36,7 @@ export default class CustomInput extends Component {
     }
 
     isValid() {
-        let result = this.emptyCheck();
-        let message = null;
-        if (result) {
-            if (this.props.password) {
-
-            }
-            else if (this.props.isEmail) {
-
-            }
-        }
-        else {
-            // this.setState({ isError: true })
-        }
-
-        return result;
+        return (this.props.errorMessage === '' || this.props.errorMessage === undefined);
     }
 
     async getMessage() {
@@ -90,8 +80,9 @@ export default class CustomInput extends Component {
                 {/*Initialize input box with a default style and add the error style when the input is left empty*/}
                 <View style={[styles.inputBox, this.isValid() ? null : styles.errorInputBox]}>
                     <TextInput
-                        style={styles.text}
+                        style={[styles.text, styles.placeholderText]}
                         placeholder={this.props.placeholder}
+                        placeholderStyle={styles.placeholderText}
                         // placeholderTextColor={this.emptyCheck() ? 'gray' : 'red'}
                         secureTextEntry={this.props.isPassword}
                         underlineColorAndroid='rgba(0,0,0,0)'
@@ -103,13 +94,12 @@ export default class CustomInput extends Component {
 
                     />
                 </View>
+
                 <Text
                     style={this.isValid() ? {
-                        color: "black",
                         display: "none"
-                    } : { color: "red" }}>
-                    {/*{this.getMessage().message}*/}
-                    {this.props.name} is required
+                    } : [{ color: "red" }, styles.placeholderText]}>
+                    {this.props.errorMessage}
                 </Text>
             </View>
         );
@@ -124,22 +114,29 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         // minHeight: 60,
         // height: 80,
-        paddingHorizontal: 40,
-        marginVertical: 5
+        // paddingHorizontal: 40,
+        marginVertical: 5,
     },
 
     text: {
-        fontSize: 15,
+        fontSize: width / 20,
         color: "black",
         textAlignVertical: "center",
         fontFamily: 'Euphemia UCAS',
+        textAlign: 'center'
+    },
+
+    placeholderText: {
+        textAlign: 'left',
+        paddingLeft: 25,
     },
 
     inputBox: {
-        // height: 40,
-        // minHeight: 40,
-        borderColor: 'gray',
-        borderBottomWidth: 1,
+        borderColor: '#31BD4B',
+        // borderWidth: 1,
+        borderRadius: 30,
+        borderBottomWidth: 3,
+        // borderWidth: 3,
         alignItems: 'stretch',
     },
 

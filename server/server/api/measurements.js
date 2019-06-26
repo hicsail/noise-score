@@ -27,7 +27,7 @@ internals.applyRoutes = function (server, next) {
     },
     handler: function (request, reply) {
       // Get latidude & longitude from address.
-      opencage.geocode({q: request.query['query']}).then(data => {
+      opencage.geocode({ q: request.query['query'] }).then(data => {
         if (data.status.code == 200) {
           if (data.results.length > 0) {
             var place = data.results[0];
@@ -44,7 +44,6 @@ internals.applyRoutes = function (server, next) {
       }).catch(error => {
         console.log('error', error.message);
       });
-
 
 
     }
@@ -83,41 +82,43 @@ internals.applyRoutes = function (server, next) {
 
   // Function to input a user measurement
   server.route({
-    method:'POST',
+    method: 'POST',
     path: '/inputMeasurement',
     config: {
       validate: {
         payload: {
           username: Joi.string(),
-          userID : Joi.string(),
+          userID: Joi.string(),
           rawData: Joi.array(),
           location: Joi.array(),
           locationType: Joi.string(),
-          floorLevel : Joi.number(),
+          floorLevel: Joi.number(),
           loud: Joi.string(),
-          describe : Joi.string(),
+          describe: Joi.string(),
           intense: Joi.string(),
-          feel :Joi.string(),
-          sources : Joi.array(),
+          place: Joi.string(),
+          feel: Joi.string(),
+          sources: Joi.array(),
           words: Joi.string(),
-          date : Joi.string()
+          date: Joi.string()
         }
       },
       pre: [{
         assign: 'paramsCheck',
-        method: function (request, reply){
+        method: function (request, reply) {
           var ret = "";
           const loudArray = ["Very quiet", "Quiet", "Moderately Loud", "Loud", "Very Loud"];
           const describeArray = ["Very pleasant", "Pleasant", "Neutral", "Noisy", "Unbearable"];
-          const intenseArray =  ["not", "little", "moderately", "very"];
+          const intenseArray = ["not", "little", "moderately", "very"];
+          const placeArray = ["Indoors", "Outdoors", "At work"];
           const feelArray = ["Relaxed", "Tranquil", "Neutral", "Irritated", "Anxious", "Frustrated", "Angry"];
           const sourcesArray = ["aircraft", "alarm", "dog", "car music", "construction", "fireworks", "footsteps", "horn", "hvac",
             "leaf blower", "trash", "music", "neighbor", "party", "delivery", "pickup", "quiet", "restaurant", "traffic", "trains", "voices", "other"];
-          const locationTypeArray = [ "work", "outdoors", "indoors"];
-          if (request.payload.location[0] > 180 || request.payload.location[0] < -180){
+          const locationTypeArray = ["work", "outdoors", "indoors"];
+          if (request.payload.location[0] > 180 || request.payload.location[0] < -180) {
             ret = ret + " + Problem with Lang";
           }
-          if (request.payload.location[1] > 90 || request.payload.location[1] < -90){
+          if (request.payload.location[1] > 90 || request.payload.location[1] < -90) {
 
             ret = ret + " + Problem with Lit";
           }
@@ -130,12 +131,15 @@ internals.applyRoutes = function (server, next) {
           if (!feelArray.includes(request.payload.feel)) {
             ret = ret + " + Problem with Feel";
           }
-          for (var i = 0; i < request.payload.sources.length; i++){
+          if (!placeArray.includes(request.payload.place)) {
+            ret = ret + " + Problem with Place";
+          }
+          for (var i = 0; i < request.payload.sources.length; i++) {
             if (!sourcesArray.includes(request.payload.sources[i])) {
               ret = ret + " + Problem with Sources";
             }
           }
-          if(!request.payload.words.length > 140){
+          if (!request.payload.words.length > 140) {
             ret = ret + " + Problem with Words"
           }
           if (ret.length > 1) {
@@ -154,13 +158,14 @@ internals.applyRoutes = function (server, next) {
       const loud = request.payload.loud;
       const describe = request.payload.describe;
       const feel = request.payload.feel;
+      const place = request.payload.place;
       const sources = request.payload.sources;
       const words = request.payload.words;
       const date = request.payload.date;
       try {
-        Measurement.create(username, userID, rawData, location, loud, describe, feel, sources, words,date);
-      } catch (error){
-          reply(error);
+        Measurement.create(username, userID, rawData, location, loud, describe, feel, place, sources, words, date);
+      } catch (error) {
+        reply(error);
       }
       reply(200);
     }
@@ -177,11 +182,11 @@ internals.applyRoutes = function (server, next) {
     },
     handler: function (request, reply) {
       var userID = request.state.AuthCookie.userId;
-      Measurement.find({ userID : userID}, (err, session) => {
-        if(err){
+      Measurement.find({ userID: userID }, (err, session) => {
+        if (err) {
           reply(404);
         } else {
-              reply(session);
+          reply(session);
 
         }
       });
@@ -199,19 +204,19 @@ internals.applyRoutes = function (server, next) {
     },
     handler: function (request, reply) {
       Measurement.find({}, (err, session) => {
-        if(err){
+        if (err) {
           reply(400);
         } else {
           const ret = [];
-          for (let i = 0; i < session.length; i++){
+          for (let i = 0; i < session.length; i++) {
             const pointData = {
-              latitude : session[i]['location']['lat'],
-              longitude : session[i]['location']['lang'],
-              weight : session[i]['rawData']['average']
+              latitude: session[i]['location']['lat'],
+              longitude: session[i]['location']['lang'],
+              weight: session[i]['rawData']['average']
             };
             ret.push(pointData);
           }
-              reply(ret);
+          reply(ret);
         }
       });
     }
@@ -219,12 +224,6 @@ internals.applyRoutes = function (server, next) {
 
   next();
 };
-
-
-
-
-
-
 
 
 exports.register = function (server, options, next) {
