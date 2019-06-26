@@ -6,10 +6,10 @@ class customButton extends Component {
     render() {
         const { text, onPress } = this.props;
         return (
-            <TouchableOpacity style={styles.buttonStyle}
+            <TouchableOpacity style={[styles.buttonStyle, this.props.customStyle]}
                               onPress={() => onPress()}
             >
-                <Text style={styles.textStyle}>{text}</Text>
+                <Text style={[styles.textStyle, this.props.customTextStyle]}>{text}</Text>
             </TouchableOpacity>
         );
     }
@@ -17,7 +17,9 @@ class customButton extends Component {
 
 customButton.propTypes = {
     text: PropTypes.string.isRequired,
-    onPress: PropTypes.func.isRequired
+    onPress: PropTypes.func.isRequired,
+    customStyle: PropTypes.object,
+    customTextStyle: PropTypes.object,
 };
 
 const styles = StyleSheet.create({
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
 
     buttonStyle: {
         // flex:1,
-        padding:10,
+        padding: 10,
         borderRadius: 20,
         backgroundColor: '#31BD4B',//'#215441',
     }

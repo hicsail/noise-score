@@ -17,6 +17,8 @@ import AccountScreen from "../Account/AccountScreen";
 import CustomButton from "../../Base/CustomButton"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Dimensions } from "react-native";
+import {SignupStack} from '../../../App'
+
 
 const { width, height } = Dimensions.get('window');
 export default class LoginScreen extends React.Component {
@@ -103,7 +105,7 @@ export default class LoginScreen extends React.Component {
 
                     <View style={styles.imgWrapper}>
                         <Image style={styles.imgStyle}
-                               source={require('./../../../assets/NoiseScore1.2.1.png')}
+                               source={require('./../../../assets/splash_logo.jpeg')}
                         />
                     </View>
 
@@ -128,12 +130,17 @@ export default class LoginScreen extends React.Component {
                             // buttonStyle={styles.button}
                             text="Sign In"
                             onPress={() => this.submit()}
+                            customStyle={{ borderWidth: 3, borderColor: '#31BD4B' }}
                         />
-
+                        <Text style={{ marginVertical: 0, alignSelf: 'center', justifyContent: 'center' }}>
+                            - OR -
+                        </Text>
                         <CustomButton
                             // style={styles.button}
                             text="Sign Up"
                             onPress={() => this.props.navigation.navigate("SignUp1")}
+                            customStyle={{ backgroundColor: 'white', borderWidth: 3, borderColor: '#31BD4B' }}
+                            customTextStyle={{ color: '#31BD4B' }}
                         />
 
                         <Text style={styles.forgotStyle}
@@ -141,7 +148,7 @@ export default class LoginScreen extends React.Component {
                             Forgot your password ? Click here !
                         </Text>
                     </View>
-                    <View style={styles.imgWrapper}>
+                    <View style={{ flexGrow: 2, }}>
                         <Image style={styles.imgStyle}
                                source={require('./../../../assets/Splash-image-mini3.png')}
                         />
@@ -157,7 +164,7 @@ const styles = StyleSheet.create({
 
     wrapper: {
         flexGrow: 1,
-        minHeight: height-25,
+        minHeight: height - 25,
         alignItems: 'stretch',
         paddingLeft: 30,
         paddingRight: 30,
@@ -165,11 +172,13 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         // backgroundColor: "#e9eeec",
         // minHeight: 600,
+        // backgroundColor:"gray"
 
     },
 
     imgWrapper: {
-        flexGrow: 3,
+        flexGrow: 2,
+        // backgroundColor:'lightgreen'
         // alignItems: 'stretch',
         // alignContent: 'center',
         // position: 'absolute',
@@ -179,7 +188,7 @@ const styles = StyleSheet.create({
     scrollWrapper: {
         // flexGrow: 1,
         // justifyContent: "space-between",
-        height: height-25,
+        height: height - 25,
         // alignItems: 'stretch',
         // // padding: 80,
         // flexWrap: 'wrap',
@@ -197,12 +206,13 @@ const styles = StyleSheet.create({
     },
 
     inputs: {
-        flexGrow: 2,
+        flexGrow: 1,
         justifyContent: "space-between",
         alignItems: 'stretch',
         // padding: 80,
         // flexWrap: 'wrap',
         alignContent: 'center',
+        // backgroundColor:'lightblue'
     },
 
     forgotStyle: {

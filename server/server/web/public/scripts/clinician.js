@@ -15,7 +15,7 @@ $(document).ready(function() {
     ajax: {
       url: '/api/table/measurements',
       data: function (d) {
-        d.fields = 'userID Location RawData Sound Describe Feel Sources Comments';
+        d.fields = 'userID Location RawData Sound Describe Feel Place Sources Comments';
       }
     },
 
@@ -53,6 +53,10 @@ $(document).ready(function() {
       },
       {
         data: 'feel',
+        defaultContent: ''
+      },
+      {
+        data: 'place',
         defaultContent: ''
       },
       {

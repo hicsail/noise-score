@@ -7,7 +7,7 @@ const MongoModels = require('hicsail-mongo-models');
 
 
 class Measurement extends MongoModels {
-  static create (username, userID, rawData, location, loud, describe, feel, sources, words, date){
+  static create (username, userID, rawData, location, loud, describe, place, feel, sources, words, date){
     const self = this;
     const document = {
       username: username,
@@ -59,6 +59,7 @@ Measurement.schema = Joi.object({
   loud: Joi.string(),
   describe : Joi.string(),
   feel :Joi.string(),
+  place : Joi.string(),
   sources : Joi.array(),
   words : Joi.string(),
   date : Joi.object()
