@@ -7,7 +7,7 @@ import NavButtons2 from '../../components/NavButtons2';
 import IconFA from "react-native-vector-icons/FontAwesome";
 // import {getHeader} from "../../../App";
 
-'../../../App'
+// '../../../App'
 
 const { width, height } = Dimensions.get('window');
 
@@ -138,6 +138,7 @@ export default class MeasureScreen2 extends React.Component {
                         alignItems: 'stretch'
                     }}>
                     <TouchableOpacity
+
                         style={[styles.button, styles.clearButton]}
                         // disabled={this.state.started}
                         onPress={() => this.props.navigation.navigate('Measure1')}
@@ -179,7 +180,7 @@ export default class MeasureScreen2 extends React.Component {
 
 
                     <TouchableOpacity
-                        style={[styles.button, styles.submitButton]}
+                     style={[styles.button, styles.submitButton]}
                         // disabled={this.state.started}
                         onPress={() => this.next()}
                     >
@@ -236,7 +237,6 @@ const styles = StyleSheet.create({
         fontSize: 26,
         color: "black"
     },
-
     button: {
         flex: 1,
         minHeight: 40,
@@ -252,12 +252,10 @@ const styles = StyleSheet.create({
         margin: 5,
         padding: 10,
     },
-
     submitButton: {
         backgroundColor: '#31BD4B',
         borderColor: '#31BD4B'
     },
-
     clearButton: {
         backgroundColor: '#4E5255',
         borderColor: '#4E5255'

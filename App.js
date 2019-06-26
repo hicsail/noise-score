@@ -102,12 +102,6 @@ const home = createBottomTabNavigator(
 );
 
 
-const ForgotPassStack = createStackNavigator({
-    ForgotResetPassword: { screen: ForgotResetPassword },
-    ResetPassword: { screen: ResetPassword },
-});
-
-
 export function getHeader(rightComponent) {
     return {
         headerTitleStyle: {
@@ -197,7 +191,7 @@ let AppNavigator;
 if (Platform.OS === 'ios'){
 
   AppNavigator = createSwitchNavigator({
-    UserLogin: login,
+    UserLogin: Login,
     App: home
   });
 

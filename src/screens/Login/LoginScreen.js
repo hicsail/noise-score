@@ -51,7 +51,7 @@ export default class LoginScreen extends React.Component {
         //                 'Authorization': authHeader
         //             };
         //
-        //             axios.get('http://10.0.2.2:9000/api/sessions/my', { headers: header }).then(function (ret) {
+        //             axios.get('http://' + constants.IP_ADDRESS + '/api/sessions/my', { headers: header }).then(function (ret) {
         //                 navigate("SignedIn");
         //             }).catch(function (error) {
         //                 console.log("error validating user", error);
