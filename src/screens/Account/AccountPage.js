@@ -35,7 +35,11 @@ export default class AccountScreen extends React.Component {
                 });
             }
         }.bind(this));
+        console.log(this.props.navigation);
+        console.log("AAAAAAAAAAA");
+        console.log(this.props.navigationOptions);
     }
+
 
     // Helper function to remove local storage
     async removeItemValue(key) {
@@ -91,6 +95,8 @@ export default class AccountScreen extends React.Component {
         const { navigate } = this.props.navigation;
         navigate("Account4");
     }
+
+
 
     render() {
         const { username } = this.state;
