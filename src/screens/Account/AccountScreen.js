@@ -43,7 +43,7 @@ export default class AccountScreen extends React.Component {
                         userID: this.state.userID,
                         username: this.state.username
                     };
-                    axios.get('http://10.0.2.2:9000/api/userMeasurements', {
+                    axios.get('http://' + constants.IP_ADDRESS + '/api/userMeasurements', {
                         headers: header,
                         params: params
                     }).then(function (ret) {
@@ -165,7 +165,7 @@ export default class AccountScreen extends React.Component {
                         'Content-Type': 'application/json',
                         'Authorization': authHeader
                     };
-                    axios.get('http://10.0.2.2:9000/api/userMeasurements', {
+                    axios.get('http://' + constants.IP_ADDRESS + '/api/userMeasurements', {
                         headers: header,
                         params: params
                     }).then(function (ret) {
