@@ -14,24 +14,21 @@ const { width, height } = Dimensions.get('window');
 export function getHeader(rightComponent) {
     return {
         headerTitleStyle: {
-            alignSelf: 'center',
-            textAlign: "center",
-            justifyContent: 'center',
             flex: 1,
-            fontWeight: 'bold',
-            textAlignVertical: 'center'
+            height: null,
+
+            width: 0.7 * width,
+            // alignSelf: 'center',
+            // alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            // paddingVertical: 5
         },
-        headerTitle: <Image source={require("../../../assets/logo-bright-green.png")} resizeMode={'contain'}
-                            style={{
-                                height: height / 8,
-                                alignSelf: "center",
-                                // width: width / 2,
-                                marginLeft: "auto",
-                                marginRight: "auto"
-                            }}/>,
+        headerTitle: <Image style={{ flex: 1, width: 0.7 * width, resizeMode: 'contain' }}
+                            source={require('./../../../assets/logo-white.png')}
+        />,
         headerStyle: {
-            backgroundColor: 'green',
-            height: height / 10
+            height: height / 10, padding: 5, backgroundColor: '#31BD4B'
         },
         headerRightStyle: {
             alignSelf: 'center',
@@ -44,7 +41,7 @@ export function getHeader(rightComponent) {
         },
         headerRight: rightComponent ? <View></View> : null,
 
-        headerTintColor: "white",
+        headerTintColor: "red",
     }
 }
 

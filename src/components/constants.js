@@ -10,7 +10,7 @@ export const NOISE_SOURCES = [
   {val: 'delivery', text:'delivery', icon:'truck-delivery'},
   {val: 'dog', text:'dog', icon:'dog-side'},
   {val: 'fireworks', text:'fireworks', icon:'star'},
-  {val: 'footsteps', text:'footsteps', icon:'shoe-formal'},
+  {val: 'footsteps', text:'footsteps', icon:'walk'},
   {val: 'horn', text:'horn', icon:'bullhorn'},
   {val: 'hvac', text:'hvac', icon:'air-conditioner'},
 
@@ -31,7 +31,8 @@ export const NOISE_SOURCES = [
 
 ];
 
-export const IP_ADDRESS = (Platform.OS === 'ios') ? 'localhost:9000' : '10.0.2.2:9000';
+// export const IP_ADDRESS = (Platform.OS === 'ios') ? 'localhost:9000' : '10.0.2.2:9000';
 
-
+// aws ec2 instance elastic ip
+export const IP_ADDRESS = '3.14.174.164:9000';
 

@@ -82,6 +82,7 @@ export default class LoginScreen extends React.Component {
         };
         console.log("In here 1");
         const { navigate } = this.props.navigation;
+
         let url = 'http://' + constants.IP_ADDRESS + '/api/login';
         axios.post(url, userCredentials)
             .then(function (response) {
