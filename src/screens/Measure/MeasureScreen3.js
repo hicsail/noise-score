@@ -34,12 +34,14 @@ export default class MeasureScreen3 extends React.Component {
         super(props);
         this.state = {
             comment: '',
+            started: false
         };
     }
 
     clear = () => {
         this.setState({
-            comment: ''
+            comment: '',
+            started: false
         });
     };
 
@@ -115,45 +117,40 @@ export default class MeasureScreen3 extends React.Component {
                 <TextInput
                     multiline={true}
                     style={styles.textInput}
-                    onChangeText={(comment) => this.setState({ comment })}
+                    onChangeText={(comment) => {
+                        this.setState({ comment });
+                        this.state.started = true; }}
                     value={this.state.comment}
                     maxLength={140}
                 />
 
 
-                <View
-                    style={{
+                <View style={{
                         flex: 1,
                         flexDirection: 'column',
                         justifyContent: 'flex-end',
                         alignItems: 'stretch'
                     }}>
+
                     <TouchableOpacity
-                        style={[styles.button, this.state.started ? styles.disabledButton : styles.clearButton]}
-                        disabled={this.state.started}
-                        onPress={() => this.clear()}
-                    >
-
+                      style={[styles.clearButton, this.state.started ? styles.darkButton : styles.disabledButton]}
+                      onPress={() => this.clear()}>
                         <IconFA
-                            name={'trash'}
-                            // size={width / 15}
-                            color="white"
-                            style={{
-                                flex: 1,
-                                alignSelf: 'center',
-                                textAlign: 'left',
-                                fontSize: width / 15
-                            }}
-                        />
-
+                          name={'trash'}
+                          color="white"
+                          style={{
+                              flex: 1,
+                              alignSelf: 'center',
+                              textAlign: 'left',
+                              fontSize: width / 15
+                          }}/>
                         <Text style={{
                             fontSize: width / 15,
-                            alignSelf: 'center',
-                            textAlign: 'center',
                             color: 'white'
-                        }}>Clear</Text>
+                        }}>Clear Comment</Text>
                     </TouchableOpacity>
                 </View>
+
 
                 <View style={{ alignItems: 'flex-end' }}>
                     <View
@@ -164,21 +161,18 @@ export default class MeasureScreen3 extends React.Component {
                             alignItems: 'stretch'
                         }}>
                         <TouchableOpacity
-                            style={[styles.button, styles.clearButton]}
-                            // disabled={this.state.started}
+                            style={[styles.button, styles.darkButton]}
                             onPress={() => this.props.navigation.navigate('Measure2')}
                         >
 
                             <IconFA
                                 name={'arrow-left'}
-                                // size={width / 15}
                                 color="white"
                                 style={{
                                     flex: 1,
                                     alignSelf: 'center',
                                     textAlign: 'left',
                                     fontSize: width / 15,
-                                    // backgroundColor:'white'
                                 }}
                             />
                             <View style={{
@@ -192,13 +186,8 @@ export default class MeasureScreen3 extends React.Component {
                                 alignItems: 'center'
                             }}>
                                 <Text style={{
-                                    // flex: 3,
-                                    // position: 'absolute',
                                     fontSize: width / 15,
-                                    // alignSelf: 'stretch',
-                                    // textAlign: 'left',
                                     color: 'white',
-                                    // backgroundColor:'red'
                                 }}>Back</Text>
                             </View>
                         </TouchableOpacity>
@@ -206,7 +195,6 @@ export default class MeasureScreen3 extends React.Component {
 
                         <TouchableOpacity
                             style={[styles.button, styles.submitButton]}
-                            // disabled={this.state.started}
                             onPress={() => this.submit()}
                         >
 
@@ -221,13 +209,8 @@ export default class MeasureScreen3 extends React.Component {
                                 alignItems: 'center'
                             }}>
                                 <Text style={{
-                                    // flex: 3,
-                                    // position: 'absolute',
                                     fontSize: width / 15,
-                                    // alignSelf: 'stretch',
-                                    // textAlign: 'left',
                                     color: 'white',
-                                    // backgroundColor:'red'
                                 }}>Submit</Text></View>
 
                             <IconFA
@@ -240,6 +223,7 @@ export default class MeasureScreen3 extends React.Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+
 
             </ScrollView>
         );
@@ -273,14 +257,8 @@ const styles = StyleSheet.create({
         flex: 1,
         minHeight: 40,
         flexDirection: 'row',
-        // justifyContent: 'center',
-
         alignSelf: 'stretch',
-        // borderWidth: 2,
         borderRadius: 10,
-
-        // borderColor: '#31BD4B',
-
         margin: 5,
         padding: 10,
     },
@@ -290,8 +268,26 @@ const styles = StyleSheet.create({
         borderColor: '#31BD4B'
     },
 
-    clearButton: {
+    darkButton: {
         backgroundColor: '#4E5255',
         borderColor: '#4E5255'
     },
+    clearButton: {
+        flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'stretch',
+        minHeight: 40,
+        minWidth: 120,
+        marginLeft: 80,
+        marginRight: 80,
+        marginTop: 20,
+        marginBottom: 20,
+        padding: 10,
+        borderWidth: 2,
+        borderRadius: 10,
+    },
+    disabledButton: {
+        backgroundColor: '#B7BBBD',
+        borderColor: '#B7BBBD'
+    }
 });
