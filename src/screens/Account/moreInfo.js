@@ -1,5 +1,5 @@
 import React from 'react';
-import { Picker, StyleSheet, View, ScrollView, Platform } from 'react-native';
+import { Picker, StyleSheet, View, ScrollView, Platform, Dimensions } from 'react-native';
 import axios from "axios";
 import { Button, Text, Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -88,6 +88,7 @@ export default class AccountScreen extends React.Component {
         AsyncStorage.getItem('moreInfo').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
+                console.log(response);
                 this.setState({
                     username: response['username'],
                     describe: response['describe'],
@@ -145,45 +146,37 @@ export default class AccountScreen extends React.Component {
         if (sourcesArray) {
             return (
                 <View style={styles.container}>
-                    <Header
-                        centerComponent={{ text: date, style: { color: '#323232' } }}
-                        containerStyle={styles.header}
-                        leftComponent={<Button icon={
-                            <Icon
-                                name="arrow-left"
-                                size={15}
-                                color="white"
+                    <View style={{ height: '40%', padding: 10 }}>
+                        <MapView
+                            style={{ ...StyleSheet.absoluteFillObject }}
+                            provider={"google"} // remove if not using Google Maps
+                            // provider={Platform.OS === 'ios' ? null : 'osmdroid'}
+                            region={this.state.region}
+                            moveOnMarkerPress={true}
+                            showsUserLocation={true}
+                            showsCompass={true}
+                            showsPointsOfInterest={true}
+                        >
+                            <Marker
+                                key={1}
+                                coordinate={latlng}
+                                title={date}
+                                tracksViewChanges={false}
                             />
-                        } onPress={() => this.accountScreen()}
-                                               buttonStyle={styles.headerButton}/>}
-
-
-                    />
-                    <MapView
-                        style={{ ...StyleSheet.absoluteFillObject }}
-                        provider={"google"} // remove if not using Google Maps
-                        // provider={Platform.OS === 'ios' ? null : 'osmdroid'}
-                        region={this.state.region}
-                        moveOnMarkerPress={true}
-                        showsUserLocation={true}
-                        showsCompass={true}
-                        showsPointsOfInterest={true}
-                    >
-                        <Marker
-                            key={1}
-                            coordinate={latlng}
-                            title={date}
-                            tracksViewChanges={false}
-                        />
-                    </MapView>
+                        </MapView>
+                    </View>
                     <View style={styles.bottomHalf}>
+                        <Text>{date}</Text>
                         <ScrollView>
-                            <Text style={styles.textHeader}>How loud were the sounds?</Text>
-                            <Text style={styles.text}>{loud}</Text>
-                            <Text style={styles.textHeader}>Which words best describe the sound?</Text>
-                            <Text style={styles.text}>{describe}</Text>
                             <Text style={styles.textHeader}>Where were you are the time of the measurement?</Text>
                             <Text style={styles.text}>{place}</Text>
+
+                            <Text style={styles.textHeader}>How loud were the sounds?</Text>
+                            <Text style={styles.text}>{loud}</Text>
+
+                            <Text style={styles.textHeader}>Which words best describe the sound?</Text>
+                            <Text style={styles.text}>{describe}</Text>
+
                             <Text style={styles.textHeader}>How did the sounds make you feel?</Text>
                             <Text style={styles.text}>{feel}</Text>
                             <Text style={styles.textHeader}>Major sources of noise?</Text>
@@ -204,7 +197,7 @@ export default class AccountScreen extends React.Component {
 
 }
 
-
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -215,7 +208,7 @@ const styles = StyleSheet.create({
     },
     bottomHalf: {
         backgroundColor: 'white',
-        height: '40%',
+        height: '60%',
         position: 'absolute', //Here is the trick
         bottom: 0, //Here is the trick
         width: '100%',

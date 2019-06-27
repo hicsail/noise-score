@@ -151,6 +151,8 @@ internals.applyRoutes = function (server, next) {
       }]
     },
     handler: function (request, reply) {
+      console.log("payload is \n\n\n");
+      console.log(request.payload);
       const username = request.payload.username;
       const userID = request.payload.userID;
       const rawData = request.payload.rawData;
