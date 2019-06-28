@@ -36,13 +36,13 @@ const brightGreen = "#31BD4B";
 const MeasureStack = createStackNavigator({
     Measure: { screen: MeasureScreen, navigationOptions: getHeader(false) },
     Measure1: { screen: MeasureScreen1, navigationOptions: getHeader(true) },
-    Measure2: { screen: MeasureScreen2,  },
+    Measure2: { screen: MeasureScreen2, navigationOptions: getHeader(true) },
     Measure3: { screen: MeasureScreen3, navigationOptions: getHeader(true) },
 });
 
 
 const AccountStack = createStackNavigator({
-    Account1: { screen: AccountScreen, navigationOptions: getHeader(false) },
+    Account1: { screen: AccountScreen, },
     Account2: { screen: AccountPage, navigationOptions: getHeader(true) },
     Account3: { screen: moreInfo, navigationOptions: getHeader(true) },
 });
@@ -108,24 +108,21 @@ const ForgotPassStack = createStackNavigator({
 export function getHeader(rightComponent) {
     return {
         headerTitleStyle: {
-            alignSelf: 'center',
-            textAlign: "center",
-            justifyContent: 'center',
             flex: 1,
-            fontWeight: 'bold',
-            textAlignVertical: 'center'
+            height: null,
+
+            width: 0.7 * width,
+            // alignSelf: 'center',
+            // alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            // paddingVertical: 5
         },
-        headerTitle: <Image source={require("./assets/logo-bright-green.png")} resizeMode={'contain'}
-                            style={{
-                                height: height / 8,
-                                alignSelf: "center",
-                                // width: width / 2,
-                                marginLeft: "auto",
-                                marginRight: "auto"
-                            }}/>,
+        headerTitle: <Image style={{ flex: 1, height: height / 10 - 10, resizeMode: 'contain' }}
+                            source={require('./assets/logo-white.png')}
+        />,
         headerStyle: {
-            backgroundColor: 'lightgray',
-            height: height / 10
+            height: height / 10, backgroundColor: '#31BD4B'
         },
         headerRightStyle: {
             alignSelf: 'center',
@@ -150,15 +147,15 @@ export const Login = createStackNavigator({
 
         SignUp1: {
             screen: SignUp,
-            navigationOptions: getHeader("Step 1/3"),
+            navigationOptions: getHeader(true),
         },
         SignUp2: {
             screen: SignUp2,
-            // navigationOptions: getHeader("Step 2/3"),
+            navigationOptions: getHeader(true),
         },
         SignUp3: {
             screen: SignUp3,
-            // navigationOptions: getHeader("Step 3/3"),
+            navigationOptions: getHeader(true),
         },
 
         ForgotResetPassword: {

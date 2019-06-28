@@ -1,11 +1,12 @@
 import React from 'react';
-import { AsyncStorage, Picker, StyleSheet, View, ScrollView } from 'react-native';
+import { AsyncStorage, Picker, StyleSheet, View, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
 import axios from "axios";
-import { ListItem, Button, Text, Header } from 'react-native-elements';
+import { ListItem, Button, Text, Header, } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
+const { width, height } = Dimensions.get('window');
 export default class AccountScreen extends React.Component {
+
 
     constructor(props) {
         super(props);
@@ -17,10 +18,81 @@ export default class AccountScreen extends React.Component {
 
     }
 
+    static navigationOptions = ({ navigation }) => {
+        //return header with Custom View which will replace the original header
+        const { params } = navigation.state;
+        return {
+            header: (
+                <View style={{ height: height / 10, padding: 5, backgroundColor: '#31BD4B' }}>
+                    <View
+                        style={{ flex: 1, justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center' }}>
+
+                        <TouchableOpacity style={{
+                            width: 0.15 * width, height: height / 12, margin: 5,
+                            justifyContent: 'center', alignItems: 'center',
+                        }}
+                                          onPress={() => params.account()}>
+
+                            <Icon
+                                name="user-circle"
+                                size={0.09 * width}
+                                color="white"
+                            />
+
+
+                        </TouchableOpacity>
+
+
+                        <View style={{
+                            flex: 1,
+                            height: null,
+
+                            width: 0.7 * width,
+                            // alignSelf: 'center',
+                            // alignContent: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            // paddingVertical: 5
+                        }}>
+                            <Image style={{ flex: 1, width: 0.7 * width, resizeMode: 'contain' }}
+                                   source={require('./../../../assets/logo-white.png')}
+                            />
+                            {/*<Text style={{ fontSize: 25, color: 'white' }}>Hello, Stathis</Text>*/}
+                        </View>
+
+
+                        <TouchableOpacity style={{
+                            width: 0.15 * width, height: height / 12, margin: 5,
+                            justifyContent: 'center', alignItems: 'center'
+                        }}
+                                          disabled={true}
+                        >
+
+                            {/*<Image style={{ flex: 1, width: 0.15 * width, resizeMode: 'contain' }}*/}
+                            {/*source={require('./../../../assets/mic-white.png')}*/}
+                            {/*/>*/}
+
+                            {/*<Image style={{ flex: 1, width: 0.15 * width, resizeMode: 'contain' }}*/}
+                            {/*source={require('./../../../assets/logo-white.png')}*/}
+                            {/*/>*/}
+
+                            {/*<Button*/}
+                            {/*style={{ backgroundColor: 'red', color: 'black' }}*/}
+                            {/*onPress={() => navigation.goBack()}*/}
+                            {/*title={'Back'}*/}
+                            {/*/>*/}
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            ),
+        };
+    };
+
     componentDidMount() {
         // Add listener to notice when we need to reload data. Whenever we move to this screen
         // Also make API call to get all the users measurements and save it as a local variable
 
+        this.props.navigation.setParams({ account: this.account });
         this.subs = [
             this.props.navigation.addListener('willFocus', () => this.updateData())
         ];
@@ -50,6 +122,8 @@ export default class AccountScreen extends React.Component {
                         self.setState({
                             userData: ret['data']
                         });
+                        console.log("\n\n\n\n\n\n\n\n");
+                        console.log(ret['data'])
                     }).catch(function (error) {
                         // If there is an error sign out
                         alert(error);
@@ -143,7 +217,6 @@ export default class AccountScreen extends React.Component {
         }
     }
 
-
     updateData() {
         // Function to update the data to show to the user
         // Makes API call '/api/userMeasurements' and
@@ -183,7 +256,6 @@ export default class AccountScreen extends React.Component {
         }
     }
 
-
     reloadButton() {
         // Simple function to reload the data
         this.updateData();
@@ -196,38 +268,43 @@ export default class AccountScreen extends React.Component {
         navigate("Account2");
     }
 
+    account = () => {
+        const { navigate } = this.props.navigation;
+        navigate("Account2");
+    };
+
     render() {
         const { username } = this.state;
         var data = this.state.userData;
         var list = this.generateData(data);
         return (
             <View style={styles.container}>
-                <Header
-                    centerComponent={{ text: username, style: { color: '#323232' } }}
-                    containerStyle={styles.header}
-                    leftComponent={
-                        <Button
-                            icon={
-                                <Icon
-                                    name="user-circle"
-                                    size={15}
-                                    color="white"
-                                />
-                            }
-                            onPress={() => this.accountPage()}
-                            buttonStyle={styles.button}/>}
-                    rightComponent={
-                        <Button
-                            icon={
-                                <Icon
-                                    name="retweet"
-                                    size={15}
-                                    color="white"
-                                />
-                            }
-                            onPress={() => this.reloadButton()}
-                            buttonStyle={styles.button}/>}
-                />
+                {/*<Header*/}
+                {/*centerComponent={{ text: username, style: { color: '#323232' } }}*/}
+                {/*containerStyle={styles.header}*/}
+                {/*leftComponent={*/}
+                {/*<Button*/}
+                {/*icon={*/}
+                {/*<Icon*/}
+                {/*name="user-circle"*/}
+                {/*size={15}*/}
+                {/*color="white"*/}
+                {/*/>*/}
+                {/*}*/}
+                {/*onPress={() => this.accountPage()}*/}
+                {/*buttonStyle={styles.button}/>}*/}
+                {/*rightComponent={*/}
+                {/*<Button*/}
+                {/*icon={*/}
+                {/*<Icon*/}
+                {/*name="retweet"*/}
+                {/*size={15}*/}
+                {/*color="white"*/}
+                {/*/>*/}
+                {/*}*/}
+                {/*onPress={() => this.reloadButton()}*/}
+                {/*buttonStyle={styles.button}/>}*/}
+                {/*/>*/}
                 <ScrollView>
                     <View>
                         {list}
