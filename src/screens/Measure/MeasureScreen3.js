@@ -47,8 +47,11 @@ export default class MeasureScreen3 extends React.Component {
         // Make API call to input the measurement ('/api/inputMeasurement')
         const { navigate } = this.props.navigation;
         var success = true;
-        AsyncStorage.getItem('formData').then(function (ret) {
+
+        AsyncStorage.getItem('formData', null).then(function (ret) {
             var response = JSON.parse(ret);
+            console.log('\nresponse data is :\n');
+            console.log(response);
             if (this.state.comment.length > 0) {
                 response["words"] = this.state.comment;
             } else {
@@ -65,6 +68,8 @@ export default class MeasureScreen3 extends React.Component {
                         var longitude = position['coords']['latitude'];
                         var latitude = position['coords']['longitude'];
                         response['location'] = [latitude, longitude];
+                        console.log("we re going to add the following to the database\n");
+                        console.log(response);
                         axios.post('http://10.0.2.2:9000/api/inputMeasurement', response)
                             .then(function (response1) {
                                 // Done!

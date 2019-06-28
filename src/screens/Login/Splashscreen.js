@@ -13,7 +13,7 @@ export default class Splashscreen extends React.Component {
                 () => {
                     resolve('result')
                 },
-                2000
+                20000
             )
         )
     };
@@ -68,15 +68,18 @@ export default class Splashscreen extends React.Component {
         return (
             <View style={styles.viewStyles}>
                 <Image
-                    source={require('../../../assets/logo-bright-green.png')}
+                    source={require('../../../assets/logo-bright-green2.png')}
                     style={{
                         flex: 1,
                         alignSelf: 'center',
-                        width: width - 40,
+                        resizeMode:'contain',
+                        width: width-40,
+
+                        // height: undefined,
                     }}
                 />
                 <Image
-                    source={require('../../../assets/splash-image.jpeg')}
+                    source={require('../../../assets/splash-image-transparent.png')}
                     style={{
                         flex: 1,
                         alignSelf: 'stretch',

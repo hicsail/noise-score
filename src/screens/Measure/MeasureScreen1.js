@@ -42,6 +42,7 @@ export default class MeasureScreen1 extends React.Component {
                 response["describe"] = this.state.oneWord;
                 response["feel"] = this.state.feeling;
                 response["place"] = this.state.place;
+                console.log(response);
                 AsyncStorage.setItem("formData", JSON.stringify(response));
             }.bind(this)).then(function () {
                 navigate('Measure2');
@@ -57,7 +58,7 @@ export default class MeasureScreen1 extends React.Component {
 
                         <View style={styles.padding}>
                             <View style={styles.wrapText}>
-                                <Text style={styles.text}> How loud were the sounds?</Text>
+                                <Text style={styles.text}> Where were you at the time of the measurement ?</Text>
                             </View>
                             <SelectMultipleGroupButton
                                 multiple={false}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsyncStorage, Picker, StyleSheet, View, ScrollView } from 'react-native';
+import { AsyncStorage, Picker, StyleSheet, View, ScrollView, Image } from 'react-native';
 import axios from "axios";
 import { Button, Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,6 +16,9 @@ export default class AccountScreen extends React.Component {
         };
 
     }
+
+
+
 
     componentDidMount() {
         // When the component mounts, gather the user data from local storage (AsyncStorage)
@@ -96,24 +99,23 @@ export default class AccountScreen extends React.Component {
     }
 
 
-
     render() {
         const { username } = this.state;
         return (
             <View style={styles.container}>
-                <Header
-                    centerComponent={{ text: username, style: { color: '#323232' } }}
-                    containerStyle={styles.header}
-                    leftComponent={<Button icon={
-                        <Icon
-                            name="arrow-left"
-                            size={15}
-                            color="white"
-                        />
-                    } onPress={() => this.goBack()} buttonStyle={styles.headerButton}/>}
+                {/*<Header*/}
+                    {/*centerComponent={{ text: username, style: { color: '#323232' } }}*/}
+                    {/*containerStyle={styles.header}*/}
+                    {/*leftComponent={<Button icon={*/}
+                        {/*<Icon*/}
+                            {/*name="arrow-left"*/}
+                            {/*size={15}*/}
+                            {/*color="white"*/}
+                        {/*/>*/}
+                    {/*} onPress={() => this.goBack()} buttonStyle={styles.headerButton}/>}*/}
 
 
-                />
+                {/*/>*/}
                 <View style={styles.content}>
                     <Button
                         buttonStyle={styles.button}
