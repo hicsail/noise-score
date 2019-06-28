@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView, Alert, TextInput, Dimensions, Image } from 'react-native';
+import { StyleSheet, View, ScrollView, Alert, TextInput,
+  Dimensions, Image, TouchableOpacity } from 'react-native';
 import { home } from "../../../App";
 import axios from 'axios';
-import { Input, Text, SocialIcon, Button } from 'react-native-elements';
+import { Input, Text, SocialIcon, Button, Icon } from 'react-native-elements';
 import t from 'tcomb-form-native';
 import CustomInput from '../../Base/CustomInput'
+import IconFA from "react-native-vector-icons/FontAwesome";
+
 // import { styles } from "./LoginScreen";
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
@@ -275,37 +278,46 @@ export default class SignUp extends React.Component {
     //         header: (
     //             <View style={{ height: height / 10, padding: 5, backgroundColor: '#31BD4B' }}>
     //                 <View
-    //                     style={{
-    //                         flex: 1,
-    //                         // marginTop: 20,
-    //                         // backgroundColor: 'red',
+    //                     style={{ flex: 1, justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center' }}>
     //
-    //                         justifyContent: 'center',
-    //                         flexDirection: 'row',
-    //                         alignItems: 'center'
-    //                     }}>
-    //                     {/*<View style={{ left: 0, position: 'absolute', marginLeft: 10, backgroundColor: 'transparent' }}>*/}
-    //                         <Button
-    //                             style={{ left: 0, position: 'absolute', backgroundColor: 'transparent', color: 'transparent' }}
-    //                             onPress={() => navigation.pop()}
-    //                             title={'Back'}
-    //                         />
-    //                     {/*</View>*/}
+    //                     <TouchableOpacity style={{
+    //                         width: 0.15 * width, height: height / 12, margin: 5, backgroundColor: 'black',
+    //                         justifyContent: 'center', alignItems: 'center', zIndex:1000
+    //                     }}
+    //                                       onPress={() => navigation.goBack()}>
+    //                         <Icon type={'arrow-left'}/>
+    //                     </TouchableOpacity>
+    //
+    //
+    //
     //                     <View style={{
     //                         flex: 1,
     //                         height: null,
-    //                         resizeMode: 'contain',
-    //                         width: null,
+    //
+    //                         width: 0.7 * width,
     //                         // alignSelf: 'center',
     //                         // alignContent: 'center',
     //                         alignItems: 'center',
     //                         justifyContent: 'center',
-    //                         paddingVertical: 5
+    //                         // paddingVertical: 5
     //                     }}>
-    //                         <Image style={{ flex: 1, height: null, width: width / 2, }}
-    //                                source={require('./../../../assets/splash_logo.jpeg')}
+    //                         <Image style={{ flex: 1, resizeMode: 'contain', }}
+    //                                source={require('./../../../assets/splash_logo2.jpeg')}
     //                         />
     //                     </View>
+    //
+    //
+    //                     <TouchableOpacity style={{
+    //                         width: 0.15 * width, height: height / 12, margin: 5, backgroundColor: 'red',
+    //                         justifyContent: 'center', alignItems: 'center'
+    //                     }}
+    //                                       onPress={() => navigation.goBack()}>
+    //                         {/*<Button*/}
+    //                             {/*style={{ backgroundColor: 'red', color: 'black' }}*/}
+    //                             {/*onPress={() => navigation.goBack()}*/}
+    //                             {/*title={'Back'}*/}
+    //                         {/*/>*/}
+    //                     </TouchableOpacity>
     //                 </View>
     //             </View>
     //         ),
@@ -358,7 +370,6 @@ export default class SignUp extends React.Component {
         let errors = this.state.usernameError +
             this.state.passwordError + this.state.confirmError + this.state.emailError +
             this.state.cityError + this.state.stateError + this.state.zipError;
-        console.log(errors);
         return errors === '';
     }
 
@@ -368,7 +379,6 @@ export default class SignUp extends React.Component {
             email: this.state.email,
             username: this.state.username
         };
-
 
         let response;
 
@@ -431,7 +441,7 @@ export default class SignUp extends React.Component {
     };
 
 
-    next() {
+    async next() {
         const { navigate } = this.props.navigation;
 
         if (this.state.username === '\t')
@@ -450,7 +460,7 @@ export default class SignUp extends React.Component {
             this.ZipHandle('');
 
 
-        this.validCheck();
+        await this.validCheck();
 
         if (this.errorCheck()) {
             console.log('ready to store');
@@ -466,6 +476,9 @@ export default class SignUp extends React.Component {
             });
 
         }
+        else {
+            Alert.alert("Invalid inputs", 'Please check again the information you provided');
+        }
 
     }
 
@@ -477,7 +490,9 @@ export default class SignUp extends React.Component {
     render() {
 
         return (
-            <View>
+            <View
+                style={{ borderLeftWidth: 5, borderRightWidth: 5, borderColor: '#31BD4B' }}
+            >
 
                 <ScrollView contentContainerStyle={styles.scrollWrapper}>
 
@@ -593,7 +608,7 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
         textAlign: "center",
         fontFamily: 'Euphemia UCAS',
-        paddingHorizontal: 100
+        // paddingHorizontal: 100
     },
     textInput: {
         fontSize: 15,
@@ -626,12 +641,13 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textHeader: {
-        fontSize: 26,
-        marginTop: "10%",
+        fontSize: 30,
+        marginVertical: 0.01 * height,
         color: "black",
         justifyContent: 'center',
         textAlignVertical: "center",
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: 'Arial',
     },
     buttonWrapper: {
         marginBottom: 30,
@@ -642,7 +658,7 @@ const styles = StyleSheet.create({
 
     wrapper: {
         flexGrow: 1,
-        minHeight: height - 25,
+        minHeight: height - height / 10,
         // height: 800,
         alignItems: 'stretch',
         paddingLeft: 30,

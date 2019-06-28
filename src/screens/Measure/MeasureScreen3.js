@@ -17,7 +17,6 @@ import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import axios from "axios";
 import IconFA from "react-native-vector-icons/FontAwesome";
 
-
 const { width, height } = Dimensions.get('window');
 export default class MeasureScreen3 extends React.Component {
 
@@ -51,8 +50,11 @@ export default class MeasureScreen3 extends React.Component {
         // Make API call to input the measurement ('/api/inputMeasurement')
         const { navigate } = this.props.navigation;
         var success = true;
-        AsyncStorage.getItem('formData').then(function (ret) {
+
+        AsyncStorage.getItem('formData', null).then(function (ret) {
             var response = JSON.parse(ret);
+            console.log('\nresponse data is :\n');
+            console.log(response);
             if (this.state.comment.length > 0) {
                 response["words"] = this.state.comment;
             } else {
@@ -151,7 +153,6 @@ export default class MeasureScreen3 extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-
                 <View style={{ alignItems: 'flex-end' }}>
                     <View
                         style={{
@@ -223,7 +224,6 @@ export default class MeasureScreen3 extends React.Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-
 
             </ScrollView>
         );

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button, Picker, ScrollView } from 'react-native';
+import {StyleSheet, Text, View, Button, Picker, ScrollView, Dimensions } from 'react-native';
 import {SelectMultipleGroupButton} from "react-native-selectmultiple-button";
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -81,7 +81,7 @@ export default class AccountScreen extends React.Component {
             <ScrollView>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                      <Text style={styles.textHeader}>Thank you for registering and welcome to NoiseScore! </Text>
+                      <Text style={styles.textHeader}>To complete your registration please answer the following questions </Text>
                         <Text style={styles.subText}> Before you start using NoiseScore,
                             we would like to gather a little more information about who you are, your attitudes about community noise
                             and sound issues, your general health, and time activity during a typical week.</Text>
@@ -295,7 +295,7 @@ export default class AccountScreen extends React.Component {
         });
     }
 }
-
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
     padding: {
         padding: 20,
@@ -361,16 +361,25 @@ const styles = StyleSheet.create({
 const lightGreen = '#31BD4B';
 const darkGray = "#383838";
 
+const fontSize = width / 15;
+
+const fontStyle = { fontSize: fontSize, padding: 5 };
+
+
 const questionButtonsStyle = {
-    borderColor: '#383838',
+    borderColor: lightGreen,
     backgroundColor: "transparent",
     textColor: darkGray,
     borderTintColor: lightGreen,
     backgroundTintColor: lightGreen,
-    textTintColor: "black"
+    textTintColor: "white",
+    // padding:20
 };
 
-const questionButtonSize ={
-    borderRadius: 10,
-    height: 40
+const questionButtonSize = {
+    borderRadius: 15,
+    height: 'auto',
+    borderWidth: 3,
+    // padding: 20,
+    // margin:10
 };
