@@ -18,8 +18,6 @@ export default class AccountScreen extends React.Component {
     }
 
 
-
-
     componentDidMount() {
         // When the component mounts, gather the user data from local storage (AsyncStorage)
         // Store the data as a local variable
@@ -104,15 +102,15 @@ export default class AccountScreen extends React.Component {
         return (
             <View style={styles.container}>
                 {/*<Header*/}
-                    {/*centerComponent={{ text: username, style: { color: '#323232' } }}*/}
-                    {/*containerStyle={styles.header}*/}
-                    {/*leftComponent={<Button icon={*/}
-                        {/*<Icon*/}
-                            {/*name="arrow-left"*/}
-                            {/*size={15}*/}
-                            {/*color="white"*/}
-                        {/*/>*/}
-                    {/*} onPress={() => this.goBack()} buttonStyle={styles.headerButton}/>}*/}
+                {/*centerComponent={{ text: username, style: { color: '#323232' } }}*/}
+                {/*containerStyle={styles.header}*/}
+                {/*leftComponent={<Button icon={*/}
+                {/*<Icon*/}
+                {/*name="arrow-left"*/}
+                {/*size={15}*/}
+                {/*color="white"*/}
+                {/*/>*/}
+                {/*} onPress={() => this.goBack()} buttonStyle={styles.headerButton}/>}*/}
 
 
                 {/*/>*/}
@@ -124,13 +122,13 @@ export default class AccountScreen extends React.Component {
                         title="Sign Out"
                         onPress={() => this.logout()}
                     />
-                    <Button
-                        buttonStyle={styles.button}
-                        backgroundColor="transparent"
-                        textStyle={{ color: "#bcbec1" }}
-                        title="Reset Password"
-                        onPress={() => this.resetPassword()}
-                    />
+                    {/*<Button*/}
+                    {/*buttonStyle={styles.button}*/}
+                    {/*backgroundColor="transparent"*/}
+                    {/*textStyle={{ color: "#bcbec1" }}*/}
+                    {/*title="Reset Password"*/}
+                    {/*onPress={() => this.resetPassword()}*/}
+                    {/*/>*/}
                 </View>
             </View>
         )
