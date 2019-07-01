@@ -586,9 +586,11 @@ export default class SignUp extends React.Component {
                             title="Next"
                             onPress={() => this.next()}
                             buttonStyle={styles.button}
-                            backgroundColor={'white'}
-                            color={'white'}
+                            // backgroundColor={'white'}
+                            // color={'white'}
                         />
+
+
                     </View>
                 </ScrollView>
             </View>

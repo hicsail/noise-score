@@ -68,13 +68,13 @@ export default class Splashscreen extends React.Component {
         return (
             <View style={styles.viewStyles}>
                 <Image
-                    source={require('../../../assets/logo-bright-green2.png')}
+                    source={require('../../../assets/splash-logo-transp.png')}
                     style={{
                         flex: 1,
                         alignSelf: 'center',
                         resizeMode:'contain',
                         width: width-40,
-
+// backgroundColor:'red'
                         // height: undefined,
                     }}
                 />

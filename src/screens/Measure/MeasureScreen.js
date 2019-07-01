@@ -257,7 +257,7 @@ export default class MeasureScreen extends React.Component {
                                 <Text style={{
                                     fontSize: width / 10,
                                     textAlign: 'center'
-                                }}> {this.state.started ? "Recording..." : "Paused"}</Text>
+                                }}> {this.state.started ? "Recording..." : "Stopped"}</Text>
                             </View>
                             <View
                                 // style={(this.state.started || this.state.stopped) ? null : { display: 'none' }}
@@ -323,14 +323,20 @@ export default class MeasureScreen extends React.Component {
 
 
                                 <TouchableOpacity
-                                    style={[styles.button, styles.measureButton, { flexDirection: 'column' }]}
+                                    style={
+                                        this.state.started?
+                                        [styles.button, styles.measureButton, { flexDirection: 'column' }]
+                                    :
+                                            [styles.button, styles.measureButton, styles.disabledButton, { flexDirection: 'column' }]
+                                    }
                                     onPress={() => {
                                         this.state.started ? this.stopMeasurement() : this.startMeasurement()
                                     }}
+                                    disabled={!this.state.started}
                                 >
                                     {/*<StartMicrophone/>*/}
                                     <IconFA
-                                        name={this.state.started ? 'pause' : 'circle'}
+                                        name={this.state.started ? 'square' : 'square'}
                                         size={width / 15}
                                         style={{
                                             flex: 1,
@@ -346,7 +352,7 @@ export default class MeasureScreen extends React.Component {
                                         textAlign: 'center',
                                         justifyContent: 'flex-end',
                                         color: 'white'
-                                    }}>{this.state.started ? 'Pause' : 'Resume'}</Text>
+                                    }}>{this.state.started ? 'Stop' : 'Stopped'}</Text>
                                 </TouchableOpacity>
 
 
