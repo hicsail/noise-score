@@ -185,7 +185,7 @@ export default class AccountScreen extends React.Component {
                             <Text style={styles.text}>{words}</Text>
                             <Text style={styles.textHeader}>Raw Data:</Text>
                             <Text style={styles.text}>Average : {average}db</Text>
-                            <Text style={styles.text}>Min:{max}db - Max:{min}db</Text>
+                            <Text style={styles.text}>Min:{min}db - Max:{max}db</Text>
                         </ScrollView>
                     </View>
                 </View>
