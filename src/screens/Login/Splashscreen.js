@@ -14,7 +14,7 @@ export default class Splashscreen extends React.Component {
                 () => {
                     resolve('result')
                 },
-                20000
+                5000
             )
         )
     };

@@ -5,7 +5,7 @@ import { ListItem, Button, Text, Header, } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
-
+const { width, height } = Dimensions.get('window');
 export default class AccountScreen extends React.Component {
 
     constructor(props) {

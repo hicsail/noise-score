@@ -13,8 +13,8 @@ class Measurement extends MongoModels {
       username: username,
       userID: userID,
       rawData: {
-        min: rawData[1],
-        max: rawData[0],
+        min: rawData[0],
+        max: rawData[1],
         average: rawData[2],
         median: rawData[3]
       },

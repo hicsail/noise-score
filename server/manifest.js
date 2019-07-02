@@ -70,7 +70,7 @@ const manifest = {
             Session: './server/models/session',
             Token: './server/models/token',
             User: './server/models/user',
-            Measurement: './server/models/Measurement',
+            Measurement: './server/models/measurement',
           },
           autoIndex: Config.get('/hapiMongoModels/autoIndex')
         }
