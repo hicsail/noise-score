@@ -76,7 +76,7 @@ export default class MeasureScreen3 extends React.Component {
                                 // Done!
                             })
                             .catch(function (error) {
-                                sucsess = false;
+                                success = false;
                             });
                     },
                     error => Alert.alert(error.message),
