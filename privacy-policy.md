@@ -34,9 +34,9 @@ The University will share de-identified, aggregate data collected via the App in
 Researchers will share data where we have removed anything that we think would show your identity. There still may be a small chance that someone could figure out that the information is about you. Such sharing includes:
 
 
-•	Publishing results in a medical book or journal.
-•	Adding results to a Federal government database.
-•	Using research data in future studies, done by us or by other scientists.
+*	Publishing results in a medical book or journal.
+*	Adding results to a Federal government database.
+*	Using research data in future studies, done by us or by other scientists.
 
 
 Like most smartphone applications, the App uses third-party entities, such as hosting companies or technology platforms, to facilitate the App.  These third-party entities track Internet services and record the data in log files. The log files include information such as Internet Protocol addresses, the date and time that users accessed web pages or other Internet services, installation events, app crashes, browser types, and cookies. These third parties will provide protection at least as strong as the protections described in this Privacy Policy.  
