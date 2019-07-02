@@ -22,70 +22,120 @@ export default class AccountScreen extends React.Component {
         //return header with Custom View which will replace the original header
         const { params } = navigation.state;
         return {
-            header: (
-                <View style={{ height: height / 10, padding: 5, backgroundColor: '#31BD4B' }}>
-                    <View
-                        style={{ flex: 1, justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center' }}>
 
-                        <TouchableOpacity style={{
-                            width: 0.15 * width, height: height / 12, margin: 5,
-                            justifyContent: 'center', alignItems: 'center',
-                        }}
-                                          onPress={() => params.account()}>
+            headerTitleStyle: {
+                flex: 1,
+                height: null,
 
-                            <Icon
-                                name="user-circle"
-                                size={0.09 * width}
-                                color="white"
-                            />
+                width: 0.7 * width,
+                // alignSelf: 'center',
+                // alignContent: 'center',
+                alignItems: 'center',
+                justifyContent: 'center',
+                // paddingVertical: 5
+            },
+            headerTitle: <Image style={{ flex: 1, height: height / 10 - 10, resizeMode: 'contain' }}
+                                source={require('./../../../assets/logo-white.png')}
+            />,
+            headerStyle: {
+                height: height / 10, backgroundColor: '#31BD4B'
+            },
+            headerRightStyle: {
+                alignSelf: 'center',
+                textAlign: "center",
+                justifyContent: 'center',
+                flex: 1,
+                fontWeight: 'bold',
+                textAlignVertical: 'center',
+                backgroundColor: 'white'
+            },
+            headerRight:
+                <View></View>,
+            headerLeft:
+                <TouchableOpacity style={{
+                    width: 0.15 * width, height: height / 12, margin: 5,
+                    justifyContent: 'center', alignItems: 'center',
+                }}
+                                  onPress={() => params.account()}>
+
+                    <Icon
+                        name="user-circle"
+                        size={0.09 * width}
+                        color="white"
+                    />
 
 
-                        </TouchableOpacity>
+                </TouchableOpacity>,
+
+            headerTintColor:
+                "white",
 
 
-                        <View style={{
-                            flex: 1,
-                            height: null,
-
-                            width: 0.7 * width,
-                            // alignSelf: 'center',
-                            // alignContent: 'center',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            // paddingVertical: 5
-                        }}>
-                            <Image style={{ flex: 1, width: 0.7 * width, resizeMode: 'contain' }}
-                                   source={require('./../../../assets/logo-white.png')}
-                            />
-                            {/*<Text style={{ fontSize: 25, color: 'white' }}>Hello, Stathis</Text>*/}
-                        </View>
-
-
-                        <TouchableOpacity style={{
-                            width: 0.15 * width, height: height / 12, margin: 5,
-                            justifyContent: 'center', alignItems: 'center'
-                        }}
-                                          disabled={true}
-                        >
-
-                            {/*<Image style={{ flex: 1, width: 0.15 * width, resizeMode: 'contain' }}*/}
-                            {/*source={require('./../../../assets/mic-white.png')}*/}
-                            {/*/>*/}
-
-                            {/*<Image style={{ flex: 1, width: 0.15 * width, resizeMode: 'contain' }}*/}
-                            {/*source={require('./../../../assets/logo-white.png')}*/}
-                            {/*/>*/}
-
-                            {/*<Button*/}
-                            {/*style={{ backgroundColor: 'red', color: 'black' }}*/}
-                            {/*onPress={() => navigation.goBack()}*/}
-                            {/*title={'Back'}*/}
-                            {/*/>*/}
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            ),
-        };
+            // header: (
+            //     <View style={{ height: height / 10, padding: 5, backgroundColor: '#31BD4B' }}>
+            //         <View
+            //             style={{ flex: 1, justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center' }}>
+            //
+            //             <TouchableOpacity style={{
+            //                 width: 0.15 * width, height: height / 12, margin: 5,
+            //                 justifyContent: 'center', alignItems: 'center',
+            //             }}
+            //                               onPress={() => params.account()}>
+            //
+            //                 <Icon
+            //                     name="user-circle"
+            //                     size={0.09 * width}
+            //                     color="white"
+            //                 />
+            //
+            //
+            //             </TouchableOpacity>
+            //
+            //
+            //             <View style={{
+            //                 flex: 1,
+            //                 height: null,
+            //
+            //                 width: 0.7 * width,
+            //                 // alignSelf: 'center',
+            //                 // alignContent: 'center',
+            //                 alignItems: 'center',
+            //                 justifyContent: 'center',
+            //                 // paddingVertical: 5
+            //             }}>
+            //                 <Image style={{ flex: 1, width: 0.7 * width, resizeMode: 'contain' }}
+            //                        source={require('./../../../assets/logo-white.png')}
+            //                 />
+            //                 {/*<Text style={{ fontSize: 25, color: 'white' }}>Hello, Stathis</Text>*/}
+            //             </View>
+            //
+            //
+            //             <TouchableOpacity style={{
+            //                 width: 0.15 * width, height: height / 12, margin: 5,
+            //                 justifyContent: 'center', alignItems: 'center'
+            //             }}
+            //                               disabled={true}
+            //             >
+            //
+            //                 {/*<Image style={{ flex: 1, width: 0.15 * width, resizeMode: 'contain' }}*/}
+            //                 {/*source={require('./../../../assets/mic-white.png')}*/}
+            //                 {/*/>*/}
+            //
+            //                 {/*<Image style={{ flex: 1, width: 0.15 * width, resizeMode: 'contain' }}*/}
+            //                 {/*source={require('./../../../assets/logo-white.png')}*/}
+            //                 {/*/>*/}
+            //
+            //                 {/*<Button*/}
+            //                 {/*style={{ backgroundColor: 'red', color: 'black' }}*/}
+            //                 {/*onPress={() => navigation.goBack()}*/}
+            //                 {/*title={'Back'}*/}
+            //                 {/*/>*/}
+            //             </TouchableOpacity>
+            //         </View>
+            //     </View>
+            // ),
+        }
+            ;
     };
 
     componentDidMount() {
