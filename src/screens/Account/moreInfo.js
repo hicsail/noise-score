@@ -146,24 +146,25 @@ export default class AccountScreen extends React.Component {
         if (sourcesArray) {
             return (
                 <View style={styles.container}>
-
-                    <MapView
-                        style={{ ...StyleSheet.absoluteFillObject }}
-                        provider={"google"} // remove if not using Google Maps
-                        // provider={Platform.OS === 'ios' ? null : 'osmdroid'}
-                        region={this.state.region}
-                        moveOnMarkerPress={true}
-                        showsUserLocation={true}
-                        showsCompass={true}
-                        showsPointsOfInterest={true}
-                    >
-                        <Marker
-                            key={1}
-                            coordinate={latlng}
-                            title={date}
-                            tracksViewChanges={false}
-                        />
-                    </MapView>
+                    <View style={{ height: '40%', padding: 10 }}>
+                        <MapView
+                            style={{ ...StyleSheet.absoluteFillObject }}
+                            provider={"google"} // remove if not using Google Maps
+                            // provider={Platform.OS === 'ios' ? null : 'osmdroid'}
+                            region={this.state.region}
+                            moveOnMarkerPress={true}
+                            showsUserLocation={true}
+                            showsCompass={true}
+                            showsPointsOfInterest={true}
+                        >
+                            <Marker
+                                key={1}
+                                coordinate={latlng}
+                                title={date}
+                                tracksViewChanges={false}
+                            />
+                        </MapView>
+                    </View>
                     <View style={styles.bottomHalf}>
                         <Text>{date}</Text>
                         <ScrollView>
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
     },
     bottomHalf: {
         backgroundColor: 'white',
-        height: '40%',
+        height: '60%',
         position: 'absolute', //Here is the trick
         bottom: 0, //Here is the trick
         width: '100%',

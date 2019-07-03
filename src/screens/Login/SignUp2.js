@@ -26,7 +26,7 @@ export default class AccountScreen extends React.Component {
         // First we have to check if all the inputs are valid
         if(this.state.pronouns === "undefined"){
             alert("Please select what pronouns you would like to use.")
-        } else if (this.state.yearBorn == -1){
+        } else if (this.state.yearBorn === -1){
             alert("Please select the year you were born in.")
         } else if(this.state.ethnicity === "undefined") {
             alert("Please select an Ethnicity");
@@ -249,9 +249,9 @@ export default class AccountScreen extends React.Component {
                     <Button
                         title="Next"
                         onPress={() => this.next()}
-                        buttonStyle={styles.button}
+                        style={styles.button}
                         backgroundColor={'white'}
-                        color={'white'}
+                        color={'#323232'}
                     />
                 </View>
             </View>
@@ -300,8 +300,9 @@ const styles = StyleSheet.create({
     padding: {
         padding: 20,
     },
-    button : {
+    button: {
         marginBottom: 30,
+        marginTop: 20,
         backgroundColor: '#323232',
         alignItems: 'center'
     },

@@ -32,6 +32,7 @@ export default class MeasureScreen extends React.Component {
             initial: true
         };
     }
+
     //
     // static navigationOptions = {
     //     title: 'Measure Sounds',
@@ -65,15 +66,23 @@ export default class MeasureScreen extends React.Component {
 
         this.requestAudioPermissionAndroid()
             .then((didGetPermission) => {
-                // this.setState({ initial: false });
-                // this.setState({ started: true });
                 if (didGetPermission) {
                     RNSoundLevelModule.start();
                     RNSoundLevelModule.onNewFrame = (d) => {
                         let num = (parseInt(d.value));
-                        console.log(num);
+                        console.log("the value is : ", d.value);
+                        console.log("the raw data is: ", d.rawData);
+
+                        let dec;
+                        if (d.value < -160) {
+                            dec = 0;
+                        }
+                        else {
+                            dec = this.state.decibels.concat(((parseInt(d.value) + 160) * (90/160)));
+                        }
+
                         this.setState({
-                            decibels: this.state.decibels.concat((parseInt(d.value) + 160)),
+                            decibels: dec,
                             started: true,
                             stopped: false,
                             initial: false,
@@ -225,45 +234,13 @@ export default class MeasureScreen extends React.Component {
                         <View style={styles.wrapper}>
 
 
-                            {/*{this.state.started ?*/}
-                            {/*<View*/}
-                            {/*style={{*/}
-                            {/*flxGrow: 1,*/}
-                            {/*justifyContent: 'center',*/}
-                            {/*alignItems: 'center',*/}
-                            {/*flexWrap: 'nowrap',*/}
-                            {/*marginVertical: 5*/}
-                            {/*}}>*/}
-                            {/*<Text style={{ fontSize: 8 * width / 100 }}>*/}
-                            {/*Pause Measurement*/}
-                            {/*</Text>*/}
-                            {/*<StopMicrophone stopMeasurement={this.stopMeasurement}/>*/}
-                            {/*</View>*/}
-                            {/*:*/}
-
-                            {/*<View*/}
-                            {/*style={{*/}
-                            {/*flxGrow: 1,*/}
-                            {/*justifyContent: 'center',*/}
-                            {/*alignItems: 'center',*/}
-                            {/*flexWrap: 'nowrap'*/}
-                            {/*}}>*/}
-                            {/*<Text style={{ fontSize: 8 * width / 100 }}>*/}
-                            {/*Start Measurement !*/}
-                            {/*</Text>*/}
-                            {/*<StartMicrophone startMeasurement={this.startMeasurement}/>*/}
-
-                            {/*</View>*/}
-                            {/*}*/}
                             <View>
                                 <Text style={{
                                     fontSize: width / 10,
                                     textAlign: 'center'
-                                }}> {this.state.started ? "Recording..." : "Paused"}</Text>
+                                }}> {this.state.started ? "Recording..." : "Stopped"}</Text>
                             </View>
-                            <View
-                                // style={(this.state.started || this.state.stopped) ? null : { display: 'none' }}
-                            >
+                            <View>
                                 <DecibelChart decibels={this.state.decibels}/>
                             </View>
                             {/*{this.state.decibels.length > 0 ? */}
@@ -275,7 +252,7 @@ export default class MeasureScreen extends React.Component {
                                         ['max', Math.max(...this.state.decibels).toFixed(2)],
                                         ['ave', this.aveDecibel().toFixed(2)]]}/>
 
-                                <ReferenceDecibels/>
+                                {/*<ReferenceDecibels/>*/}
 
                             </View>
                             {/*: null}*/}
@@ -295,7 +272,8 @@ export default class MeasureScreen extends React.Component {
                                     flex: 1,
                                     flexDirection: 'row',
                                     justifyContent: 'space-evenly',
-                                    alignItems: 'stretch'
+                                    alignItems: 'stretch',
+                                    maxHeight: 80,
                                 }}>
                                 <TouchableOpacity
                                     style={[styles.button, this.state.started ? styles.disabledButton : styles.clearButton]}
@@ -325,14 +303,20 @@ export default class MeasureScreen extends React.Component {
 
 
                                 <TouchableOpacity
-                                    style={[styles.button, styles.measureButton, { flexDirection: 'column' }]}
+                                    style={
+                                        this.state.started ?
+                                            [styles.button, styles.measureButton, { flexDirection: 'column' }]
+                                            :
+                                            [styles.button, styles.measureButton, styles.disabledButton, { flexDirection: 'column' }]
+                                    }
                                     onPress={() => {
                                         this.state.started ? this.stopMeasurement() : this.startMeasurement()
                                     }}
+                                    disabled={!this.state.started}
                                 >
                                     {/*<StartMicrophone/>*/}
                                     <IconFA
-                                        name={this.state.started ? 'pause' : 'circle'}
+                                        name={this.state.started ? 'square' : 'square'}
                                         size={width / 15}
                                         style={{
                                             flex: 1,
@@ -348,7 +332,7 @@ export default class MeasureScreen extends React.Component {
                                         textAlign: 'center',
                                         justifyContent: 'flex-end',
                                         color: 'white'
-                                    }}>{this.state.started ? 'Pause' : 'Resume'}</Text>
+                                    }}>{this.state.started ? 'Stop' : 'Stop'}</Text>
                                 </TouchableOpacity>
 
 
@@ -398,14 +382,9 @@ const styles = StyleSheet.create({
 
     wrapper: {
         flexGrow: 1,
-        // minHeight: height - 25,
-        // height: 800,
         alignItems: 'stretch',
         justifyContent: 'space-evenly',
         padding: 30,
-        // alignContent: 'center',
-        // backgroundColor: "#e9eeec",
-        // minHeight: 600,
 
     },
 

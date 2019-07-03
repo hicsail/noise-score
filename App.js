@@ -21,6 +21,7 @@ import LoginScreen from './src/screens/Login/LoginScreen';
 import SignUp from './src/screens/Login/SignUp';
 import SignUp2 from './src/screens/Login/SignUp2';
 import SignUp3 from './src/screens/Login/SignUp3';
+import TermsConditions from './src/screens/Login/TermsConditions';
 import ForgotResetPassword from "./src/screens/Login/ForgotResetPassword";
 import ResetPassword from "./src/screens/Login/ResetPassword"
 import Splashscreen from "./src/screens/Login/Splashscreen";
@@ -152,6 +153,11 @@ export const Login = createStackNavigator({
         },
         SignUp3: {
             screen: SignUp3,
+            navigationOptions: getHeader(true),
+        },
+
+        TermsConditions: {
+            screen: TermsConditions,
             navigationOptions: getHeader(true),
         },
 
