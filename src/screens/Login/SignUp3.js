@@ -20,8 +20,10 @@ export default class AccountScreen extends React.Component {
             weekendHome: 20,
             weekendSleeping: 20,
             weekendPhysical: 5,
-            weekendRunning: 5
-        };
+            weekendRunning: 5,
+            pressed: false,
+        }
+        ;
     }
 
     // componentDidMount() {
@@ -42,6 +44,7 @@ export default class AccountScreen extends React.Component {
             var weekendArray = [this.state.weekendCommuting, this.state.weekendActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekendRunning];
             response['weekday'] = weekdayArray;
             response['weekend'] = weekendArray;
+            AsyncStorage.setItem("formData", JSON.stringify(response));
             // We need to make the API call to create a new user
             let url = 'http://' + constants.IP_ADDRESS + '/api/signup';
 
@@ -62,6 +65,8 @@ export default class AccountScreen extends React.Component {
                 console.log(error);
                 alert(error.message);
             });
+        }.bind(this)).then(function () {
+            navigate('TermsConditions');
         }.bind(this));
     }
 
@@ -69,208 +74,213 @@ export default class AccountScreen extends React.Component {
         const step = 5;
         return (
             <View style={styles.container}>
-                <ScrollView>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Last few questions! </Text>
-                        </View>
-                    </View>
-                    <View style={styles.padding}>
-                        <Text>
-                            <Text style={styles.text}>On a general </Text>
-                            <Text style={styles.innerText}>weekday </Text>
-                            <Text style={styles.text}>what percentage of time do you spend:</Text>
-                        </Text>
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Commuting: {this.state.weekdayCommuting}%</Text>
-                        </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekdayCommuting}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekdayCommuting(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Activities at school or
-                                work: {this.state.weekdayActivities}%</Text>
-                        </View>
 
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekdayActivities}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekdayActivities(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>At home: {this.state.weekdayHome}%</Text>
-                        </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekdayHome}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekdayHome(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Sleeping: {this.state.weekdaySleeping}%</Text>
-                        </View>
+                <View>
 
-                        <Slider
-                            style={{ width: 300, color: 'red' }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekdaySleeping}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekdaySleeping(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Physical Activity: {this.state.weekdayPhysical}%</Text>
+                    <ScrollView>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Last few questions! </Text>
+                            </View>
                         </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekdayPhysical}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekdayPhysical(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Running errands: {this.state.weekdayRunning}%</Text>
+                        <View style={styles.padding}>
+                            <Text>
+                                <Text style={styles.text}>On a general </Text>
+                                <Text style={styles.innerText}>weekday </Text>
+                                <Text style={styles.text}>what percentage of time do you spend:</Text>
+                            </Text>
                         </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekdayRunning}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekdayRunning(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <Text>
-                            <Text style={styles.text}>On a general </Text>
-                            <Text style={styles.innerText}>weekend </Text>
-                            <Text style={styles.text}>what percentage of time do you spend:</Text>
-                        </Text>
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Commuting: {this.state.weekendCommuting}%</Text>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Commuting: {this.state.weekdayCommuting}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekdayCommuting}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekdayCommuting(val)}
+                            />
                         </View>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Activities at school or
+                                    work: {this.state.weekdayActivities}%</Text>
+                            </View>
 
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekendCommuting}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekendCommuting(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Activities at school or
-                                work: {this.state.weekendActivities}%</Text>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekdayActivities}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekdayActivities(val)}
+                            />
                         </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekendActivities}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekendActivities(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>At home: {this.state.weekendHome}%</Text>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>At home: {this.state.weekdayHome}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekdayHome}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekdayHome(val)}
+                            />
                         </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekendHome}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekendHome(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Sleeping: {this.state.weekendSleeping}%</Text>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Sleeping: {this.state.weekdaySleeping}%</Text>
+                            </View>
+
+                            <Slider
+                                style={{ width: 300, color: 'red' }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekdaySleeping}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekdaySleeping(val)}
+                            />
                         </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekendSleeping}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekendSleeping(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Physical Activity: {this.state.weekendPhysical}%</Text>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Physical Activity: {this.state.weekdayPhysical}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekdayPhysical}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekdayPhysical(val)}
+                            />
                         </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekendPhysical}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekendPhysical(val)}
-                        />
-                    </View>
-                    <View style={styles.padding}>
-                        <View style={styles.wrapText}>
-                            <Text style={styles.text}>Running errands: {this.state.weekendRunning}%</Text>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Running errands: {this.state.weekdayRunning}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekdayRunning}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekdayRunning(val)}
+                            />
                         </View>
-                        <Slider
-                            style={{ width: 300 }}
-                            step={step}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={this.state.weekendRunning}
-                            onValueChange={val => this.setState({ age: val })}
-                            onSlidingComplete={val => this.setweekendRunning(val)}
+                        <View style={styles.padding}>
+                            <Text>
+                                <Text style={styles.text}>On a general </Text>
+                                <Text style={styles.innerText}>weekend </Text>
+                                <Text style={styles.text}>what percentage of time do you spend:</Text>
+                            </Text>
+                        </View>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Commuting: {this.state.weekendCommuting}%</Text>
+                            </View>
+
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekendCommuting}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekendCommuting(val)}
+                            />
+                        </View>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Activities at school or
+                                    work: {this.state.weekendActivities}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekendActivities}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekendActivities(val)}
+                            />
+                        </View>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>At home: {this.state.weekendHome}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekendHome}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekendHome(val)}
+                            />
+                        </View>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Sleeping: {this.state.weekendSleeping}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekendSleeping}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekendSleeping(val)}
+                            />
+                        </View>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Physical Activity: {this.state.weekendPhysical}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekendPhysical}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekendPhysical(val)}
+                            />
+                        </View>
+                        <View style={styles.padding}>
+                            <View style={styles.wrapText}>
+                                <Text style={styles.text}>Running errands: {this.state.weekendRunning}%</Text>
+                            </View>
+                            <Slider
+                                style={{ width: 300 }}
+                                step={step}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={this.state.weekendRunning}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.setweekendRunning(val)}
+                            />
+                        </View>
+                    </ScrollView>
+                    <Text> hi</Text>
+                    <View style={{ position: 'absolute', bottom: 0 }}>
+                        <Button
+                            title="Next"
+                            onPress={() => this.next()}
+                            buttonStyle={styles.button}
+                            backgroundColor={'white'}
+                            color={'#323232'}
                         />
                     </View>
-                </ScrollView>
-                <View style={styles.button}>
-                    <Button
-                        title="Next"
-                        onPress={() => this.next()}
-                        buttonStyle={styles.button}
-                        backgroundColor={'white'}
-                        color={'white'}
-                    />
                 </View>
             </View>
         );
@@ -368,6 +378,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        padding: 10,
         backgroundColor: 'white',
         alignItems: 'center'
     },

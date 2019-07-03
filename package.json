@@ -1,5 +1,9 @@
 {
   "scripts": {
+    "name": "noise-score",
+    "version": "0.0.0",
+    "author": "Boston University Software and Application Innovation Lab",
+    "homepage": "https://sail.bu.edu",
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
