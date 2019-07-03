@@ -10,6 +10,9 @@
  * #import "RNSplashScreen.h"  // here
  *
  * [RNSplashScreen show];  // here
+ *
+ * #jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.bundle?platform=ios"];
+ * jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
  */
 
 #import "AppDelegate.h"
@@ -25,7 +28,8 @@
 
   [GMSServices provideAPIKey:@"AIzaSyBheSD_wTJyBPU1_UnmbmKO7y2VjVyYZ1I"];
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.bundle?platform=ios"];
-
+  
+  
   [[RCTBundleURLProvider sharedSettings] setJsLocation:jsCodeLocation.host];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation

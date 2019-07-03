@@ -54,6 +54,7 @@
 		301C269F22C421E1006ABCA2 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 301C266322C421E1006ABCA2 /* EvilIcons.ttf */; };
 		301C26A022C421E1006ABCA2 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 301C266422C421E1006ABCA2 /* SimpleLineIcons.ttf */; };
 		301C26A122C421E1006ABCA2 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 301C266522C421E1006ABCA2 /* MaterialIcons.ttf */; };
+		302915A622CD2E7300F4F95B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 302915A522CD2E7300F4F95B /* MapKit.framework */; };
 		30306E4221EE6B82004A0336 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30306E4121EE6B82004A0336 /* CoreFoundation.framework */; };
 		30306E8321EE6FB7004A0336 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30306E8221EE6FB7004A0336 /* GoogleMaps.framework */; };
 		30306E8521EE6FC3004A0336 /* GoogleMapsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30306E8421EE6FC3004A0336 /* GoogleMapsCore.framework */; };
@@ -524,6 +525,7 @@
 		301C266322C421E1006ABCA2 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		301C266422C421E1006ABCA2 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		301C266522C421E1006ABCA2 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		302915A522CD2E7300F4F95B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		30306E4121EE6B82004A0336 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		30306E5421EE6FAB004A0336 /* GoogleMapsBase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMapsBase.framework; path = "../../../../Downloads/GoogleMaps-2.7.0/Base/Frameworks/GoogleMapsBase.framework"; sourceTree = "<group>"; };
 		30306E8221EE6FB7004A0336 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleMaps.framework; path = "../../../../Downloads/GoogleMaps-2.7.0/Maps/Frameworks/GoogleMaps.framework"; sourceTree = "<group>"; };
@@ -677,6 +679,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				302915A622CD2E7300F4F95B /* MapKit.framework in Frameworks */,
 				30C9184C22BFD164006C3837 /* libRCTGeolocation.a in Frameworks */,
 				30C9184B22BFD100006C3837 /* Accelerate.framework in Frameworks */,
 				30C9180722BFCD6D006C3837 /* libRCTActionSheet.a in Frameworks */,
@@ -874,6 +877,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				302915A522CD2E7300F4F95B /* MapKit.framework */,
 				3011C79922BE4471006204AA /* GoogleMaps.framework */,
 				304A315622B9614100089B24 /* JavaScriptCore.framework */,
 				30306E4121EE6B82004A0336 /* CoreFoundation.framework */,
@@ -1950,8 +1954,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/noisescore\"",
-					"\"$(SRCROOT)/noisescore\"",
-					"\"$(SRCROOT)/noisescore\"",
 				);
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
@@ -1977,6 +1979,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_NO_COMMON_BLOCKS = NO;
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "HAVE_GOOGLE_MAPS=1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
@@ -1997,8 +2000,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/noisescore\"",
-					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
 				);
 				NEW_SETTING = "";
@@ -2179,9 +2180,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -2236,9 +2238,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -2267,6 +2270,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_NO_COMMON_BLOCKS = NO;
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
