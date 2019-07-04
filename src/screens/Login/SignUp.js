@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-<<<<<<< HEAD
-import { StyleSheet, View, ScrollView, Alert, TextInput, Dimensions, Image, TouchableOpacity } from 'react-native';
-=======
 import { StyleSheet, View, ScrollView, Alert, TextInput,
   Dimensions, Image, TouchableOpacity } from 'react-native';
->>>>>>> 90f3769a0a6f68db4785975e21dc5fff78230acd
 import { home } from "../../../App";
 import axios from 'axios';
 import { Input, Text, SocialIcon, Button, Icon } from 'react-native-elements';
