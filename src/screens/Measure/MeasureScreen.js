@@ -72,8 +72,17 @@ export default class MeasureScreen extends React.Component {
                         let num = (parseInt(d.value));
                         console.log("the value is : ", d.value);
                         console.log("the raw data is: ", d.rawData);
+
+                        let dec;
+                        if (d.value < -160) {
+                            dec = 0;
+                        }
+                        else {
+                            dec = this.state.decibels.concat(((parseInt(d.value) + 160) * (90/160)));
+                        }
+
                         this.setState({
-                            decibels: this.state.decibels.concat((parseInt(d.value) + 160)),
+                            decibels: dec,
                             started: true,
                             stopped: false,
                             initial: false,
@@ -243,7 +252,7 @@ export default class MeasureScreen extends React.Component {
                                         ['max', Math.max(...this.state.decibels).toFixed(2)],
                                         ['ave', this.aveDecibel().toFixed(2)]]}/>
 
-                                <ReferenceDecibels/>
+                                {/*<ReferenceDecibels/>*/}
 
                             </View>
                             {/*: null}*/}
@@ -263,7 +272,8 @@ export default class MeasureScreen extends React.Component {
                                     flex: 1,
                                     flexDirection: 'row',
                                     justifyContent: 'space-evenly',
-                                    alignItems: 'stretch'
+                                    alignItems: 'stretch',
+                                    maxHeight: 80,
                                 }}>
                                 <TouchableOpacity
                                     style={[styles.button, this.state.started ? styles.disabledButton : styles.clearButton]}
@@ -322,7 +332,8 @@ export default class MeasureScreen extends React.Component {
                                         textAlign: 'center',
                                         justifyContent: 'flex-end',
                                         color: 'white'
-                                    }}>{this.state.started ? 'Stop' : 'Stopped'}</Text>
+                                    }}>{this.state.started ? 'Stop' : 'Stop'}</Text>
+
                                 </TouchableOpacity>
 
 
@@ -372,14 +383,9 @@ const styles = StyleSheet.create({
 
     wrapper: {
         flexGrow: 1,
-        // minHeight: height - 25,
-        // height: 800,
         alignItems: 'stretch',
         justifyContent: 'space-evenly',
         padding: 30,
-        // alignContent: 'center',
-        // backgroundColor: "#e9eeec",
-        // minHeight: 600,
 
     },
 
