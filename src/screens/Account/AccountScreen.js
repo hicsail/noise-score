@@ -8,7 +8,6 @@ import * as constants from '../../components/constants';
 
 const { width, height } = Dimensions.get('window');
 
-
 export default class AccountScreen extends React.Component {
 
     constructor(props) {

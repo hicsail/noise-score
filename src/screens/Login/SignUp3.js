@@ -65,7 +65,6 @@ export default class AccountScreen extends React.Component {
                 console.log(error);
                 alert(error.message);
             });
-
         }.bind(this)).then(function () {
             navigate('TermsConditions');
         }.bind(this));

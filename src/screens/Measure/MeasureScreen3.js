@@ -17,7 +17,6 @@ import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import axios from "axios";
 import IconFA from "react-native-vector-icons/FontAwesome";
 
-
 const { width, height } = Dimensions.get('window');
 export default class MeasureScreen3 extends React.Component {
 
