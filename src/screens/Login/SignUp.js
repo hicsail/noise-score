@@ -15,6 +15,7 @@ import axios from 'axios';
 import { Input, Text, SocialIcon, Button, Icon } from 'react-native-elements';
 import t from 'tcomb-form-native';
 import CustomInput from '../../Base/CustomInput'
+import CustomPasswordInput from '../../Base/CustomPasswordInput'
 import IconFA from "react-native-vector-icons/FontAwesome";
 
 // import { styles } from "./LoginScreen";
@@ -497,9 +498,7 @@ export default class SignUp extends React.Component {
     render() {
 
         return (
-            <View
-                style={{ borderLeftWidth: 5, borderRightWidth: 5, borderColor: '#31BD4B' }}
-            >
+            <View>
 
                 <ScrollView contentContainerStyle={styles.scrollWrapper}>
 
@@ -521,11 +520,12 @@ export default class SignUp extends React.Component {
                         />
 
                         {/*Password input*/}
-                        <CustomInput
+                        <CustomPasswordInput
                             label={this.inputs.password.label}
                             placeholder={this.inputs.password.placeholder}
                             name={this.inputs.password.label}
-                            isPassword={true}
+                            // isPassword={true}
+                            // secureTextEntry={true}
                             content={this.state.password}
                             errorMessage={this.inputs.password.errors[this.state.passwordError]}
                             controlFunc={this.PasswordHandle}
@@ -667,12 +667,10 @@ const styles = StyleSheet.create({
 
     wrapper: {
         flexGrow: 1,
-        minHeight: height - height / 10,
-        // height: 800,
+        minHeight: height - 25,
         alignItems: 'stretch',
         paddingLeft: 30,
         paddingRight: 30,
-        // paddingTop: 30,
         alignContent: 'center',
         // backgroundColor: "#e9eeec",
         // minHeight: 600,

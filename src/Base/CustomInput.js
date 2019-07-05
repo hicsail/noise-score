@@ -80,11 +80,12 @@ export default class CustomInput extends Component {
                 {/*Initialize input box with a default style and add the error style when the input is left empty*/}
                 <View style={[styles.inputBox, this.isValid() ? null : styles.errorInputBox]}>
                     <TextInput
+                        {...this.props}
                         style={[styles.text, styles.placeholderText]}
-                        placeholder={this.props.placeholder}
-                        placeholderStyle={styles.placeholderText}
-                        // placeholderTextColor={this.emptyCheck() ? 'gray' : 'red'}
-                        secureTextEntry={this.props.isPassword}
+                        // placeholder={this.props.placeholder}
+                        // placeholderStyle={styles.placeholderText}
+                        // // placeholderTextColor={this.emptyCheck() ? 'gray' : 'red'}
+                        // secureTextEntry={this.props.isPassword}
                         underlineColorAndroid='rgba(0,0,0,0)'
 
                         onChangeText={(field) => {
