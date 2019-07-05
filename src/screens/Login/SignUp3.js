@@ -46,25 +46,6 @@ export default class AccountScreen extends React.Component {
             response['weekend'] = weekendArray;
             AsyncStorage.setItem("formData", JSON.stringify(response));
             // We need to make the API call to create a new user
-
-            let url = 'http://' + constants.IP_ADDRESS + '/api/signup';
-            axios.post(url, response).then(function (response){
-                // Lets save relevent information and login!
-                Alert.alert(
-                    'Welcome to Noise Score!',
-                    'Click measurements to get started.',
-                    [
-                        { text: 'Lets go!', onPress: () => console.log('OK Pressed') },
-                    ],
-                    { cancelable: false },
-                );
-                let ret = response['data'];
-                AsyncStorage.setItem("userData", JSON.stringify(ret));
-                navigate("App")
-            }).catch(function (error) {
-                console.log(error);
-                alert(error.message);
-            });
         }.bind(this)).then(function () {
             navigate('TermsConditions');
         }.bind(this));
