@@ -13,6 +13,7 @@ import {
 import axios from 'axios';
 import IconFA from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from '@react-native-community/async-storage';
+import * as constants from '../../components/constants';
 
 const { width, height } = Dimensions.get('window');
 export default class TermsConditions extends React.Component {
@@ -31,7 +32,7 @@ export default class TermsConditions extends React.Component {
         AsyncStorage.getItem('formData').then(function (ret) {
             var response = JSON.parse(ret);
             // We need to make the API call to create a new user
-            axios.post('http://' + IP_ADDRESS + '/api/signup', response).then(function (response) {
+            axios.post('http://' + constants.IP_ADDRESS + '/api/signup', response).then(function (response) {
                 // Lets save relevent information and login!
                 Alert.alert(
                     'Welcome to Noise Score!',
