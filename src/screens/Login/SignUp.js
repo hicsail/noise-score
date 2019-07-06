@@ -525,11 +525,10 @@ export default class SignUp extends React.Component {
                         />
 
                         {/*Confirm password input */}
-                        <CustomInput
+                        <CustomPasswordInput
                             label={this.inputs.confirmPass.label}
                             placeholder={this.inputs.confirmPass.placeholder}
                             name={this.inputs.confirmPass.label}
-                            isPassword={true}
                             content={this.state.confirmPass}
                             errorMessage={this.inputs.confirmPass.errors[this.state.confirmError]}
                             controlFunc={this.ConfirmHandle}
