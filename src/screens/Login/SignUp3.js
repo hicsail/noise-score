@@ -253,17 +253,17 @@ export default class AccountScreen extends React.Component {
                                 onSlidingComplete={val => this.setweekendRunning(val)}
                             />
                         </View>
-                    </ScrollView>
-                    <Text> hi</Text>
-                    <View style={{ position: 'absolute', bottom: 0 }}>
+
+                    {/*<View style={{ position: 'absolute', bottom: 0 }}>*/}
                         <Button
                             title="Next"
                             onPress={() => this.next()}
                             buttonStyle={styles.button}
-                            backgroundColor={'white'}
-                            color={'#323232'}
+                            // backgroundColor={'white'}
+                            // color={'#323232'}
                         />
-                    </View>
+                    {/*</View>*/}
+                    </ScrollView>
                 </View>
 
             </View>
@@ -369,7 +369,9 @@ const styles = StyleSheet.create({
     },
     button: {
         marginBottom: 30,
+        marginTop: 20,
         backgroundColor: '#323232',
+        alignItems: 'center'
     },
     innerText: {
         fontSize: 26,

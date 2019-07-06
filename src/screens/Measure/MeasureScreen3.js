@@ -44,6 +44,7 @@ export default class MeasureScreen3 extends React.Component {
         });
     };
 
+
     submit() {
         // Function to handle submitting a measurement
         // Get all needed data from local storage (AsyncStorage)
@@ -116,42 +117,45 @@ export default class MeasureScreen3 extends React.Component {
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>(up to 140 characters)</Text>
                 </View>
+
                 <TextInput
-                    multiline={true}
-                    style={styles.textInput}
-                    onChangeText={(comment) => {
-                        this.setState({ comment });
-                        this.state.started = true; }}
-                    value={this.state.comment}
-                    maxLength={140}
+                  multiline={true}
+                  style={styles.textInput}
+                  onChangeText={(comment) => {
+                      this.setState({ comment });
+                      this.state.started = true; }}
+                  value={this.state.comment}
+                  maxLength={140}
+                  blurOnSubmit={true}
                 />
 
+                { this.state.started ?
+                  <View style={{
+                      flex: 1,
+                      flexDirection: 'column',
+                      justifyContent: 'flex-end',
+                      alignItems: 'stretch'
+                  }}>
 
-                <View style={{
-                        flex: 1,
-                        flexDirection: 'column',
-                        justifyContent: 'flex-end',
-                        alignItems: 'stretch'
-                    }}>
+                      <TouchableOpacity
+                        style={[styles.clearButton, this.state.started ? styles.darkButton : styles.disabledButton]}
+                        onPress={() => this.clear()}>
+                          <IconFA
+                            name={'trash'}
+                            color="white"
+                            style={{
+                                flex: 1,
+                                alignSelf: 'center',
+                                textAlign: 'left',
+                                fontSize: width / 15
+                            }}/>
+                          <Text style={{
+                              fontSize: width / 15,
+                              color: 'white'
+                          }}>Clear Comment</Text>
+                      </TouchableOpacity>
+                  </View> : null }
 
-                    <TouchableOpacity
-                      style={[styles.clearButton, this.state.started ? styles.darkButton : styles.disabledButton]}
-                      onPress={() => this.clear()}>
-                        <IconFA
-                          name={'trash'}
-                          color="white"
-                          style={{
-                              flex: 1,
-                              alignSelf: 'center',
-                              textAlign: 'left',
-                              fontSize: width / 15
-                          }}/>
-                        <Text style={{
-                            fontSize: width / 15,
-                            color: 'white'
-                        }}>Clear Comment</Text>
-                    </TouchableOpacity>
-                </View>
 
 
                 <View style={{ alignItems: 'flex-end' }}>
@@ -225,6 +229,7 @@ export default class MeasureScreen3 extends React.Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+
 
 
             </ScrollView>

@@ -21,6 +21,8 @@ import IconFA from "react-native-vector-icons/FontAwesome";
 
 
 const { width, height } = Dimensions.get('window');
+const buttonHeight = height/15;
+console.log("buttonHeight is ", buttonHeight);
 export default class MeasureScreen extends React.Component {
 
     constructor(props) {
@@ -147,7 +149,6 @@ export default class MeasureScreen extends React.Component {
         }
         return total / this.state.decibels.length;
     };
-
 
     render() {
         const decibelsOutput = this.state.decibels.map((decibel, i) => (
@@ -391,7 +392,8 @@ const styles = StyleSheet.create({
 
     button: {
         flex: 1,
-        minHeight: 40,
+        //minHeight: 40,
+        minHeight: buttonHeight,
         flexDirection: 'row',
         // justifyContent: 'center',
 

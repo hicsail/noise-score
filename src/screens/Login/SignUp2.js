@@ -147,7 +147,7 @@ export default class AccountScreen extends React.Component {
                     <SelectMultipleGroupButton
                         multiple={false}
                         group={[
-                            { value: 'Not at All' },
+                            { value: 'Not at all' },
                             { value: 'Very Little' },
                             { value: 'A Little' },
                             { value: 'Moderately' },
@@ -244,16 +244,19 @@ export default class AccountScreen extends React.Component {
                         }
                     />
                 </View>
-            </ScrollView>
-                <View style={styles.button}>
-                    <Button
-                        title="Next"
-                        onPress={() => this.next()}
-                        style={styles.button}
-                        backgroundColor={'white'}
-                        color={'#323232'}
-                    />
+
+
+                <View style={styles.wrapText}>
+                <Button
+                    title="Next"
+                    onPress={() => this.next()}
+                    style={styles.button}
+                    //backgroundColor={'white'}
+                    //color={'#323232'}
+                />
                 </View>
+
+            </ScrollView>
             </View>
         );
     }
