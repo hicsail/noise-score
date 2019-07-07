@@ -295,7 +295,7 @@ export default class MeasureScreen extends React.Component {
                                     />
 
                                     <Text style={{
-                                        fontSize: width / 15,
+                                        fontSize: width / 16,
                                         alignSelf: 'center',
                                         textAlign: 'center',
                                         color: 'white'
@@ -328,7 +328,7 @@ export default class MeasureScreen extends React.Component {
                                         }}
                                     />
                                     <Text style={{
-                                        fontSize: width / 17,
+                                        fontSize: width / 15,
                                         alignSelf: 'center',
                                         textAlign: 'center',
                                         justifyContent: 'flex-end',

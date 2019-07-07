@@ -307,7 +307,6 @@ internals.applyRoutes = function (server, next) {
       pre: [{
         assign: 'user',
         method: function (request, reply) {
-
           const conditions = {
             email: request.payload.email,
             'resetPassword.expires': { $gt: Date.now() }
@@ -320,7 +319,7 @@ internals.applyRoutes = function (server, next) {
             }
 
             if (!user) {
-              return reply(Boom.badRequest('Invalid email or key.'));
+              return reply(Boom.badRequest('Invalid email or key - user not found.'));
             }
 
             reply(user);
