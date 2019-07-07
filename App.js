@@ -50,7 +50,6 @@ const AccountStack = createStackNavigator({
 });
 
 
-
 const SignUpStack = createStackNavigator({
     SignUp: SignUp,
     SignUp1: SignUp2,
@@ -63,10 +62,10 @@ const MapStack = createStackNavigator({
 });
 
 
-const ForgotPassStack = createStackNavigator({
-    ForgotResetPassword: { screen: ForgotResetPassword },
-    ResetPassword: { screen: ResetPassword },
-});
+// const ForgotPassStack = createStackNavigator({
+//     ForgotResetPassword: { screen: ForgotResetPassword },
+//     ResetPassword: { screen: ResetPassword },
+// });
 
 
 const home = createBottomTabNavigator(
@@ -132,7 +131,7 @@ export function getHeader(rightComponent) {
             backgroundColor: 'white'
         },
         headerRight: rightComponent ? <View></View> : null,
-
+        headerBackTitle: ' ',
         headerTintColor: "white",
     }
 }
@@ -163,14 +162,13 @@ export const Login = createStackNavigator({
 
         ForgotResetPassword: {
             screen: ForgotResetPassword,
-            navigationOptions: getHeader("Forgot Password ?"),
+            navigationOptions: getHeader(true),
         },
 
         ResetPassword: {
             screen: ResetPassword,
-            navigationOptions: getHeader("Reset Password")
+            navigationOptions: getHeader(true)
         }
-
 
 
     }
@@ -191,22 +189,22 @@ export const root = createStackNavigator({
 let AppNavigator;
 
 // iOS uses LaunchScreen.xib as splashscreen
-if (Platform.OS === 'ios'){
+if (Platform.OS === 'ios') {
 
-  AppNavigator = createSwitchNavigator({
-    UserLogin: Login,
-    App: home
-  });
+    AppNavigator = createSwitchNavigator({
+        UserLogin: Login,
+        App: home
+    });
 
 } else {
-  AppNavigator = createSwitchNavigator({
-      Splash: Splashscreen,
-      App: home,
-      UserLogin: Login
-    },
-    {
-      initialRoute: Splashscreen
-    });
+    AppNavigator = createSwitchNavigator({
+            Splash: Splashscreen,
+            App: home,
+            UserLogin: Login
+        },
+        {
+            initialRoute: Splashscreen
+        });
 }
 
 
