@@ -3,55 +3,55 @@
     {
       "size" : "20x20",
       "idiom" : "iphone",
-      "filename" : "splash_logo_40x40.jpeg",
+      "filename" : "one-hand-40.jpg",
       "scale" : "2x"
     },
     {
       "size" : "20x20",
       "idiom" : "iphone",
-      "filename" : "splash_logo_60x60.jpeg",
+      "filename" : "one-hand-60.jpg",
       "scale" : "3x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "splash_logo_58x58.jpeg",
+      "filename" : "one-hand-58.jpg",
       "scale" : "2x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "splash_logo_87x87.jpeg",
+      "filename" : "one-hand-87.jpg",
       "scale" : "3x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "splash_logo_80x80.jpeg",
+      "filename" : "one-hand-80.jpg",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "splash_logo_120x120.jpeg",
+      "filename" : "one-hand-120.jpg",
       "scale" : "3x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "splash_logo_120x120-1.jpeg",
+      "filename" : "one-hand-121.jpg",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "splash_logo_180x180.jpeg",
+      "filename" : "one-hand-180-180.jpg",
       "scale" : "3x"
     },
     {
       "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "splash_logo.jpeg",
+      "filename" : "one-hand-1024.jpg",
       "scale" : "1x"
     }
   ],
