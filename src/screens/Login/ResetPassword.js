@@ -76,6 +76,7 @@ export default class ResetPassword extends React.Component {
                 await axios.post('http://' + constants.IP_ADDRESS + '/api/login/reset', userCredentials).then(function (ret) {
                     navigate("SignIn");
                 }).catch(function (error) {
+                    alert("Invalid key or email.  Please try again.");
                     console.log("THE ERROR:");
                     console.log("*********************\n\n\n" + error + "****************\n\n\n");
                 });
