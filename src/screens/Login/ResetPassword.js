@@ -73,7 +73,9 @@ export default class ResetPassword extends React.Component {
                 };
 
                 //axios post for reset password
-                await axios.post('http://' + constants.IP_ADDRESS + '/api/login/reset', userCredentials).then(function (ret) {
+                await axios.post('http://' + constants.IP_ADDRESS + '/api/login/reset', userCredentials)
+                  .then(function (ret) {
+                    Alert.alert("Password Reset", "Your password has been reset. Please login using your new password");
                     navigate("SignIn");
                 }).catch(function (error) {
                     alert("Invalid key or email.  Please try again.");
@@ -87,7 +89,7 @@ export default class ResetPassword extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={{ flex: 1, justifyContent: 'center', padding: 30 }}>
 
                 <Input
                     autoCapitalize='none'

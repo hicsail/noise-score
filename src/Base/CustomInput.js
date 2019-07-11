@@ -81,10 +81,6 @@ export default class CustomInput extends Component {
                     <TextInput
                         {...this.props}
                         style={[styles.text, styles.placeholderText]}
-                        // placeholder={this.props.placeholder}
-                        // placeholderStyle={styles.placeholderText}
-                        // // placeholderTextColor={this.emptyCheck() ? 'gray' : 'red'}
-                        // secureTextEntry={this.props.isPassword}
                         underlineColorAndroid='rgba(0,0,0,0)'
 
                         onChangeText={(field) => {

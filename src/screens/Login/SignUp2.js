@@ -8,7 +8,7 @@ export default class AccountScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            yearBorn : -1,
+            yearBorn : "-1",
             pronouns : "undefined",
             ethnicity : "undefined",
             sensitive : "undefined",

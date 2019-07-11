@@ -1,3 +1,4 @@
+import {Dimensions } from 'react-native';
 import { Platform } from 'react-native';
 
 export const NOISE_SOURCES = [
@@ -31,8 +32,10 @@ export const NOISE_SOURCES = [
 
 ];
 
-export const IP_ADDRESS = (Platform.OS === 'ios') ? 'localhost:9000' : '10.0.2.2:9000';
+//export const IP_ADDRESS = (Platform.OS === 'ios') ? 'localhost:9000' : '10.0.2.2:9000';
 
 // aws ec2 instance elastic ip
-//export const IP_ADDRESS = '3.14.174.164:9000';
+export const IP_ADDRESS = '3.14.174.164:9000';
 
+
+export const { width, height } = Dimensions.get('window');

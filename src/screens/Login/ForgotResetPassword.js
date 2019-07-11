@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, Dimensions, View, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { home } from "../../../App";
 import axios from 'axios';
@@ -14,10 +14,7 @@ class ForgotResetPassword extends React.Component {
         title: 'ForgotResetPassword',
     };
 
-
     constructor(props) {
-        // Check if we already are logged in (navigate to MapScreen.js)
-        // Otherwise do nothing
         super(props);
         this.state = {
             key: '',
@@ -28,28 +25,19 @@ class ForgotResetPassword extends React.Component {
         }
     }
 
-    componentDidMount() {
-
-    }
-
-
-    async forgotPassword() {
+    forgotPassword() {
         const data = { email: this.state.email };
+        const { navigate } = this.props.navigation;
         // If mail exists, send verification token and return true, else return false;
-        let result = false;
-        result = await axios.post('http://' + constants.IP_ADDRESS + '/api/login/forgot', data)
+
+        axios.post('http://' + constants.IP_ADDRESS + '/api/login/forgot', data)
             .then(function () {
-                return true;
+                navigate('ResetPassword');
             })
             .catch(function () {
-                return false;
+                Alert.alert("Verification Failed", "Invalid email. Please check and retry.")
             });
 
-        console.log("result of forgot password is " + result);
-        if (result)
-            this.props.navigation.navigate('ResetPassword');
-        else
-            this.simpleAlert("Verification Failed", "Invalid email. Please check and retry")
     }
 
 
@@ -64,33 +52,44 @@ class ForgotResetPassword extends React.Component {
     render() {
         return (
 
-
-            <View>
-                <Input
-                    autoCapitalize='none'
-                    placeholder='Email'
-                    rightIcon={{ type: 'font-awesome', name: 'envelope' }}
-                    onChangeText={(email) => {
-                        this.setState({ email });
-                    }}
-                />
-                <Button
-                    title="Get token and reset password"
-                    onPress={() => {
-                        this.forgotPassword();
-                    }}
-
-                />
-                <Text>Already have a retrieval token, click here</Text>
-                <Button
-                    title="Reset password"
-                    onPress={() => this.props.navigation.navigate('ResetPassword')}
-                />
-            </View>
-
+            <ScrollView style={{ flexGrow: 1 }}>
+                <View style={{ flex: 1, justifyContent: 'center', padding: 30 }}>
+                    <View style={{ height: height / 2, justifyContent: 'space-evenly' }}>
+                        <View style={{ flex: 1, }}>
+                            <View style={{ marginVertical: 10 }}>
+                                <Input
+                                    autoCapitalize='none'
+                                    placeholder='Email'
+                                    rightIcon={{ type: 'font-awesome', name: 'envelope' }}
+                                    onChangeText={(email) => {
+                                        this.setState({ email });
+                                    }}
+                                />
+                            </View>
+                            <Button
+                                title="Get token and reset password"
+                                onPress={() => {
+                                    this.forgotPassword();
+                                }}
+                                style={{ marginTop: 10 }}
+                            />
+                        </View>
+                        <View style={{ flex: 1, alignText: 'center' }}>
+                            <Text style={{
+                                marginVertical: 10
+                            }}>Already have a retrieval token, click here</Text>
+                            <Button
+                                title="Reset password"
+                                onPress={() => this.props.navigation.navigate('ResetPassword')}
+                            />
+                        </View>
+                    </View>
+                </View>
+            </ScrollView>
         )
     }
 
 }
 
+const { width, height } = Dimensions.get('window');
 export default withNavigation(ForgotResetPassword);
