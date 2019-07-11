@@ -61,7 +61,7 @@ export default class MeasureScreen extends React.Component {
     };
 
     startMeasurement = () => {
-
+        let ignored = 0;
         this.requestAudioPermissionAndroid()
             .then((didGetPermission) => {
                 if (didGetPermission) {
@@ -69,13 +69,18 @@ export default class MeasureScreen extends React.Component {
                     RNSoundLevelModule.onNewFrame = (d) => {
                         let num = (parseInt(d.value));
                         console.log("the value is : ", d.value);
-                        console.log("the raw data is: ", d.rawData);
-                        this.setState({
-                            decibels: this.state.decibels.concat((parseInt(d.value) + 160)),
-                            started: true,
-                            stopped: false,
-                            initial: false,
-                        });
+                        // console.log("the raw data is: ", d.rawData);
+                        if (ignored > 1) {
+                            this.setState({
+                                decibels: this.state.decibels.concat((parseInt(d.value) + 160)),
+                                started: true,
+                                stopped: false,
+                                initial: false,
+                            });
+                        }
+                        else {
+                            ignored = ignored + 1;
+                        }
                     }
                 }
             });
