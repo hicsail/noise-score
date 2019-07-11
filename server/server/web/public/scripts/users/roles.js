@@ -16,7 +16,7 @@ $(document).ready(() => {
     ajax: {
       url: '/api/table/users',
       data: function (d) {
-        d.fields = 'name email username roles';
+        d.fields = 'name email username ethnicity pronouns sensitive home community work health year weekday weekend roles';
       }
     },
     columns: [
@@ -29,6 +29,18 @@ $(document).ready(() => {
       {
         data: 'email'
       },
+
+      { data: 'year' },
+      { data: 'ethnicity' },
+      { data: 'pronouns' },
+      { data: 'sensitive' },
+      { data: 'home' },
+      { data: 'community' },
+      { data: 'work' },
+      { data: 'health' },
+      { data: 'weekday' },
+      { data: 'weekend' },
+
       {
         data: 'roles.clinician',
         render: function (data, type, row) {

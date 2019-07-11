@@ -2,26 +2,33 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-class customButton extends Component {
+
+// ------------ Simple button with text ------------
+export default class CustomButton extends Component {
     render() {
         const { text, onPress } = this.props;
         return (
-            <TouchableOpacity style={[styles.buttonStyle, this.props.customStyle]}
-                              onPress={() => onPress()}
+            <TouchableOpacity
+                style={[styles.buttonStyle, this.props.customStyle]}
+                onPress={() => onPress()}
             >
-                <Text style={[styles.textStyle, this.props.customTextStyle]}>{text}</Text>
+                <Text style={[styles.textStyle, this.props.customTextStyle]}>
+                    {text}
+                </Text>
             </TouchableOpacity>
         );
     }
 }
 
-customButton.propTypes = {
+// ------------ Acceptable props for this custom button ------------
+CustomButton.propTypes = {
     text: PropTypes.string.isRequired,
     onPress: PropTypes.func.isRequired,
-    customStyle: PropTypes.object,
-    customTextStyle: PropTypes.object,
+    customStyle: PropTypes.object, // Overrides default style
+    customTextStyle: PropTypes.object, // Overrides default style
 };
 
+// ------------ Default styling, green button with white text ------------
 const styles = StyleSheet.create({
     textStyle: {
         fontSize: 20,
@@ -30,11 +37,10 @@ const styles = StyleSheet.create({
     },
 
     buttonStyle: {
-        // flex:1,
         padding: 10,
         borderRadius: 20,
-        backgroundColor: '#31BD4B',//'#215441',
+        borderWidth: 3,
+        borderColor: '#31BD4B',
+        backgroundColor: '#31BD4B',
     }
 });
-
-export default customButton;

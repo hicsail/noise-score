@@ -16,6 +16,17 @@
                 <th>Name</th>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Year</th>
+                <th>Ethnicity</th>
+                <th>Pronouns</th>
+                <th>Sensitive</th>
+                <th>Home</th>
+                <th>Community</th>
+                <th>Work</th>
+                <th>Health</th>
+                <th>Year</th>
+                <th>Weekday</th>
+                <th>Weekend</th>
                 <th>StudyID</th>
                 <th>Joined Study</th>
                 <th>Users Events</th>
@@ -52,7 +63,7 @@
       ajax: {
         url: "/api/table/users",
         data: function (d) {
-          d.fields = "name username email studyID timeCreated";
+          d.fields = "name username email year ethnicity pronouns sensitive home community work health year weekday weekend studyID timeCreated";
         }
       },
       "columns": [
@@ -68,6 +79,10 @@
           data: "email",
           defaultContent: ""
         },
+        {
+          data: "ethnicity",
+          defaultContent: ""
+         },
         {
           data: "studyID",
           render: function (data, type, row) {

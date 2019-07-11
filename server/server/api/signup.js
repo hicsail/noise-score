@@ -23,17 +23,18 @@ internals.applyRoutes = function (server, next) {
           password: Joi.string().required(),
           email: Joi.string().email().lowercase().required(),
           invite: Joi.string().optional(),
-          location : Joi.array(),
+          location: Joi.array(),
           recodingIds: Joi.string(),
           pronouns: Joi.string(),
           ethnicity: Joi.string(),
           sensitive: Joi.string(),
-          home:Joi.string(),
-          community : Joi.string(),
-          work : Joi.string(),
-          health : Joi.string(),
-          weekday : Joi.array(),
-          weekend : Joi.array()
+          home: Joi.string(),
+          community: Joi.string(),
+          work: Joi.string(),
+          health: Joi.string(),
+          year: Joi.string(),
+          weekday: Joi.array(),
+          weekend: Joi.array()
         }
       },
       pre: [{
@@ -78,7 +79,7 @@ internals.applyRoutes = function (server, next) {
             reply(true);
           });
         }
-      },{
+      }, {
         assign: 'passwordCheck',
         method: function (request, reply) {
 
@@ -91,9 +92,9 @@ internals.applyRoutes = function (server, next) {
             reply(true);
           });
         }
-      },{
+      }, {
         assign: 'paramsCheck',
-        method: function (request, reply){
+        method: function (request, reply) {
           var ret = "";
           ///const pushFrequencyArray = ["hour", "day", "week", "month", "never"];
           const pronounsArray = ["He/His", "She/Her", "They/Them", "undefined"];
@@ -125,10 +126,10 @@ internals.applyRoutes = function (server, next) {
           if (!healthArray.includes(request.payload.health)) {
             ret = ret + " + Problem with health";
           }
-          if(!request.payload.weekend.every(isBelowThreshold)){
+          if (!request.payload.weekend.every(isBelowThreshold)) {
             ret = ret + " + Problem with Weekend";
           }
-          if(!request.payload.weekday.every(isBelowThreshold)){
+          if (!request.payload.weekday.every(isBelowThreshold)) {
             ret = ret + " + Problem with Weekday";
           }
           if (ret.length > 1) {
@@ -161,14 +162,13 @@ internals.applyRoutes = function (server, next) {
           const community = request.payload.community;
           const work = request.payload.work;
           const health = request.payload.work;
+          const year = request.payload.year;
           // Weekday and Weekend are Arrays
           const weekday = request.payload.weekday;
           const weekend = request.payload.weekend;
 
 
-
-
-          const form = [location, pronouns, ethnicity, sensitive, home, community, work, health, weekday, weekend];
+          const form = [location, pronouns, ethnicity, sensitive, home, community, work, health, year, weekday, weekend];
           User.create(username, password, email, form, done);
         },
         // welcome: ['user', function (results, done) {
@@ -276,9 +276,9 @@ internals.applyRoutes = function (server, next) {
 
           if (request.payload.username) {
             if (results.usernameFind) {
-              return done(null,false);
+              return done(null, false);
             }
-            return done(null,true);
+            return done(null, true);
           }
           return done();
         }],
@@ -292,9 +292,9 @@ internals.applyRoutes = function (server, next) {
 
           if (request.payload.email) {
             if (results.emailFind) {
-              return done(null,false);
+              return done(null, false);
             }
-            return done(null,true);
+            return done(null, true);
           }
           return done();
         }]

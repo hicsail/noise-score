@@ -19,7 +19,6 @@ import Text from "react-native-elements/src/text/Text";
 import { Header } from 'react-navigation';
 import IconFA from "react-native-vector-icons/FontAwesome";
 
-
 const { width, height } = Dimensions.get('window');
 const buttonHeight = height/15;
 console.log("buttonHeight is ", buttonHeight);
@@ -65,7 +64,7 @@ export default class MeasureScreen extends React.Component {
     };
 
     startMeasurement = () => {
-
+        let ignored = 0;
         this.requestAudioPermissionAndroid()
             .then((didGetPermission) => {
                 if (didGetPermission) {
@@ -73,22 +72,28 @@ export default class MeasureScreen extends React.Component {
                     RNSoundLevelModule.onNewFrame = (d) => {
                         let num = (parseInt(d.value));
                         console.log("the value is : ", d.value);
-                        console.log("the raw data is: ", d.rawData);
+                        // console.log("the raw data is: ", d.rawData);
+                        if (ignored > 1) {
 
-                        let dec;
-                        if (d.value < -160) {
+                          let dec;
+                          if (d.value < -160) {
                             dec = 0;
+                          }
+                          else {
+                            dec = this.state.decibels.concat(((parseInt(d.value) + 160) * (90/160)));
+                          }
+                            this.setState({
+                                decibels: dec,
+                                started: true,
+                                stopped: false,
+                                initial: false,
+                            });
                         }
                         else {
-                            dec = this.state.decibels.concat(((parseInt(d.value) + 160) * (90/160)));
+                            ignored = ignored + 1;
                         }
 
-                        this.setState({
-                            decibels: dec,
-                            started: true,
-                            stopped: false,
-                            initial: false,
-                        });
+
                     }
                 }
             });
