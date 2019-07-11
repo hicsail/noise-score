@@ -169,7 +169,7 @@ export default class AccountScreen extends React.Component {
                     <View style={styles.bottomHalf}>
                         <Text>{date}</Text>
                         <ScrollView>
-                            <Text style={styles.textHeader}>Where were you are the time of the measurement?</Text>
+                            <Text style={styles.textHeader}>Where were you at the time of the measurement?</Text>
                             <Text style={styles.text}>{place}</Text>
 
                             <Text style={styles.textHeader}>How loud were the sounds?</Text>
