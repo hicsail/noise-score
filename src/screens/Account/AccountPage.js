@@ -112,10 +112,10 @@ export default class AccountScreen extends React.Component {
                             })
                             .catch(function (error) {
                                 console.log(error);
-                                alert("Something went wrong!");
+                                alert("Error logging out. Please close the app to log out.");
                             });
                     } else {
-                        alert("Error")
+                        alert("Log out error. Please close the app to log out.")
                     }
                 });
             }

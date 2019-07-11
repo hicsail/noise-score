@@ -5,15 +5,16 @@ import {
     View,
     Button,
     ScrollView,
-    AsyncStorage,
     Slider,
     Alert,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
+  TextInput
 } from 'react-native';
 import axios from 'axios';
 import IconFA from "react-native-vector-icons/FontAwesome";
-
+import AsyncStorage from '@react-native-community/async-storage';
+import * as constants from '../../components/constants';
 
 const { width, height } = Dimensions.get('window');
 export default class TermsConditions extends React.Component {
@@ -31,8 +32,10 @@ export default class TermsConditions extends React.Component {
 
         AsyncStorage.getItem('formData').then(function (ret) {
             var response = JSON.parse(ret);
+            //console.log("response is ");
+            //console.log(response);
             // We need to make the API call to create a new user
-            axios.post('http://10.0.2.2:9000/api/signup', response).then(function (response) {
+            axios.post('http://' + constants.IP_ADDRESS + '/api/signup', response).then(function (response2) {
                 // Lets save relevent information and login!
                 Alert.alert(
                     'Welcome to Noise Score!',
@@ -42,12 +45,13 @@ export default class TermsConditions extends React.Component {
                     ],
                     { cancelable: false },
                 );
-                let ret = response['data'];
-                AsyncStorage.setItem("userData", JSON.stringify(ret));
+                let ret2 = response2['data'];
+                AsyncStorage.setItem("userData", JSON.stringify(ret2));
                 navigate("App")
             }).catch(function (error) {
                 console.log(error);
                 alert(error.message);
+
             });
         }.bind(this));
     }
@@ -61,68 +65,66 @@ export default class TermsConditions extends React.Component {
                 <View style={{ flex: 1 }}>
 
                     <ScrollView>
-
                         <View style={styles.wrapper}>
+                            <TextInput multiline editable={false}>
                             <Text style={styles.text}>
-
                                 <Text style={styles.h1}>
                                     Before you register and begin using this app, you must agree to our Consent process,
                                     Terms and Conditions, and Privacy Statement.
                                 </Text>
                                 {'\n\n'}
-
                                 <Text style={styles.h2}>
                                     What is NoiseScore?
                                 </Text>
                                 {'\n\n'}
 
-                                    NoiseScore is a free smartphone research application designed to gather both
-                                    objective and subjective information about your community noise levels. This
-                                    community engagement research tool allows you to provide measurable and spatial
-                                    input about your experience with noise.
+                                NoiseScore is a free smartphone research application designed to gather both
+                                objective and subjective information about your community noise levels. This
+                                community engagement research tool allows you to provide measurable and spatial
+                                input about your experience with noise.
 
-                                    You can use NoiseScore to:
-                                    {'\n'}
-                                    {'\n\t'} '• Objectively describe your community noise levels by recording its sound level
-                                    (measured in decibels)
-                                    {'\n\t'} • Subjectively describe this noise level by answering a short survey
-                                    {'\n\t'} • Add your response to our live noise heat map that can be used to gauge the sound
-                                    and noise climate in not only your community but communities all over the globe.
+                                You can use NoiseScore to:
+                                {'\n'}
+                                {'\n\t'} • Objectively describe your community noise levels by recording its sound level
+                                (measured in decibels)
+                                {'\n\t'} • Subjectively describe this noise level by answering a short survey
+                                {'\n\t'} • Add your response to our live noise heat map that can be used to gauge the sound
+                                and noise climate in not only your community but communities all over the globe.
 
                                 {'\n'}{'\n'}
-                                    NoiseScore is currently being administered and managed by Community Noise Lab, a
-                                    research lab at Boston University’s School of Public Health.
+                                NoiseScore is currently being administered and managed by Community Noise Lab, a
+                                research lab at Boston University’s School of Public Health.
                                 <Text style={{ fontWeight: 'bold' }}>
                                     By downloading and using this app, you are participating in a research study.
                                 </Text>
 
 
-                                     It is your decision whether or not to
-                                    participate in this study and you may choose to stop using the app at any time. We
-                                    are conducting this research to gather a deeper understanding about your thoughts,
-                                    feelings, and behaviors about the sounds you encounter in your everyday life. When
-                                    you first create an account, you will answer a short survey so that we can learn a
-                                    little more about who you are and your general attitudes about community noise and
-                                    sound issues. With this app, you will be able to create a noise event. With each
-                                    noise event you create, you will measure its sound level (in decibels), map your
-                                    location, record the noise sources (barking dog, siren, aircraft, etc.) and answer a
-                                    series of questions designed to gather your opinions on how this noise event made
-                                    you feel. This process takes approximately one-minute to complete. The data provided
-                                    by you and other research participants ("participants") will be collected and used
-                                    for research purposes. Upon completion of a NoiseScore noise event, you will be able
-                                    to view an aggregation of ALL participant responses via our heat map. You will also
-                                    be able to review your historical records.
-                                    The main risk of participating in this study is discomfort, which may be caused by
-                                    you feeling uncomfortable collecting sound level and noise perception data with your
-                                    smartphone and adding your responses to our live heat map. Please note that
-                                    downloading and using the app is completely optional. If you decide to download and
-                                    use the app to measure a noise event you do not have to answer any questions that
-                                    make you feel uncomfortable. Further, you are free to quit measuring a noise event
-                                    or use the app at any time. If you chose to quit before submitting a noise event,
-                                    none of your answers will be saved.
-                                    This research project will last for two years. However, it may be extended, if
-                                    permission to continue is given by Boston Medical Center and Boston University
-                                    Medical Campus IRB.
+                                It is your decision whether or not to
+                                participate in this study and you may choose to stop using the app at any time. We
+                                are conducting this research to gather a deeper understanding about your thoughts,
+                                feelings, and behaviors about the sounds you encounter in your everyday life. When
+                                you first create an account, you will answer a short survey so that we can learn a
+                                little more about who you are and your general attitudes about community noise and
+                                sound issues. With this app, you will be able to create a noise event. With each
+                                noise event you create, you will measure its sound level (in decibels), map your
+                                location, record the noise sources (barking dog, siren, aircraft, etc.) and answer a
+                                series of questions designed to gather your opinions on how this noise event made
+                                you feel. This process takes approximately one-minute to complete. The data provided
+                                by you and other research participants ("participants") will be collected and used
+                                for research purposes. Upon completion of a NoiseScore noise event, you will be able
+                                to view an aggregation of ALL participant responses via our heat map. You will also
+                                be able to review your historical records.
+                                The main risk of participating in this study is discomfort, which may be caused by
+                                you feeling uncomfortable collecting sound level and noise perception data with your
+                                smartphone and adding your responses to our live heat map. Please note that
+                                downloading and using the app is completely optional. If you decide to download and
+                                use the app to measure a noise event you do not have to answer any questions that
+                                make you feel uncomfortable. Further, you are free to quit measuring a noise event
+                                or use the app at any time. If you chose to quit before submitting a noise event,
+                                none of your answers will be saved.
+                                This research project will last for two years. However, it may be extended, if
+                                permission to continue is given by Boston Medical Center and Boston University
+                                Medical Campus IRB.
 
                                 {'\n\n'}
                                 <Text style={styles.h3}>
@@ -258,7 +260,6 @@ export default class TermsConditions extends React.Component {
                                 effect.
                                 No waiver of any of these Terms of Use shall be deemed a further or continuing waiver of
                                 such term or condition or any other term or condition.
-
                                 {'\n\n'}
                                 <Text style={[styles.text, styles.h2]}>
                                     Privacy Policy
@@ -276,6 +277,7 @@ export default class TermsConditions extends React.Component {
                                 When you download and use the app, you will be asked to read our terms and conditions
                                 and agree with them. If you do not agree with the terms of this Privacy Policy, please
                                 do not access or use the App.
+                                {'\n\n'}
                                 It is your decision whether to participate in this study and you may choose to stop
                                 using the App at any time. The Lab is conducting this research to gather a deeper
                                 understanding about your thoughts, feelings, and behaviors about the sounds you
@@ -285,7 +287,7 @@ export default class TermsConditions extends React.Component {
                                 create a noise event. With each noise event you create, you will measure its sound level
                                 (in decibels), map your location, record the noise sources (barking dog, siren,
                                 aircraft, etc.) and answer a series of questions designed to gather your opinions on how
-                                this noise event made you feel. Once you submit your noise event, your responses will be
+                                this noise event made you feel.  Once you submit your noise event, your responses will be
                                 added to our live heat map. The data provided by you and other research participants
                                 ("participants") will be collected and used for research purposes. Upon completion of a
                                 NoiseScore noise event, you will be able to view an aggregation of ALL participant
@@ -362,7 +364,7 @@ export default class TermsConditions extends React.Component {
                                 {'\n'} • Publishing results in a medical book or journal.
                                 {'\n'} • Adding results to a Federal government database.
                                 {'\n'} • Using research data in future studies, done by us or by other scientists.
-                                {'\n'}
+                                {'\n\n'}
                                 Like most smartphone applications, the App uses third-party entities, such as hosting
                                 companies or technology platforms, to facilitate the App. These third-party entities
                                 track Internet services and record the data in log files. The log files include information
@@ -434,11 +436,11 @@ export default class TermsConditions extends React.Component {
                                 subject. You should also call or email if you want to talk to someone who is not part of
                                 the
                                 study about your questions, concerns, or problems.
-
-
                             </Text>
+                            </TextInput>
                         </View>
                     </ScrollView>
+
                     <View style={{ flexGrow: 1, position: 'relative', bottom: 0 }}>
                         <View style={{
                             flexGrow: 1,
@@ -490,8 +492,8 @@ export default class TermsConditions extends React.Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View>
 
+                </View>
             </View>
 
             // <View style={{ height:height-300}}>
@@ -578,21 +580,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-evenly'
     },
-
-
     wrapper: {
         flexGrow: 1,
-        // minHeight: height - 100,
-        // height: 800,
         alignItems: 'stretch',
         padding: 30,
         alignContent: 'center',
-        // backgroundColor: "#e9eeec",
-        // minHeight: 600,
-
     },
-
-
     scrollWrapper: {
         // flexGrow: 1,
         // justifyContent: "space-between",
@@ -602,45 +595,33 @@ const styles = StyleSheet.create({
         // flexWrap: 'wrap',
         // alignContent: 'center'
     },
-
     text: {
         fontSize: 15,
         color: "black",
         marginBottom: 10,
-        // fontWeight: 'bold',
         textAlign: 'left'
     },
-
     h1: {
         fontSize: 25,
         fontWeight: 'bold',
         textAlign: 'center'
     },
-
     h2: {
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center'
     },
-
     h3: {
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'justify'
     },
-
     button: {
         flex: 1,
         minHeight: 40,
         flexDirection: 'row',
-        // justifyContent: 'center',
-
         alignSelf: 'stretch',
-        // borderWidth: 2,
         borderRadius: 10,
-
-        // borderColor: '#31BD4B',
-
         margin: 5,
         padding: 10,
     },

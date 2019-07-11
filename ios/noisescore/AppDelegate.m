@@ -4,14 +4,15 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- *  key - AIzaSyCfs7lmz0M65ZqqcMclLS7AJhNN2j5E0VA
- *
  * jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
  * #import "RNSplashScreen.h"  // here
  *
  * [RNSplashScreen show];  // here
  *
- * #jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.bundle?platform=ios"];
+ * Debug:
+ * jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.bundle?platform=ios"];
+ *
+ * Release:
  * jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
  */
 

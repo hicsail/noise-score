@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
 
 const { width, height } = Dimensions.get('window');
+
 export default class AccountScreen extends React.Component {
 
     constructor(props) {
@@ -172,6 +173,8 @@ export default class AccountScreen extends React.Component {
                         self.setState({
                             userData: ret['data']
                         });
+                        console.log("\n\n\n\n\n\n\n\n");
+                        console.log(ret['data'])
                     }).catch(function (error) {
                         // If there is an error sign out
                         alert(error);
@@ -328,7 +331,6 @@ export default class AccountScreen extends React.Component {
         var list = this.generateData(data);
         return (
             <View style={styles.container}>
-
                 <ScrollView>
                     <View>
                         {list}
