@@ -10,13 +10,40 @@ import {
     TextInput,
     Alert,
     TouchableOpacity,
-    Dimensions
+    Dimensions, Platform, PermissionsAndroid
 } from 'react-native';
 import NavButtons from '../../components/NavButtons';
 import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import axios from "axios";
 import IconFA from "react-native-vector-icons/FontAwesome";
 
+
+const  requestPermission = () => {
+    if(Platform.OS === 'ios') return Promise.resolve(true)
+    return PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+            'title': 'Duhen të drejtat për kordinatat GPS',
+            'message': 'Kto të dhëna duhen për të gjeneruar adresën tuaj'
+        }
+    ).then(granted => {
+        if(granted === PermissionsAndroid.RESULTS.GRANTED) {
+            return Promise.resolve("You can use the location")
+        } else {
+            return Promise.reject("Location permission denied")
+        }
+    })
+};
+
+const getCoordinates = () => {
+    return requestPermission().then(ok => {
+        return new Promise((resolve, reject) => {
+            const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:5000}
+                : {enableHighAccuracy:true,timeout:5000,maximumAge:2000};
+            global.navigator.geolocation.getCurrentPosition(resolve, reject, options)
+        })
+    })
+};
 const { width, height } = Dimensions.get('window');
 export default class MeasureScreen3 extends React.Component {
 
@@ -66,18 +93,27 @@ export default class MeasureScreen3 extends React.Component {
                 response["username"] = userData['user']['username'];
                 response["userID"] = userData['user']['_id'];
 
+                getCoordinates().then(position => {
+                    // response['location'] = [position.coords.latitude+','+position.coords.longitude;
+                    // Alert.alert(coordinates)
+                    response['location'] = [position.coords.longitude, position.coords.latitude];
+                    axios.post('http://' + constants.IP_ADDRESS + '/api/inputMeasurement', response)
+                        .then(function (response1) {
+                            // Done!
+                        })
+                        .catch(function (error) {
+                            success = false;
+                        });
+                }).catch(error => {
+                    Alert.alert("hiiiii")
+                });
+
                 navigator.geolocation.getCurrentPosition(
                     position => {
                         var longitude = position['coords']['latitude'];
                         var latitude = position['coords']['longitude'];
-                        response['location'] = [latitude, longitude];
-                        axios.post('http://' + constants.IP_ADDRESS + '/api/inputMeasurement', response)
-                            .then(function (response1) {
-                                // Done!
-                            })
-                            .catch(function (error) {
-                                success = false;
-                            });
+
+
                     },
                     error => Alert.alert(error.message),
                     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }

@@ -50,6 +50,7 @@ export default class AccountScreen extends React.Component {
         AsyncStorage.getItem('moreInfo').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
+                console.log(JSON.stringify(ret));
                 this.setState({
                     username: response['username'],
                     describe: response['describe'],
@@ -139,7 +140,7 @@ export default class AccountScreen extends React.Component {
             max = this.state.rawData['max'];
             min = this.state.rawData['min'];
         }
-        const latlng = {
+        let latlng = {
             latitude: this.state.region['latitude'],
             longitude: this.state.region['longitude']
         };

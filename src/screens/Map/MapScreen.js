@@ -1,14 +1,44 @@
 import React from 'react';
-import { Platform, StyleSheet, Image, View, TouchableHighlight} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {Marker, Callout, Overlay, LocalTile} from 'react-native-maps';
+import { Platform, StyleSheet, Image, View, TouchableHighlight } from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { Marker, Callout, Overlay, LocalTile } from 'react-native-maps';
 import axios from "axios";
-import {Text, List} from 'react-native-elements';
+import { Text, List } from 'react-native-elements';
 import SearchBar from 'react-native-searchbar'
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
+import { PermissionsAndroid } from 'react-native'
+import {Alert} from "react-native";
 
 const currentLocationImage = require('./mapMarker3.png');
+
+
+const  requestPermission = () => {
+    if(Platform.OS === 'ios') return Promise.resolve(true)
+    return PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+            'title': 'Duhen të drejtat për kordinatat GPS',
+            'message': 'Kto të dhëna duhen për të gjeneruar adresën tuaj'
+        }
+    ).then(granted => {
+        if(granted === PermissionsAndroid.RESULTS.GRANTED) {
+            return Promise.resolve("You can use the location")
+        } else {
+            return Promise.reject("Location permission denied")
+        }
+    })
+};
+
+const getCoordinates = () => {
+    return requestPermission().then(ok => {
+        return new Promise((resolve, reject) => {
+            const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:5000}
+                : {enableHighAccuracy:true,timeout:5000,maximumAge:2000};
+            global.navigator.geolocation.getCurrentPosition(resolve, reject, options)
+        })
+    })
+};
 
 
 export default class MapScreen extends React.Component {
@@ -20,7 +50,7 @@ export default class MapScreen extends React.Component {
         this.state = {
             markers: [],
             region: {
-                latitude:  42.361145,
+                latitude: 42.361145,
                 longitude: -71.057083,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
@@ -39,31 +69,45 @@ export default class MapScreen extends React.Component {
         const map = this.mapView;
 
         // TODO - is this necessary for IOS?
-        if (Platform.OS === "ios"){
+        if (Platform.OS === "ios") {
             navigator.geolocation.requestAuthorization();
         }
 
-        // THIS WORKS FOR ANDROID - uncomment out marker in render
-        navigator.geolocation.getCurrentPosition((position) => {
-                let lat = (position.coords.latitude);
-                let long = (position.coords.longitude);
+        // this.requestCameraPermission().done();
 
-                let initialRegion = {
-                    latitude: lat,
-                    longitude: long,
+        getCoordinates().then(position => {
+            // const coordinates = position.coords.latitude+','+position.coords.longitude;
+            this.setState({region: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
                     latitudeDelta: 0.0922,
-                    longitudeDelta: 0.05,
-                };
-                map.animateToRegion(initialRegion, 2000);
-                this.setState({region: initialRegion});
-            },
-            (error) => {
-                alert('Error getting location')
-            },
-            {
-                enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
-            }
-        );
+                    longitudeDelta: 0.0421,
+                },})
+        }).catch(error => {
+            Alert.alert(error.message)
+        });
+
+        // THIS WORKS FOR ANDROID - uncomment out marker in render
+        // navigator.geolocation.getCurrentPosition((position) => {
+        //         let lat = (position.coords.latitude);
+        //         let long = (position.coords.longitude);
+        //
+        //         let initialRegion = {
+        //             latitude: lat,
+        //             longitude: long,
+        //             latitudeDelta: 0.0922,
+        //             longitudeDelta: 0.05,
+        //         };
+        //         map.animateToRegion(initialRegion, 2000);
+        //         this.setState({ region: initialRegion });
+        //     },
+        //           (error) => {
+            //         alert('Error getting location')
+            //     },
+            //     {
+            //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
+            //     }
+            // );
 
 
         // Add listeners to update the markers (in the situation that a user takes a new measurements)
@@ -313,7 +357,7 @@ export default class MapScreen extends React.Component {
                     }}
 
                     style={styles.mapView}
-                  //provider={"google"} // remove if not using Google Maps
+                    //provider={"google"} // remove if not using Google Maps
                     provider={PROVIDER_GOOGLE}
 
                     // style={styles.map}
@@ -323,30 +367,30 @@ export default class MapScreen extends React.Component {
                     showsUserLocation={true}
                     showsCompass={true}
                     showsPointsOfInterest={true}
-                    onPress={() => this.searchBarHandler()}
+                    // onPress={() => this.searchBarHandler()}
                 >
                     {iterator}
 
                     {/*Marker to show users location in Android*/}
                     {/*Comment out when using on IOS */}
-                    <Marker
-                        key={-1}
-                        coordinate={{
-                            latitude: this.state.region['latitude'],
-                            longitude: this.state.region['longitude']
-                        }}
-                        tracksViewChanges={false}
-                        image={currentLocationImage}
-                    />
+                    {/*<Marker*/}
+                        {/*key={-1}*/}
+                        {/*coordinate={{*/}
+                            {/*latitude: this.state.region['latitude'],*/}
+                            {/*longitude: this.state.region['longitude']*/}
+                        {/*}}*/}
+                        {/*tracksViewChanges={false}*/}
+                        {/*image={currentLocationImage}*/}
+                    {/*/>*/}
 
                 </MapView>
 
                 {/*------------- Search bar funcionality - will incure costs to our PI if used -------------*/}
                 {/*<SearchBar*/}
-                    {/*ref={(ref) => this.searchBar = ref}*/}
-                    {/*handleSearch={(input) => this.search(input)}*/}
-                    {/*showOnLoad*/}
-                    {/*onSubmitEditing={() => this.searchDriver()}*/}
+                {/*ref={(ref) => this.searchBar = ref}*/}
+                {/*handleSearch={(input) => this.search(input)}*/}
+                {/*showOnLoad*/}
+                {/*onSubmitEditing={() => this.searchDriver()}*/}
                 {/*/>*/}
 
             </View>
