@@ -84,7 +84,7 @@ export default class MapScreen extends React.Component {
                     longitudeDelta: 0.0421,
                 },})
         }).catch(error => {
-            Alert.alert(error.message)
+            Alert.alert('Please change your app permissions to allow NoiseScore to access your location.')
         });
 
         // THIS WORKS FOR ANDROID - uncomment out marker in render

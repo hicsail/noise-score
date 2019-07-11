@@ -24,13 +24,8 @@ export default class AccountScreen extends React.Component {
 
         const {navigate} = this.props.navigation;
         // First we have to check if all the inputs are valid
-        if(this.state.pronouns === "undefined"){
-            alert("Please select what pronouns you would like to use.")
-        } else if (this.state.yearBorn === -1){
-            alert("Please select the year you were born in.")
-        } else if(this.state.ethnicity === "undefined") {
-            alert("Please select an Ethnicity");
-        } else if(this.state.sensitive === "undefined"){
+
+        if(this.state.sensitive === "undefined"){
             alert("Please enter a valid sensitivity.");
         } else if(this.state.homeNoise === "undefined") {
             alert("Please enter a valid Home Noise.");
@@ -51,6 +46,7 @@ export default class AccountScreen extends React.Component {
                 response['community'] = this.state.communityNoise;
                 response['work'] = this.state.workNoise;
                 response['health']= this.state.health;
+                response['year'] = this.state.yearBorn;
                 AsyncStorage.setItem("formData", JSON.stringify(response));
             }.bind(this)).then(function(){
                 navigate('SignUp3');
@@ -89,7 +85,7 @@ export default class AccountScreen extends React.Component {
                 </View>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>What pronouns would you like to use?</Text>
+                        <Text style={styles.text}>What pronouns would you like to use? {" "} </Text>
                     </View>
                         <Picker
                             selectedValue={this.state.pronouns}
@@ -104,7 +100,7 @@ export default class AccountScreen extends React.Component {
                 </View>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>What year were you born?</Text>
+                        <Text style={styles.text}>What year were you born? {" "} </Text>
                     </View>
                     <Picker
                         selectedValue={this.state.yearBorn}
@@ -118,8 +114,8 @@ export default class AccountScreen extends React.Component {
                 </View>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>I Identify as:</Text>
-                        <Text style={styles.text}>(select all that apply)</Text>
+                        <Text style={styles.text}>I Identify as: {" "} </Text>
+                        <Text style={styles.subText}>(select all that apply) {" "} </Text>
                     </View>
                     <SelectMultipleGroupButton
                         multiple={true}
@@ -141,7 +137,7 @@ export default class AccountScreen extends React.Component {
                 </View>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>Compared to people around you, do you consider yourself sensitive to noise?</Text>
+                        <Text style={styles.text}>Compared to people around you, do you consider yourself sensitive to noise? {" "} </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -162,7 +158,7 @@ export default class AccountScreen extends React.Component {
                 </View>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels in your home? </Text>
+                        <Text style={styles.text}>How would you rate the noise levels in your home? {" "} </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -183,8 +179,8 @@ export default class AccountScreen extends React.Component {
                 </View>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels in your community?  </Text>
-                        <Text style={styles.subText}>(community defined as a radius around your home)</Text>
+                        <Text style={styles.text}>How would you rate the noise levels in your community? {" "}  </Text>
+                        <Text style={styles.subText}>(community defined as a radius around your home) {" "} </Text>
                     </View>
                     <SelectMultipleGroupButton
                         multiple={false}
@@ -204,7 +200,7 @@ export default class AccountScreen extends React.Component {
                 </View>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>How would you rate the noise levels at your place of employment? </Text>
+                        <Text style={styles.text}>How would you rate the noise levels at your place of employment? {" "} </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -225,7 +221,7 @@ export default class AccountScreen extends React.Component {
                 </View>
                 <View style={styles.padding}>
                     <View style={styles.wrapText}>
-                        <Text style={styles.text}>In general, how would you describe your health? </Text>
+                        <Text style={styles.text}>In general, how would you describe your health? {" "} </Text>
                     </View>
 
                     <SelectMultipleGroupButton
@@ -248,7 +244,7 @@ export default class AccountScreen extends React.Component {
 
                 <View style={styles.wrapText}>
                 <Button
-                    title="Next"
+                    title="Next "
                     onPress={() => this.next()}
                     style={styles.button}
                     //backgroundColor={'white'}

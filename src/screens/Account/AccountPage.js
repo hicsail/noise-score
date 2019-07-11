@@ -11,8 +11,8 @@ const  requestPermission = () => {
     return PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-            'title': 'Duhen të drejtat për kordinatat GPS',
-            'message': 'Kto të dhëna duhen për të gjeneruar adresën tuaj'
+            'title': 'Please provide access to your location.',
+            'message': ''
         }
     ).then(granted => {
         if(granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -74,7 +74,6 @@ export default class AccountScreen extends React.Component {
             }
         }.bind(this));
         console.log(this.props.navigation);
-        console.log("AAAAAAAAAAA");
         console.log(this.props.navigationOptions);
     }
 
