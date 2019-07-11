@@ -81,8 +81,6 @@ internals.applyRoutes = function (server, next) {
   });
 
 
-
-
   server.route({
     method: 'GET',
     path: '/select2/users',
@@ -228,7 +226,7 @@ internals.applyRoutes = function (server, next) {
     config: {
       auth: {
         strategies: ['simple', 'jwt', 'session'],
-        scope: ['root','admin','researcher']
+        scope: ['root', 'admin', 'researcher']
       },
       validate: {
         payload: User.payload
@@ -297,8 +295,18 @@ internals.applyRoutes = function (server, next) {
       const password = request.payload.password;
       const email = request.payload.email;
       const name = request.payload.name;
+      const year = request.payload.year;
+      const ethnicity = request.payload.ethnicity;
+      const location = request.payload.location;
+      const pronouns = request.payload.pronouns;
+      const sensitive = request.payload.sensitive;
+      const home = request.payload.home;
+      const work = request.payload.work;
+      const health = request.payload.health;
+      const weekday = request.payload.weekday;
+      const weekend = request.payload.weekend;
 
-      User.create(username, password, email, name, (err, user) => {
+      User.create(username, password, email, name, year, ethnicity, location, pronouns, sensitive, home, work, health, year, weekday, weekend, (err, user) => {
 
         if (err) {
           return reply(err);
@@ -552,7 +560,7 @@ internals.applyRoutes = function (server, next) {
     config: {
       auth: {
         strategies: ['simple', 'jwt', 'session'],
-        scope: ['root','admin']
+        scope: ['root', 'admin']
       },
       validate: {
         params: {
@@ -576,7 +584,7 @@ internals.applyRoutes = function (server, next) {
               reply(hash);
             });
           }
-        },{
+        }, {
           assign: 'passwordCheck',
           method: function (request, reply) {
 
@@ -589,7 +597,7 @@ internals.applyRoutes = function (server, next) {
               reply(true);
             });
           }
-        },{
+        }, {
           assign: 'scopeCheck',
           method: function (request, reply) {
 
@@ -659,7 +667,7 @@ internals.applyRoutes = function (server, next) {
             reply(hash);
           });
         }
-      },{
+      }, {
         assign: 'passwordCheck',
         method: function (request, reply) {
 
@@ -701,7 +709,7 @@ internals.applyRoutes = function (server, next) {
     config: {
       auth: {
         strategies: ['simple', 'jwt', 'session'],
-        scope: ['root','admin']
+        scope: ['root', 'admin']
       },
       validate: {
         params: {
@@ -1336,10 +1344,10 @@ internals.applyRoutes = function (server, next) {
     handler: function (request, reply) {
       var zip = request.payload.zip;
       var ret = zipcodes.lookup(zip);
-        reply({
-          city : ret['city'],
-          state : ret['state']
-        });
+      reply({
+        city: ret['city'],
+        state: ret['state']
+      });
 
     }
   });
