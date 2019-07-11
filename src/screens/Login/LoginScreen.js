@@ -82,6 +82,7 @@ export default class LoginScreen extends React.Component {
         };
         console.log("In here 1");
         const { navigate } = this.props.navigation;
+
         let url = 'http://' + constants.IP_ADDRESS + '/api/login';
         axios.post(url, userCredentials)
             .then(function (response) {
@@ -167,29 +168,19 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         minHeight: height - 25,
         alignItems: 'stretch',
-        paddingLeft: 30,
-        paddingRight: 30,
-        paddingTop: 30,
         alignContent: 'center',
-        // backgroundColor: "#e9eeec",
-        // minHeight: 600,
-        // backgroundColor:"gray"
-
+        padding: 30,
+        paddingBottom: 0,
     },
 
     imgWrapper: {
         flexGrow: 2,
-        // backgroundColor:'lightgreen'
-        // alignItems: 'stretch',
-        // alignContent: 'center',
-        // position: 'absolute',
-        // top: 0,
     },
 
     scrollWrapper: {
         // flexGrow: 1,
         // justifyContent: "space-between",
-        height: height - 25,
+        // height: height - 25,
         // alignItems: 'stretch',
         // // padding: 80,
         // flexWrap: 'wrap',

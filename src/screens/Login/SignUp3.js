@@ -46,25 +46,6 @@ export default class AccountScreen extends React.Component {
             response['weekend'] = weekendArray;
             AsyncStorage.setItem("formData", JSON.stringify(response));
             // We need to make the API call to create a new user
-            let url = 'http://' + constants.IP_ADDRESS + '/api/signup';
-
-            axios.post(url, response).then(function (response){
-                // Lets save relevent information and login!
-                Alert.alert(
-                    'Welcome to Noise Score!',
-                    'Click measurements to get started.',
-                    [
-                        { text: 'Lets go!', onPress: () => console.log('OK Pressed') },
-                    ],
-                    { cancelable: false },
-                );
-                let ret = response['data'];
-                AsyncStorage.setItem("userData", JSON.stringify(ret));
-                navigate("App")
-            }).catch(function (error) {
-                console.log(error);
-                alert(error.message);
-            });
         }.bind(this)).then(function () {
             navigate('TermsConditions');
         }.bind(this));
@@ -73,6 +54,8 @@ export default class AccountScreen extends React.Component {
     render() {
         const step = 5;
         return (
+
+
             <View style={styles.container}>
 
                 <View>
@@ -270,19 +253,21 @@ export default class AccountScreen extends React.Component {
                                 onSlidingComplete={val => this.setweekendRunning(val)}
                             />
                         </View>
-                    </ScrollView>
-                    <Text> hi</Text>
-                    <View style={{ position: 'absolute', bottom: 0 }}>
+
+                    {/*<View style={{ position: 'absolute', bottom: 0 }}>*/}
                         <Button
                             title="Next"
                             onPress={() => this.next()}
                             buttonStyle={styles.button}
-                            backgroundColor={'white'}
-                            color={'#323232'}
+                            // backgroundColor={'white'}
+                            // color={'#323232'}
                         />
-                    </View>
+                    {/*</View>*/}
+                    </ScrollView>
                 </View>
+
             </View>
+
         );
     }
 
@@ -384,7 +369,9 @@ const styles = StyleSheet.create({
     },
     button: {
         marginBottom: 30,
+        marginTop: 20,
         backgroundColor: '#323232',
+        alignItems: 'center'
     },
     innerText: {
         fontSize: 26,

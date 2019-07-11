@@ -49,7 +49,7 @@ class ForgotResetPassword extends React.Component {
         if (result)
             this.props.navigation.navigate('ResetPassword');
         else
-            this.simpleAlert("Verficiation Failed", "Invalid email. Please check and retry")
+            this.simpleAlert("Verification Failed", "Invalid email. Please check and retry")
     }
 
 

@@ -16,6 +16,8 @@ export default class ResetPassword extends React.Component {
             password: '',
             confirmPassword: '',
         }
+
+
     }
 
     checkEmpty() {
@@ -59,26 +61,25 @@ export default class ResetPassword extends React.Component {
 
 
     async submit() {
-
+        const { navigate } = this.props.navigation;
         if (this.checkEmpty()) {
-            this.simpleAlert("Simple alert", "This is a simple alert");
+
             if (this.PassCheck()) {
-                alert("all good");
+
                 const userCredentials = {
                     key: this.state.key,
                     email: this.state.email,
                     password: this.state.password
                 };
-                console.log(this.state);
+
                 //axios post for reset password
                 await axios.post('http://' + constants.IP_ADDRESS + '/api/login/reset', userCredentials).then(function (ret) {
-                    alert("Hello");
-                    this.props.navigation.navigate("SignIn")
+                    navigate("SignIn");
                 }).catch(function (error) {
-                    Alert.alert("error validating user", "Invalid mail or retrieval token");
-                    console.log("*********************\n\n\n" + error + "****************\n\n\n")
+                    alert("Invalid key or email.  Please try again.");
+                    console.log("THE ERROR:");
+                    console.log("*********************\n\n\n" + error + "****************\n\n\n");
                 });
-
             }
         }
     }

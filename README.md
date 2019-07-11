@@ -1,7 +1,4 @@
-# Noise Score
-<p align="center">
-    <img src="assets/logo.png"/>
-</p>
+# Noise Score <img src="assets/one-hand-87.jpg"/>
 
 Mobile-app for users to record and comment on community noise levels.
 
