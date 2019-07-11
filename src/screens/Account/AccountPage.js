@@ -1,10 +1,38 @@
 import React from 'react';
-import { Picker, StyleSheet, View, ScrollView, Image } from 'react-native';
+import { Picker, StyleSheet, View, ScrollView, Image, Platform, PermissionsAndroid, Alert } from 'react-native';
 import axios from "axios";
 import { Button, Header } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
+
+const  requestPermission = () => {
+    if(Platform.OS === 'ios') return Promise.resolve(true)
+    return PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+            'title': 'Duhen të drejtat për kordinatat GPS',
+            'message': 'Kto të dhëna duhen për të gjeneruar adresën tuaj'
+        }
+    ).then(granted => {
+        if(granted === PermissionsAndroid.RESULTS.GRANTED) {
+            return Promise.resolve("You can use the location")
+        } else {
+            return Promise.reject("Location permission denied")
+        }
+    })
+};
+
+const getCoordinates = () => {
+    return requestPermission().then(ok => {
+        return new Promise((resolve, reject) => {
+            const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:5000}
+                : {enableHighAccuracy:true,timeout:5000,maximumAge:2000};
+            global.navigator.geolocation.getCurrentPosition(resolve, reject, options)
+        })
+    })
+};
+
 
 export default class AccountScreen extends React.Component {
 
@@ -24,6 +52,13 @@ export default class AccountScreen extends React.Component {
     componentDidMount() {
         // When the component mounts, gather the user data from local storage (AsyncStorage)
         // Store the data as a local variable
+
+        getCoordinates().then(position => {
+            const coordinates = position.coords.latitude+','+position.coords.longitude;
+            // Alert.alert(coordinates)
+        }).catch(error => {
+            // Alert.alert(error.message)
+        });
         AsyncStorage.getItem('userData', null).then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);

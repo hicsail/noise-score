@@ -5,6 +5,7 @@ import { ListItem, Button, Text, Header, } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
+
 const { width, height } = Dimensions.get('window');
 export default class AccountScreen extends React.Component {
 
@@ -194,6 +195,7 @@ export default class AccountScreen extends React.Component {
 
     moreInfo(data) {
         // Store the data we already have (the specific measurement)  and move to moreInfo.js
+        console.log(JSON.stringify(data));
         AsyncStorage.setItem("moreInfo", JSON.stringify(data));
         const { navigate } = this.props.navigation;
         navigate("Account3");
