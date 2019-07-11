@@ -96,8 +96,8 @@ internals.applyRoutes = function (server, next) {
         method: function (request, reply){
           var ret = "";
           ///const pushFrequencyArray = ["hour", "day", "week", "month", "never"];
-          const pronounsArray = ["He/His", "She/Her", "They/Them"];
-          const ethnicityArray =  ["Asian", "Black/African", "African American Descendant of Slavery", "Caucasian", "Hispanic/Latinx", "Pacific Islander", "Other"];
+          const pronounsArray = ["He/His", "She/Her", "They/Them", "undefined"];
+          const ethnicityArray =  ["Asian", "Black/African", "African American Descendant of Slavery", "Caucasian", "Hispanic/Latinx", "Pacific Islander", "Other", "undefined"];
           const sensitiveArray = ["Not at all", "Very Little", "A Little", "Moderately", "Severely"];
           const homeArray = ["Very quiet", "Quiet", "Neutral", "Loud", "Very Loud"];
           const communityArray = ["Very quiet", "Quiet", "Neutral", "Loud", "Very Loud"];

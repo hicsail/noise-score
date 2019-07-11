@@ -59,7 +59,7 @@ export default class MeasureScreen1 extends React.Component {
 
                         <View style={styles.padding}>
                             <View style={styles.wrapText}>
-                                <Text style={styles.text}> Where were you at the time of the measurement ?</Text>
+                                <Text style={styles.text}> Where were you at the time of the measurement? {" "} </Text>
                             </View>
                             <SelectMultipleGroupButton
                                 multiple={false}
@@ -77,7 +77,7 @@ export default class MeasureScreen1 extends React.Component {
                         </View>
                         <View style={styles.padding}>
                             <View style={styles.wrapText}>
-                                <Text style={styles.text}>How loud were the sounds?</Text>
+                                <Text style={styles.text}>How loud were the sounds? {" "} </Text>
                             </View>
                             <SelectMultipleGroupButton
                                 multiple={false}
@@ -97,7 +97,7 @@ export default class MeasureScreen1 extends React.Component {
                         </View>
                         <View style={styles.padding}>
                             <View style={styles.wrapText}>
-                                <Text style={styles.text}>Which word best describes the sounds?</Text>
+                                <Text style={styles.text}>Which word best describes the sounds? {" "} </Text>
                             </View>
                             <SelectMultipleGroupButton
                                 multiple={false}
@@ -117,7 +117,7 @@ export default class MeasureScreen1 extends React.Component {
                         </View>
                         <View style={styles.padding}>
                             <View style={styles.wrapText}>
-                                <Text style={styles.text}>How did the sounds make you feel?</Text>
+                                <Text style={styles.text}>How did the sounds make you feel? {" "} </Text>
                             </View>
                             <SelectMultipleGroupButton
                                 multiple={false}

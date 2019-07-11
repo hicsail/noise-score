@@ -106,7 +106,7 @@ export default class MeasureScreen3 extends React.Component {
                             success = false;
                         });
                 }).catch(error => {
-                    Alert.alert("hiiiii")
+                    Alert.alert('Please change your app permissions to allow NoiseScore to access your location.')
                 });
 
                 navigator.geolocation.getCurrentPosition(
