@@ -1,24 +1,14 @@
-import React, { Component } from 'react';
-import {
-    StyleSheet,
-    View,
-    AsyncStorage,
-    ScrollView,
-    Alert,
-    TextInput,
-    Dimensions,
-    Image,
-    TouchableOpacity
-} from 'react-native';
-import { home } from "../../../App";
-import axios from 'axios';
-import { Input, Text, SocialIcon, Button, Icon } from 'react-native-elements';
-import t from 'tcomb-form-native';
+import React from 'react';
+import { StyleSheet, View, AsyncStorage, ScrollView, Alert } from 'react-native';
+import { Text, Button, } from 'react-native-elements';
+
 import CustomInput from '../../Base/CustomInput'
 import CustomPasswordInput from '../../Base/CustomPasswordInput'
-import IconFA from "react-native-vector-icons/FontAwesome";
+import CustomButton from '../../Base/CustomButton'
 
-// import { styles } from "./LoginScreen";
+import { width, height } from './../../components/constants';
+
+import axios from 'axios';
 
 
 export default class SignUp extends React.Component {
@@ -27,6 +17,8 @@ export default class SignUp extends React.Component {
     constructor(props) {
         super(props);
 
+
+        // ------ Setup inputs data and error messages ------
         this.inputs = {
             username: {
                 label: 'Username',
@@ -88,6 +80,8 @@ export default class SignUp extends React.Component {
             },
 
         };
+
+        // ----- Instantiate input states and errors ------
         this.state = {
             username: '\t',
             usernameError: '',
@@ -112,7 +106,7 @@ export default class SignUp extends React.Component {
 
         };
 
-        // this.state.username = this.state.username.bind(this);
+        // ------ Bind this to handler methods ------
         this.UsernameHandle = this.UsernameHandle.bind(this);
         this.PasswordHandle = this.PasswordHandle.bind(this);
         this.ConfirmHandle = this.ConfirmHandle.bind(this);
@@ -122,7 +116,8 @@ export default class SignUp extends React.Component {
         this.ZipHandle = this.ZipHandle.bind(this);
     }
 
-
+    // ----------------------------------------------------------------------------------------------------------------
+    // ------------ Handler methods, invoked when inputs' text change and when next button is pressed ------------
     UsernameHandle(e) {
         this.setState({ username: e });
         if (e === '')
@@ -132,6 +127,7 @@ export default class SignUp extends React.Component {
     }
 
     PasswordHandle(e) {
+        // --- Check password validity ---
         this.setState({ password: e });
         if (e === '')
             this.setState({ passwordError: 'empty' });
@@ -139,7 +135,13 @@ export default class SignUp extends React.Component {
             this.setState({ passwordError: this.passStrength(e) });
         }
 
-
+        // --- If confirm password has been edited, validate confirm password ---
+        if (this.state.confirmPass !== '\t') {
+            if (this.state.confirmPass !== e)
+                this.setState({ confirmError: 'match' });
+            else
+                this.setState({ confirmError: '' });
+        }
     }
 
     ConfirmHandle(e) {
@@ -152,16 +154,12 @@ export default class SignUp extends React.Component {
             this.setState({ confirmError: '' });
     }
 
-
-    validateEmail(email) {
-        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(String(email).toLowerCase());
-    }
-
     EmailHandle(e) {
         this.setState({ email: e });
         if (e === '')
             this.setState({ emailError: 'empty' });
+        else if (!this.validateEmail(e))
+            this.setState({ emailError: 'invalid' });
         else
             this.setState({ emailError: '' });
     }
@@ -190,30 +188,41 @@ export default class SignUp extends React.Component {
             this.setState({ zipError: '' });
     }
 
+    // ----------------------------------------------------------------------------------------------------------------
 
+    // ---------------------- Password validattion ----------------------
+    validateEmail(email) {
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+
+    // ---------------------- Password validattion ----------------------
     passStrength(password) {
-        let ctr = 0;
+        let conditions = 0;
 
+        // ------ Check if password satisfies length requirements and then check password's strength ------
         if (password.length < 8) {
             return 'length';
         }
         else {
 
+            // --- Set up password strength condition ---
             let matchedCase = [];
-            matchedCase.push("[$@$!%*#?&]"); // Special Charector
-            matchedCase.push("[A-Z]");      // Uppercase Alpabates
-            matchedCase.push("[0-9]");      // Numbers
-            matchedCase.push("[a-z]");     // Lowercase Alphabates
+            matchedCase.push("[$@$!%*#?&]");    // special characters
+            matchedCase.push("[A-Z]");          // uppercase characters
+            matchedCase.push("[a-z]");          // lowercase characters
+            matchedCase.push("[0-9]");          // numbers
 
-            // Check the conditions
-
+            // --- Check how many conditions the password satisfies ---
             for (let i = 0; i < matchedCase.length; i++) {
                 if (new RegExp(matchedCase[i]).test(password)) {
-                    ctr++;
+                    conditions++;
                 }
             }
         }
-        if (ctr < 3)
+
+        // ------ Return appropriate message depending on strength of password ------
+        if (conditions < 3)
             return 'weak';
         else
             return ''
@@ -221,205 +230,53 @@ export default class SignUp extends React.Component {
 
     }
 
-    passwordStrenghTest(password) {
-        // Function to conduct a basic password check
-
-        var ret = true;
-
-
-        let ctr = 0;
-        if (password.length < 8) {
-            let matchedCase = [];
-            matchedCase.push("[$@$!%*#?&]"); // Special Charector
-            matchedCase.push("[A-Z]");      // Uppercase Alpabates
-            matchedCase.push("[0-9]");      // Numbers
-            matchedCase.push("[a-z]");     // Lowercase Alphabates
-
-            // Check the conditions
-
-            for (let i = 0; i < matchedCase.length; i++) {
-                if (new RegExp(matchedCase[i]).test(password)) {
-                    ctr++;
-                }
-            }
-        }
-        else {
-            return false;
-        }
-
-        switch (ctr) {
-            case 0:
-            case 1:
-            case 2:
-                console.log("Very Weak");
-                break;
-            case 3:
-                console.log("Medium");
-                break;
-            case 4:
-                console.log("Strong");
-                break;
-        }
-
-        if (password.length < 8) {
-            console.log(password.length < 8);
-            ret = false;
-        } else {
-            var numbers = false;
-            var capital = false;
-            for (var i = 0; i < password.length; i++) {
-                if (password.indexOf(i) !== -1) {
-                    numbers = true;
-                }
-                if (password.charAt(i) == password.charAt(i).toUpperCase()) {
-                    capital = true;
-                }
-            }
-
-            ret = (capital && numbers);
-        }
-        return true;
-    }
-
-    // static navigationOptions = ({ navigation }) => {
-    //     //return header with Custom View which will replace the original header
-    //     return {
-    //         header: (
-    //             <View style={{ height: height / 10, padding: 5, backgroundColor: '#31BD4B' }}>
-    //                 <View
-    //                     style={{ flex: 1, justifyContent: 'space-evenly', flexDirection: 'row', alignItems: 'center' }}>
-    //
-    //                     <TouchableOpacity style={{
-    //                         width: 0.15 * width, height: height / 12, margin: 5, backgroundColor: 'black',
-    //                         justifyContent: 'center', alignItems: 'center', zIndex:1000
-    //                     }}
-    //                                       onPress={() => navigation.goBack()}>
-    //                         <Icon type={'arrow-left'}/>
-    //                     </TouchableOpacity>
-    //
-    //
-    //
-    //                     <View style={{
-    //                         flex: 1,
-    //                         height: null,
-    //
-    //                         width: 0.7 * width,
-    //                         // alignSelf: 'center',
-    //                         // alignContent: 'center',
-    //                         alignItems: 'center',
-    //                         justifyContent: 'center',
-    //                         // paddingVertical: 5
-    //                     }}>
-    //                         <Image style={{ flex: 1, resizeMode: 'contain', }}
-    //                                source={require('./../../../assets/splash_logo2.jpeg')}
-    //                         />
-    //                     </View>
-    //
-    //
-    //                     <TouchableOpacity style={{
-    //                         width: 0.15 * width, height: height / 12, margin: 5, backgroundColor: 'red',
-    //                         justifyContent: 'center', alignItems: 'center'
-    //                     }}
-    //                                       onPress={() => navigation.goBack()}>
-    //                         {/*<Button*/}
-    //                             {/*style={{ backgroundColor: 'red', color: 'black' }}*/}
-    //                             {/*onPress={() => navigation.goBack()}*/}
-    //                             {/*title={'Back'}*/}
-    //                         {/*/>*/}
-    //                     </TouchableOpacity>
-    //                 </View>
-    //             </View>
-    //         ),
-    //     };
-    // };
-
-    async locationValidate(city = "", state = "", zip = '0') {
-        // Function to validate teh city, state, and zip of a certain location
-        // Makes backend call to verify
-
-        let location = {
-            city: city,
-            state: state,
-            zip: zip
-        };
-
-        // ------------ Final check for validity of location provided, call on the backend, return result of post ------------
-        return await axios.post('http://10.0.2.2:9000/api/validateZip', location).then(
-            function (response) {
-                // If we have not prompted a change in city and state we're good to go and return true.
-                if (response.data.city === (city) && response.data.state === (state))
-                    return true;
-
-
-                Alert.alert(
-                    //Alert title
-                    'Validation Error\n',
-                    //Alert message
-                    'Your Zipcode does not match your City and State\n' +
-                    'Did you mean ' + response.data.city + ", " + response.data.state + "?\n",
-                    [{ text: 'Ok' }],
-                    { cancelable: false },
-                );
-
-                return false;
-            }
-        ).catch(
-            function (error) {
-                alert("Whoops. Something went wrong validating your location!");
-                console.log(error);
-
-                return false;
-            }
-        );
-    }
-
-
-    errorCheck() {
-        let errors = this.state.usernameError +
-            this.state.passwordError + this.state.confirmError + this.state.emailError +
-            this.state.cityError + this.state.stateError + this.state.zipError;
-        return errors === '';
-    }
-
+    // ---------------------- Check if username or email are in use and city-state-zip validity ----------------------
     async validCheck() {
 
+        let response;
+
+        // ------------------------------------------------------------------------------------------------------------
+        // ------------ Check if email or username are in use ------------
         let credentials = {
             email: this.state.email,
             username: this.state.username
         };
 
-        let response;
-
-
+        // ------ Call to the server ------
         response = await axios.post('http://10.0.2.2:9000/api/available', credentials)
             .then(async function (response) {
-
                 return response;
             })
             .catch(function (error) {
                 return {}
             });
 
-
-        if (this.state.username !== '' && this.state.username !== '\t')
+        // ------ If username is in use, set appropriate error ------
+        if (this.state.username !== '' && this.state.username !== '\t') {
             if (!response.data['username']) {
                 this.setState({ usernameError: 'inuse' });
             }
-        if (this.state.email !== '' && this.state.username !== '\t')
+        }
+
+        // ------ If email is in use, set appropriate error ------
+        if (this.state.email !== '' && this.state.username !== '\t') {
             if (!response.data['email']) {
                 this.setState({ emailError: 'inuse' });
             }
+        }
         console.log(response);
         // this.setState({ usernameError: res['usernameError'] });
 
 
-        //Validate location
+        // ------------------------------------------------------------------------------------------------------------
+        // ------------ Valiate city and state according to zip-code ------------
         let location = {
             city: this.state.city,
             state: this.state.state,
             zip: this.state.zip
         };
 
+        // ------ Call to the server ------
         response = await axios.post('http://10.0.2.2:9000/api/validateZip', location).then(
             function (response) {
                 return response
@@ -428,8 +285,10 @@ export default class SignUp extends React.Component {
                 return null
             });
 
+
         if (response !== null) {
 
+            // ------ If city-state don't correspond to the zip code set the appropriate errors ------
             if (!(response.data.city === (this.state.city) && response.data.state === (this.state.state))) {
                 this.setState({
                     cityError: 'invalid',
@@ -437,6 +296,7 @@ export default class SignUp extends React.Component {
                     zipError: 'invalid',
                 });
             }
+            // ------ If changing zip code resulted in valid city-state-zip combination remove all errors ------
             else {
                 this.setState({
                     cityError: '',
@@ -445,13 +305,23 @@ export default class SignUp extends React.Component {
                 });
             }
         }
-        console.log(this.state);
+        // console.log(this.state);
     };
 
+    // ---------------------- Check if any of the inputs has an error ----------------------
+    errorCheck() {
+        let errors = this.state.usernameError +
+            this.state.passwordError + this.state.confirmError + this.state.emailError +
+            this.state.cityError + this.state.stateError + this.state.zipError;
+        return errors === '';
+    }
 
+
+    // ----------------------- Method to move to next sign up step -----------------------
     async next() {
         const { navigate } = this.props.navigation;
 
+        // ------ If input fields were untouched, set them to empty text, this will trigger the error messages ------
         if (this.state.username === '\t')
             this.UsernameHandle('');
         if (this.state.password === '\t')
@@ -467,11 +337,16 @@ export default class SignUp extends React.Component {
         if (this.state.zip === '\t')
             this.ZipHandle('');
 
-
+        // ------ Validate username/email and city-state-zip --> sets appropriate error messages ------
         await this.validCheck();
 
+
+        // ------ If there are no errors left procceed to next step of the signup process, else alert user ------
         if (this.errorCheck()) {
-            console.log('ready to store');
+            // console.log('ready to store');
+
+            // ------ Store user data in async storage for use in the last step of the signup process...
+            // ---- ... and navigate to the next step of the signup process ------
             let signUpData = {
                 'username': this.state.username,
                 'password': this.state.password,
@@ -479,190 +354,116 @@ export default class SignUp extends React.Component {
                 'location': [this.state.city, this.state.state, this.state.zip]
             };
             AsyncStorage.setItem("formData", JSON.stringify(signUpData)).then(function () {
-                console.log("in here");
                 navigate('SignUp2');
             });
 
         }
         else {
-            Alert.alert("Invalid inputs", 'Please check again the information you provided');
+            Alert.alert("Invalid inputs", 'Please check again the information you provided.');
         }
 
     }
 
 
-    componentDidMount() {
-
-    }
-
+    // ----------------------- Rendering method of the Signup Screen -----------------------
     render() {
 
         return (
-            <View>
 
-                <ScrollView contentContainerStyle={styles.scrollWrapper}>
+            <ScrollView>
 
-                    <View style={styles.wrapper}>
+                <View style={styles.wrapper}>
 
-                        <Text style={styles.textHeader}>
-                            Sign Up
-                        </Text>
+                    <Text style={styles.textHeader}>
+                        Set up your account
+                    </Text>
 
-                        {/*Username input */}
-                        <CustomInput
-                            label={this.inputs.username.label}
-                            placeholder={this.inputs.username.placeholder}
-                            name={this.inputs.username.label}
-                            content={this.state.username}
-                            errorMessage={this.inputs.username.errors[this.state.usernameError]}
-                            controlFunc={this.UsernameHandle}
-                            // value={this.state.username}
-                        />
+                    {/* ------ Username input ------ */}
+                    <CustomInput
+                        label={this.inputs.username.label}
+                        placeholder={this.inputs.username.placeholder}
+                        name={this.inputs.username.label}
+                        content={this.state.username}
+                        errorMessage={this.inputs.username.errors[this.state.usernameError]}
+                        controlFunc={this.UsernameHandle}
+                        // value={this.state.username}
+                    />
 
-                        {/*Password input*/}
-                        <CustomPasswordInput
-                            label={this.inputs.password.label}
-                            placeholder={this.inputs.password.placeholder}
-                            name={this.inputs.password.label}
-                            // isPassword={true}
-                            // secureTextEntry={true}
-                            content={this.state.password}
-                            errorMessage={this.inputs.password.errors[this.state.passwordError]}
-                            controlFunc={this.PasswordHandle}
-                        />
+                    {/* ------ Password input ------ */}
+                    <CustomPasswordInput
+                        label={this.inputs.password.label}
+                        placeholder={this.inputs.password.placeholder}
+                        name={this.inputs.password.label}
+                        content={this.state.password}
+                        errorMessage={this.inputs.password.errors[this.state.passwordError]}
+                        controlFunc={this.PasswordHandle}
+                    />
 
-                        {/*Confirm password input */}
-                        <CustomPasswordInput
-                            label={this.inputs.confirmPass.label}
-                            placeholder={this.inputs.confirmPass.placeholder}
-                            name={this.inputs.confirmPass.label}
-                            content={this.state.confirmPass}
-                            errorMessage={this.inputs.confirmPass.errors[this.state.confirmError]}
-                            controlFunc={this.ConfirmHandle}
-                        />
+                    {/* ------ Confirm password input ------ */}
+                    <CustomPasswordInput
+                        label={this.inputs.confirmPass.label}
+                        placeholder={this.inputs.confirmPass.placeholder}
+                        name={this.inputs.confirmPass.label}
+                        content={this.state.confirmPass}
+                        errorMessage={this.inputs.confirmPass.errors[this.state.confirmError]}
+                        controlFunc={this.ConfirmHandle}
+                    />
 
 
-                        {/*Email address input */}
-                        <CustomInput
-                            label={this.inputs.email.label}
-                            placeholder={this.inputs.email.placeholder}
-                            name={this.inputs.email.label}
-                            content={this.state.email}
-                            errorMessage={this.inputs.email.errors[this.state.emailError]}
-                            controlFunc={this.EmailHandle}
-                        />
+                    {/* ------ Email address input ------ */}
+                    <CustomInput
+                        label={this.inputs.email.label}
+                        placeholder={this.inputs.email.placeholder}
+                        name={this.inputs.email.label}
+                        content={this.state.email}
+                        errorMessage={this.inputs.email.errors[this.state.emailError]}
+                        controlFunc={this.EmailHandle}
+                    />
 
-                        {/*City input */}
-                        <CustomInput
-                            label={this.inputs.city.label}
-                            placeholder={this.inputs.city.placeholder}
-                            name={this.inputs.city.label}
-                            content={this.state.city}
-                            errorMessage={this.inputs.city.errors[this.state.cityError]}
-                            controlFunc={this.CityHandle}
-                        />
+                    {/* ------ City input ------ */}
+                    <CustomInput
+                        label={this.inputs.city.label}
+                        placeholder={this.inputs.city.placeholder}
+                        name={this.inputs.city.label}
+                        content={this.state.city}
+                        errorMessage={this.inputs.city.errors[this.state.cityError]}
+                        controlFunc={this.CityHandle}
+                    />
 
-                        {/*State input */}
-                        <CustomInput
-                            label={this.inputs.state.label}
-                            placeholder={this.inputs.state.placeholder}
-                            name={this.inputs.state.label}
-                            content={this.state.state}
-                            errorMessage={this.inputs.state.errors[this.state.stateError]}
-                            controlFunc={this.StateHandle}
-                        />
+                    {/* ------ State input ------ */}
+                    <CustomInput
+                        label={this.inputs.state.label}
+                        placeholder={this.inputs.state.placeholder}
+                        name={this.inputs.state.label}
+                        content={this.state.state}
+                        errorMessage={this.inputs.state.errors[this.state.stateError]}
+                        controlFunc={this.StateHandle}
+                    />
 
-                        {/*zip input */}
-                        <CustomInput
-                            label={this.inputs.zip.label}
-                            placeholder={this.inputs.zip.placeholder}
-                            name={this.inputs.zip.label}
-                            content={this.state.zip}
-                            errorMessage={this.inputs.zip.errors[this.state.zipError]}
-                            controlFunc={this.ZipHandle}
-                        />
-                        <Button
-                            title="Next"
-                            onPress={() => this.next()}
-                            buttonStyle={styles.button}
-                            // backgroundColor={'white'}
-                            // color={'white'}
-                        />
+                    {/* ------ Zip input ------ */}
+                    <CustomInput
+                        label={this.inputs.zip.label}
+                        placeholder={this.inputs.zip.placeholder}
+                        name={this.inputs.zip.label}
+                        content={this.state.zip}
+                        errorMessage={this.inputs.zip.errors[this.state.zipError]}
+                        controlFunc={this.ZipHandle}
+                    />
 
+                    <CustomButton
+                        text="Next"
+                        onPress={() => this.next()}
+                        customStyle={styles.button}
+                    />
 
-                    </View>
-                </ScrollView>
-            </View>
+                </View>
+            </ScrollView>
         );
     }
 
 }
 
-const { width, height } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'stretch',
-        // width: "90%",
-        paddingLeft: width / 10,
-        paddingRight: width / 10,
-        minHeight: height,
-    },
-    text: {
-        fontSize: 20,
-        color: "black",
-        textAlignVertical: "center",
-        textAlign: "center",
-        fontFamily: 'Euphemia UCAS',
-        // paddingHorizontal: 100
-    },
-    textInput: {
-        fontSize: 15,
-        color: "black",
-        fontFamily: 'Euphemia UCAS',
-        backgroundColor: 'white',
-        height: 40,
-    },
-
-    errorText: {},
-
-    errorInput: {
-        height: 40,
-        borderColor: 'red',
-        borderBottomWidth: 1,
-        alignItems: 'stretch',
-        // paddingHorizontal: 25,
-    },
-    content: {
-        marginTop: "10%",
-        textAlign: 'center'
-    },
-    header: {
-        flex: 10
-    },
-    button: {
-        marginBottom: 30,
-        marginTop: 20,
-        backgroundColor: '#323232',
-        alignItems: 'center'
-    },
-    textHeader: {
-        fontSize: 30,
-        marginVertical: 0.01 * height,
-        color: "black",
-        justifyContent: 'center',
-        textAlignVertical: "center",
-        textAlign: "center",
-        fontFamily: 'Arial',
-    },
-    buttonWrapper: {
-        marginBottom: 30,
-        width: "70%",
-        backgroundColor: '#323232',
-    },
-
 
     wrapper: {
         flexGrow: 1,
@@ -671,35 +472,29 @@ const styles = StyleSheet.create({
         paddingLeft: 30,
         paddingRight: 30,
         alignContent: 'center',
-        // backgroundColor: "#e9eeec",
-        // minHeight: 600,
-
     },
 
-    imgWrapper: {
-        flexGrow: 3,
+    textHeader: {
+        fontFamily: 'Euphemia UCAS',
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginVertical: 10,
+        color: "black",
+        justifyContent: 'center',
+        textAlignVertical: "center",
+        textAlign: "center",
     },
 
-    scrollWrapper: {
-        flexGrow: 1,
+    button: {
+        marginBottom: 30,
+        marginTop: 20,
+        // backgroundColor: '#323232',
+        alignItems: 'center'
     },
 
-    imgStyle: {
-        flexGrow: 1,
-        alignSelf: 'stretch',
-        width: undefined,
-        height: undefined
-
-        // top: 0,
-        // left: 0,
-    },
-
-    inputs: {
-        flexGrow: 2,
-        justifyContent: "space-between",
-        alignItems: 'stretch',
-        // padding: 80,
-        // flexWrap: 'wrap',
-        alignContent: 'center',
+    buttonWrapper: {
+        marginBottom: 30,
+        width: "70%",
+        backgroundColor: '#323232',
     },
 });

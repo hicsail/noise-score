@@ -1,6 +1,7 @@
 // let items = ["aircraft", "alarm", "dog", "carMusic", "construction", "fireworks", "footsteps", "horn", "hvac",
 // "leafBlower", "trash", "music", "neighbor", "party", "delivery", "pickup", "quiet", "restaurant", "traffic",
 // "trains", "voices", "other"]
+import {Dimensions } from 'react-native';
 
 export const NOISE_SOURCES = [
 
@@ -32,3 +33,5 @@ export const NOISE_SOURCES = [
   {val: 'other', text:'other', icon:'checkbox-blank-circle-outline'}
 
 ];
+
+export const { width, height } = Dimensions.get('window');
