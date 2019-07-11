@@ -60,21 +60,23 @@ class User extends MongoModels {
           community: form[5],
           work: form[6],
           health: form[7],
+          year: form[8],
           weekday : {
-            commuting: form[8][0],
-            schoolWork: form[8][1],
-            home: form[8][2],
-            sleeping: form[8][4],
-            errands: form[8][5]
-          },
-          weekend : {
             commuting: form[9][0],
             schoolWork: form[9][1],
             home: form[9][2],
-            sleeping: form[9][3],
-            physical: form[9][4],
+            sleeping: form[9][4],
             errands: form[9][5]
+          },
+          weekend : {
+            commuting: form[10][0],
+            schoolWork: form[10][1],
+            home: form[10][2],
+            sleeping: form[10][3],
+            physical: form[10][4],
+            errands: form[10][5]
           }
+
         };
 
         self.insertOne(document, done);
@@ -173,7 +175,8 @@ class User extends MongoModels {
 
   static PHI() {
 
-    return ['username', 'password', 'name', 'email'];
+    return ['username', 'password', 'name', 'email', 'ethnicity' , 'location', 'pronouns', 'sensitive',
+    'home', 'work', 'health', 'year', 'weekday', 'weekend'];
   }
 }
 
@@ -214,6 +217,7 @@ User.schema = Joi.object({
   community : Joi.string(),
   work : Joi.string(),
   health : Joi.string(),
+  year: Joi.string(),
   weekday : {
     commuting: Joi.string(),
     schoolWork: Joi.string(),
@@ -236,7 +240,33 @@ User.payload = Joi.object({
   username: Joi.string().token().lowercase().invalid('root').required(),
   password: Joi.string().required(),
   email: Joi.string().email().lowercase().required(),
-  name: Joi.string().required()
+  name: Joi.string().required(),
+  pushFrequency: Joi.string(),
+  recodingIds: Joi.string(),
+  pronouns: Joi.string(),
+  ethnicity: Joi.string(),
+  sensitive: Joi.string(),
+  home:Joi.string(),
+  community : Joi.string(),
+  work : Joi.string(),
+  health : Joi.string(),
+  year: Joi.string(),
+  weekday : {
+    commuting: Joi.string(),
+    schoolWork: Joi.string(),
+    home : Joi.string(),
+    sleeping: Joi.string(),
+    physical : Joi.string(),
+    errands: Joi.string()
+  },
+  weekend : {
+    commuting: Joi.string(),
+    schoolWork: Joi.string(),
+    home : Joi.string(),
+    sleeping: Joi.string(),
+    physical : Joi.string(),
+    errands: Joi.string()
+  }
 });
 
 

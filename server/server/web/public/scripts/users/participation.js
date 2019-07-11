@@ -12,7 +12,7 @@ $(document).ready(() => {
     lengthChange: false,
     dom: 'Bfrtip',
     buttons: [
-      'copy', 'csv', 'excel', 'pdf', 'print','colvis'
+      'copy', 'csv', 'excel', 'pdf', 'print', 'colvis'
     ],
     ajax: {
       url: '/api/table/users',
@@ -22,6 +22,18 @@ $(document).ready(() => {
     },
     columns: [
       { data: 'username' },
+      { year: 'year' },
+      { ethnicity: 'ethnicity' },
+      { pronouns: 'pronouns' },
+      { sensitive: 'sensitive' },
+      { home: 'home' },
+      { community: 'community' },
+      { work: 'work' },
+      { health: 'health' },
+      { year: 'year' },
+      { weekday: 'weekday' },
+      { weekend: 'weekend' },
+
       {
         data: 'studyID',
         render: function (data, type, row) {
