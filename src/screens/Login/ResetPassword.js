@@ -83,9 +83,9 @@ export default class ResetPassword extends React.Component {
             if (this.PassCheck()) {
 
                 const userCredentials = {
-                    key: this.state.key,
-                    email: this.state.email,
-                    password: this.state.password
+                    key: this.state.key.replace(' ',''),
+                    email: this.state.email.replace(' ',''),
+                    password: this.state.password.replace(' ','')
                 };
 
                 //axios post for reset password
