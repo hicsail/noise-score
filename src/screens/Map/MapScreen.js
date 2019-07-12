@@ -18,8 +18,8 @@ const  requestPermission = () => {
     return PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-            'title': 'Please allow NoiseScore to access your location.',
-            'message': ''
+            'title': '',
+            'message': 'Please allow NoiseScore to access your location.'
         }
     ).then(granted => {
         if(granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -84,7 +84,7 @@ export default class MapScreen extends React.Component {
                     longitudeDelta: 0.0421,
                 },})
         }).catch(error => {
-            Alert.alert('Please change your app permissions to allow NoiseScore to access your location.')
+            Alert.alert('','Please allow NoiseScore to access your location.')
         });
 
         // THIS WORKS FOR ANDROID - uncomment out marker in render
