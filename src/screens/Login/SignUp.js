@@ -131,7 +131,7 @@ export default class SignUp extends React.Component {
         if (e === '')
             this.setState({ passwordError: 'empty' });
         else {
-            this.setState({ passwordError: this.passStrength(e) });
+            this.setState({ passwordError: SignUp.passStrength(e) });
         }
 
         // --- If confirm password has been edited, validate confirm password ---
@@ -196,7 +196,7 @@ export default class SignUp extends React.Component {
     }
 
     // ---------------------- Password validattion ----------------------
-    passStrength(password) {
+    static passStrength(password) {
         let conditions = 0;
 
         // ------ Check if password satisfies length requirements and then check password's strength ------
