@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import ForgotResetPassword from "./ForgotResetPassword"
 import axios from "axios";
 import * as constants from '../../components/constants';
+import SignUp from "./SignUp";
 
 export default class ResetPassword extends React.Component {
 
@@ -20,20 +21,35 @@ export default class ResetPassword extends React.Component {
 
     }
 
+
+
+
+
+
     checkEmpty() {
+
         if (this.state.key === '') {
             this.simpleAlert("Recovery key not filled", "Please fill the recovery key sent to your email");
             return false;
         }
-        else if (this.state.email === '') {
+
+        if (this.state.email === '') {
             this.simpleAlert("Email address not filled", "Please fill your email address");
             return false;
         }
-        else if (this.state.password === '') {
+
+        if (this.state.password === '') {
             this.simpleAlert("Password not filled", "Please fill your password");
             return false;
         }
-        else if (this.state.confirmPassword === '') {
+        else {
+            if (SignUp.passStrength(this.state.password) !== ''){
+                this.simpleAlert('Invalid password.', 'Use at least 3 of capital, lower, numbers, symbol.');
+                return false;
+            }
+        }
+
+        if (this.state.confirmPassword === '') {
             this.simpleAlert("Confirm password not filled", "Please confirm your password",);
             return false;
         }
@@ -45,7 +61,7 @@ export default class ResetPassword extends React.Component {
     PassCheck() {
         let result = true;
         if (this.state.password !== this.state.confirmPassword) {
-            this.simpleAlert("Passwords don't match", "Passwords inputed are not the same, try again");
+            this.simpleAlert("Passwords don't match", "Passwords are not the same, try again");
             result = false;
         }
         //axios post for complexity
