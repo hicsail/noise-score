@@ -80,7 +80,7 @@ export default class LoginScreen extends React.Component {
             username: this.state.username,
             password: this.state.password
         };
-        console.log("In here 1");
+
         const { navigate } = this.props.navigation;
 
         let url = 'http://' + constants.IP_ADDRESS + '/api/login';
@@ -88,7 +88,7 @@ export default class LoginScreen extends React.Component {
             .then(function (response) {
                 // Store the userData:
                 let ret = response['data'];
-                console.log("In here 2");
+                console.log("Made post request to login.");
                 AsyncStorage.setItem("userData", JSON.stringify(ret));
                 navigate("App")
             })
