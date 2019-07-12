@@ -18,14 +18,14 @@ const  requestPermission = () => {
     return PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-            'title': 'Duhen të drejtat për kordinatat GPS',
-            'message': 'Kto të dhëna duhen për të gjeneruar adresën tuaj'
+            'title': 'Please allow NoiseScore to access your location.',
+            'message': ''
         }
     ).then(granted => {
         if(granted === PermissionsAndroid.RESULTS.GRANTED) {
-            return Promise.resolve("You can use the location")
+            return Promise.resolve("Location access granted.")
         } else {
-            return Promise.reject("Location permission denied")
+            return Promise.reject("Location permission denied.")
         }
     })
 };
