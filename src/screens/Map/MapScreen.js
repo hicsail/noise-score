@@ -7,39 +7,12 @@ import { Text, List } from 'react-native-elements';
 import SearchBar from 'react-native-searchbar'
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
-import { PermissionsAndroid } from 'react-native'
+
 import {Alert} from "react-native";
 
 const currentLocationImage = require('./mapMarker3.png');
-
-
-const  requestPermission = () => {
-    if(Platform.OS === 'ios') return Promise.resolve(true)
-    return PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-            'title': '',
-            'message': 'Please allow NoiseScore to access your location.'
-        }
-    ).then(granted => {
-        if(granted === PermissionsAndroid.RESULTS.GRANTED) {
-            return Promise.resolve("Location access granted.")
-        } else {
-            return Promise.reject("Location permission denied.")
-        }
-    })
-};
-
-const getCoordinates = () => {
-    return requestPermission().then(ok => {
-        return new Promise((resolve, reject) => {
-            const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:5000}
-                : {enableHighAccuracy:true,timeout:5000,maximumAge:2000};
-            global.navigator.geolocation.getCurrentPosition(resolve, reject, options)
-        })
-    })
-};
-
+import {getCoordinates} from "../../components/constants";
+import {IP_ADDRESS} from "../../components/constants";
 
 export default class MapScreen extends React.Component {
     constructor(props) {
@@ -102,12 +75,12 @@ export default class MapScreen extends React.Component {
         //         this.setState({ region: initialRegion });
         //     },
         //           (error) => {
-            //         alert('Error getting location')
-            //     },
-            //     {
-            //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
-            //     }
-            // );
+        //         alert('Error getting location')
+        //     },
+        //     {
+        //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
+        //     }
+        // );
 
 
         // Add listeners to update the markers (in the situation that a user takes a new measurements)
@@ -186,7 +159,7 @@ export default class MapScreen extends React.Component {
                 };
 
 
-                axios.get('http://' + constants.IP_ADDRESS + '/api/userMeasurements', {
+                axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', {
                     headers: header,
                     params: params
                 }).then(function (ret) {
@@ -212,7 +185,7 @@ export default class MapScreen extends React.Component {
                     if (error.response.status == 500) {
                         AsyncStorage.removeItem("userData").then(function (ret) {
                             if (ret) {
-                                axios.delete('http://' + constants.IP_ADDRESS + '/api/logout', {headers: header})
+                                axios.delete('http://' + IP_ADDRESS + '/api/logout', {headers: header})
                                     .then(function (response) {
                                         this.props.navigation("SignedOut");
                                     })
@@ -301,7 +274,7 @@ export default class MapScreen extends React.Component {
                     };
 
 
-                    axios.get('http://' + constants.IP_ADDRESS + '/api/search', {
+                    axios.get('http://' + IP_ADDRESS + '/api/search', {
                         headers: header,
                         params: params
                     }).then(function (ret) {
@@ -374,13 +347,13 @@ export default class MapScreen extends React.Component {
                     {/*Marker to show users location in Android*/}
                     {/*Comment out when using on IOS */}
                     {/*<Marker*/}
-                        {/*key={-1}*/}
-                        {/*coordinate={{*/}
-                            {/*latitude: this.state.region['latitude'],*/}
-                            {/*longitude: this.state.region['longitude']*/}
-                        {/*}}*/}
-                        {/*tracksViewChanges={false}*/}
-                        {/*image={currentLocationImage}*/}
+                    {/*key={-1}*/}
+                    {/*coordinate={{*/}
+                    {/*latitude: this.state.region['latitude'],*/}
+                    {/*longitude: this.state.region['longitude']*/}
+                    {/*}}*/}
+                    {/*tracksViewChanges={false}*/}
+                    {/*image={currentLocationImage}*/}
                     {/*/>*/}
 
                 </MapView>
@@ -432,4 +405,3 @@ const styles = StyleSheet.create({
 
     }
 });
-

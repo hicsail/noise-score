@@ -20,14 +20,6 @@ export default class MeasureScreen1 extends React.Component {
         };
     }
 
-    // static navigationOptions = {
-    //     title: 'Comment',
-    //     headerStyle: {
-    //         backgroundColor: "#31BD4B"
-    //     },
-    //     headerTintColor: 'white'
-    // };
-
 
     next() {
         // Move to the next screen (MeasureScreen2.js)

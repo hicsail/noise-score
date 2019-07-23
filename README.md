@@ -1,7 +1,15 @@
 # Noise Score <img src="assets/one-hand-87.jpg"/>
 
-Mobile-app for users to record and comment on community noise levels.
+The NoiseScore application utilizes smart phone technology to capture both the objective and subjective nature of the sounds you encounter as you go about your daily routine. 
 
+## Setting up your environment
+
+### Requirements
+ To run and develop NoiseScore you will need :
+    1. Node.js, you can get it from here https://nodejs.org/en/ or install it through a terminal. 
+    2. Mongod, you can get it from here https://www.mongodb.com/ or install it through a terminal.
+    3. To clone the master branch, in your desired directory using git.
+    
 Download and start **React Native Debugger** for help debugging.
 
 ## Setting Up The Server 

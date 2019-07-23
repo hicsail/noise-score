@@ -1,167 +1,222 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    ScrollView,
-    Image,
-    Alert,
-    TouchableHighlight,
-    KeyboardAvoidingView
-} from 'react-native';
-import { home } from "../../../App";
-import axios from 'axios';
-import { Input, Text, Button } from 'react-native-elements';
-import ForgotResetPassword from "./ForgotResetPassword";
-import AccountScreen from "../Account/AccountScreen";
-import CustomButton from "../../Base/CustomButton"
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Dimensions } from "react-native";
-import * as constants from '../../components/constants';
+import {StyleSheet, View, Image, Alert} from 'react-native';
+import {Input, Text} from 'react-native-elements';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import CheckBox from 'react-native-check-box'
+
 import AsyncStorage from '@react-native-community/async-storage';
-import {SignupStack} from '../../../App'
+import * as Keychain from 'react-native-keychain';
 
+import axios from 'axios';
 
-const { width, height } = Dimensions.get('window');
+import ForgotResetPassword from "./ForgotResetPassword";
+import CustomButton from "../../Base/CustomButton"
+
+import {width, height, IP_ADDRESS, brightGreen} from "../../components/constants";
+
 export default class LoginScreen extends React.Component {
 
-    static navigationOptions = {
-        title: 'Home',
-    };
-
+    // ------------ Initialise props and state with required fields ------------
     constructor(props) {
-        // Check if we already are logged in (navigate to MapScreen.js)
-        // Otherwise do nothing
         super(props);
-        const { navigate } = this.props.navigation;
-        // If we are already logged in (i.e. local storage) then we can make an API call to
-        // Ensure that we still have the credentials and can directly move to the SignedIn Screen
-
-
-        // AsyncStorage.getItem("userData", null).then(function (ret) {
-        //     let response = JSON.parse(ret);
-        //
-        //     console.log(ret);
-        //
-        //     if (ret) {
-        //         if (response['authHeader'] != null) {
-        //             // Verify user with sessions
-        //             var authHeader = response['authHeader'];
-        //             const header = {
-        //                 'Content-Type': 'application/json',
-        //                 'Authorization': authHeader
-        //             };
-        //
-        //             axios.get('http://' + constants.IP_ADDRESS + '/api/sessions/my', { headers: header }).then(function (ret) {
-        //                 navigate("SignedIn");
-        //             }).catch(function (error) {
-        //                 console.log("error validating user", error);
-        //             })
-        //
-        //         }
-        //     }
-        // });
 
         this.state = {
             username: '',
             password: '',
-            forgotPass: false
+            checked: '',
         };
     }
+
+
+    // ------------ Keychain methods for storing, retrieving and resetting user credentials,... ------------
+    // ------------ used to implement remember password feature, more secure than AsyncStorage ------------
+    save = async (accessControl) => {
+        console.log(this.state);
+
+        try {
+            if (this.state.checked === 'checked') {
+                await Keychain.setGenericPassword(
+                    this.state.username,
+                    this.state.password,
+                );
+
+            } else {
+                this.reset().then(function () {
+                }).done();
+            }
+        } catch (err) {
+            console.log('Could not save credentials, ' + err);
+        }
+        // --- Store "Remember password" checked status in async storage ---
+        await AsyncStorage.setItem("checkBtn", this.state.checked).then(function () {
+        }).done();
+
+    };
+
+    async load() {
+        try {
+            const credentials = await Keychain.getGenericPassword();
+            if (credentials) {
+                this.setState({...credentials});
+            } else {
+                console.log('No credentials stored.');
+            }
+        } catch (err) {
+            console.log('Could not load credentials. ' + err);
+        }
+    }
+
+    async reset() {
+        try {
+            await Keychain.resetGenericPassword();
+            this.setState({
+                username: '',
+                password: '',
+            });
+        } catch (err) {
+            console.log('Could not reset credentials, ' + err);
+        }
+    }
+
+
+    // ------------------------------------------------------------------------
 
     componentDidMount() {
+        // --- Retrieve user credentials from keychain storage ---
+        this.load().done();
 
+        // --- Retrieve "Remember password" checked status in async storage ---
+        AsyncStorage.getItem('checkBtn', null).then(function (ret) {
+            console.log(ret);
+            this.setState({checked: (ret === null || ret === '') ? '' : ret})
+        }.bind(this))
     }
 
+
+    // ------------ Log-In method for the app, called when login button is pressed ------------
     submit() {
-        // Submit a username and password combination
-        // Makes API call and navigates to MapScreen.js on success
 
+        //Get user credential from screen's state object
         const userCredentials = {
-            username: this.state.username,
-            password: this.state.password
+            username: this.state.username.replace(' ', ''),
+            password: this.state.password.replace(' ', '')
         };
+        const {navigate} = this.props.navigation;
 
-        const { navigate } = this.props.navigation;
+        // ------ Store username and password in keychain store ------
+        // this.save().then(function () {
+        //     console.log("success")
+        // }).done();
 
-        let url = 'http://' + constants.IP_ADDRESS + '/api/login';
-        axios.post(url, userCredentials)
+        let thisVar = this;
+        // ------ Check credentials and if correct redirect to the home screen, else display error message ------
+        axios.post('http://' + IP_ADDRESS + '/api/login', userCredentials)
             .then(function (response) {
-                // Store the userData:
+                // --- Store User's data in async storage for future use ---
                 let ret = response['data'];
-                console.log("Made post request to login.");
                 AsyncStorage.setItem("userData", JSON.stringify(ret));
+
+
+                thisVar.save(userCredentials.username, userCredentials.password).done();
+                // --- Navigate to the home screen ---
                 navigate("App")
             })
             .catch(function (error) {
-                console.log(error);
-                alert("Invalid Username or Password");
+
+                Alert.alert("Invalid Credentials", "Your username or your password are incorrect. Try again.");
             });
     }
 
-
+    // ------------ Rendering method of the Login Screen ------------
     render() {
         return (
 
-            <ScrollView contentContainerStyle={styles.scrollWrapper}>
+            <KeyboardAwareScrollView ContentContainerStyle={styles.wrapper}>
                 <View style={styles.wrapper}>
 
+                    {/* ------ Top main logo ------*/}
                     <View style={styles.imgWrapper}>
                         <Image style={styles.imgStyle}
                                source={require('./../../../assets/splash_logo.jpeg')}
                         />
                     </View>
 
+                    {/* ------ Input fields ------- */}
                     <View style={styles.inputs}>
 
+                        {/* --- Username input box --- */}
                         <Input
-                            // autoCapitalize='none'
                             placeholder='Username'
-                            rightIcon={{ type: 'font-awesome', name: 'user' }}
-                            onChangeText={(username) => this.setState({ username })}
+                            value={this.state.username}
+                            rightIcon={{type: 'font-awesome', name: 'user'}}
+                            onChangeText={(username) => this.setState({username})}
                         />
 
+                        {/* --- Password input box --- */}
                         <Input
                             secureTextEntry={true}
                             autoCapitalize='none'
                             placeholder='Password'
-                            rightIcon={{ type: 'font-awesome', name: 'lock' }}
-                            onChangeText={(password) => this.setState({ password })}
+                            value={this.state.password}
+                            rightIcon={{type: 'font-awesome', name: 'lock'}}
+                            onChangeText={(password) => this.setState({password})}
                         />
 
+                        <CheckBox
+                            style={{paddingHorizontal: 10}}
+                            onClick={() => {
+                                this.setState({
+                                    checked: this.state.checked === 'checked' ? '' : 'checked'
+                                })
+                            }}
+                            isChecked={this.state.checked === 'checked'}
+                            leftText={"Remember me  "}
+                            leftTextStyle={{textAlign: 'right',}}
+                            checkBoxColor={brightGreen}
+
+                        />
+
+                        {/* ---  Sign in button --- */}
                         <CustomButton
-                            // buttonStyle={styles.button}
                             text="Sign In"
                             onPress={() => this.submit()}
-                            customStyle={{ borderWidth: 3, borderColor: '#31BD4B' }}
-                        />
-                        <Text style={{ marginVertical: 0, alignSelf: 'center', justifyContent: 'center' }}>
-                            - OR -
-                        </Text>
-                        <CustomButton
-                            // style={styles.button}
-                            text="Sign Up"
-                            onPress={() => this.props.navigation.navigate("SignUp1")}
-                            customStyle={{ backgroundColor: 'white', borderWidth: 3, borderColor: '#31BD4B' }}
-                            customTextStyle={{ color: '#31BD4B' }}
                         />
 
-                        <Text style={styles.forgotStyle}
-                              onPress={() => this.props.navigation.navigate("ForgotResetPassword")}>
-                            Forgot your password ? Click here !
+                        <Text style={styles.centerTextStyle}>
+                            - OR -
+                        </Text>
+
+                        {/* ---  Sign Up button --- */}
+                        <CustomButton
+                            text="Sign Up"
+                            onPress={() => this.props.navigation.navigate("SignUp1")}
+                            customStyle={styles.signUpBtn}
+                            customTextStyle={{color: '#31BD4B'}}
+                        />
+
+                        {/* --- Forgot password clickable text --- */}
+                        <Text
+                            style={styles.centerTextStyle}
+                            onPress={() => this.props.navigation.navigate("ForgotResetPassword")}
+                        >
+                            Forgot your password ? Click <Text style={styles.underlined}>here</Text> !
                         </Text>
                     </View>
-                    <View style={{ flexGrow: 2, }}>
+
+                    {/* ------ Bottom secondary logo ------*/}
+                    <View style={styles.imgWrapper}>
                         <Image style={styles.imgStyle}
                                source={require('./../../../assets/Splash-image-mini3.png')}
                         />
                     </View>
                 </View>
-            </ScrollView>
-        )
-            ;
+            </KeyboardAwareScrollView>
+        );
     }
 }
 
+
+//------------ Styling for components of login screen ------------
 const styles = StyleSheet.create({
 
     wrapper: {
@@ -171,44 +226,28 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         padding: 30,
         paddingBottom: 0,
+        color:'red'
     },
 
-    imgWrapper: {
-        flexGrow: 2,
-    },
-
-    scrollWrapper: {
-        // flexGrow: 1,
-        // justifyContent: "space-between",
-        // height: height - 25,
-        // alignItems: 'stretch',
-        // // padding: 80,
-        // flexWrap: 'wrap',
-        // alignContent: 'center'
-    },
+    imgWrapper: {flexGrow: 2,},
 
     imgStyle: {
         flexGrow: 1,
         alignSelf: 'stretch',
         width: undefined,
-        height: undefined
-
-        // top: 0,
-        // left: 0,
+        height: undefined,
     },
 
     inputs: {
         flexGrow: 1,
         justifyContent: "space-between",
         alignItems: 'stretch',
-        // padding: 80,
-        // flexWrap: 'wrap',
         alignContent: 'center',
-        // backgroundColor:'lightblue'
     },
 
-    forgotStyle: {
-        // justifyContent: "space-between",
-        alignSelf: 'center'
-    },
+    underlined: {textDecorationLine: 'underline'},
+
+    signUpBtn: {backgroundColor: 'white',},
+
+    centerTextStyle: {alignSelf: 'center',},
 });

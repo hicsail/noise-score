@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import {width} from "../components/constants"
 
 
 // ------------ Simple button with text ------------
@@ -31,7 +32,7 @@ CustomButton.propTypes = {
 // ------------ Default styling, green button with white text ------------
 const styles = StyleSheet.create({
     textStyle: {
-        fontSize: 20,
+        fontSize: width/20,
         color: '#ffffff',
         textAlign: 'center'
     },

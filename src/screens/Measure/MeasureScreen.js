@@ -1,26 +1,22 @@
 import React from 'react';
-import {
-    Platform,
-    PermissionsAndroid,
-    ScrollView,
-    StyleSheet,
-    View,  Dimensions, TouchableOpacity
-} from 'react-native';
+import {Platform, PermissionsAndroid, ScrollView, StyleSheet, View, Dimensions, TouchableOpacity} from 'react-native';
 import RNSoundLevelModule from 'react-native-sound-level';
+import Text from "react-native-elements/src/text/Text";
+import IconFA from "react-native-vector-icons/FontAwesome";
+
+import AsyncStorage from '@react-native-community/async-storage';
+
 import Table from '../../components/Table';
 import ListItem from '../../components/ListItem';
 import DecibelChart from '../../components/DecibelChart';
-import ClearSubmitButtons from '../../components/ClearSubmitButtons';
 import StartMicrophone from '../../components/StartMicrophone';
-import StopMicrophone from '../../components/StopMicrophone';
-import ReferenceDecibels from '../../components/ReferenceDecibels';
-import AsyncStorage from '@react-native-community/async-storage';
-import Text from "react-native-elements/src/text/Text";
-import { Header } from 'react-navigation';
-import IconFA from "react-native-vector-icons/FontAwesome";
 
-const { width, height } = Dimensions.get('window');
-const buttonHeight = height/15;
+
+import {Header} from 'react-navigation';
+
+
+const {width, height} = Dimensions.get('window');
+const buttonHeight = height / 15;
 console.log("buttonHeight is ", buttonHeight);
 export default class MeasureScreen extends React.Component {
 
@@ -60,7 +56,7 @@ export default class MeasureScreen extends React.Component {
 
 
     swapView = () => {
-        this.setState({ initial: false });
+        this.setState({initial: false});
     };
 
     startMeasurement = () => {
@@ -75,21 +71,19 @@ export default class MeasureScreen extends React.Component {
                         // console.log("the raw data is: ", d.rawData);
                         if (ignored > 1) {
 
-                          let dec;
-                          if (d.value < -160) {
-                            dec = 0;
-                          }
-                          else {
-                            dec = this.state.decibels.concat(((parseInt(d.value) + 160) * (90/160)));
-                          }
+                            let dec;
+                            if (d.value < -160) {
+                                dec = 0;
+                            } else {
+                                dec = this.state.decibels.concat(((parseInt(d.value) + 160) * (90 / 160)));
+                            }
                             this.setState({
                                 decibels: dec,
                                 started: true,
                                 stopped: false,
                                 initial: false,
                             });
-                        }
-                        else {
+                        } else {
                             ignored = ignored + 1;
                         }
 
@@ -162,7 +156,7 @@ export default class MeasureScreen extends React.Component {
 
 
         return (
-            <View style={{ height: '100%', width: '100%' }}>
+            <View style={{height: '100%', width: '100%'}}>
 
 
                 {this.state.initial ?
@@ -311,9 +305,9 @@ export default class MeasureScreen extends React.Component {
                                 <TouchableOpacity
                                     style={
                                         this.state.started ?
-                                            [styles.button, styles.measureButton, { flexDirection: 'column' }]
+                                            [styles.button, styles.measureButton, {flexDirection: 'column'}]
                                             :
-                                            [styles.button, styles.measureButton, styles.disabledButton, { flexDirection: 'column' }]
+                                            [styles.button, styles.measureButton, styles.disabledButton, {flexDirection: 'column'}]
                                     }
                                     onPress={() => {
                                         this.state.started ? this.stopMeasurement() : this.startMeasurement()
@@ -360,7 +354,7 @@ export default class MeasureScreen extends React.Component {
                                         name={'arrow-right'}
                                         size={width / 15}
                                         color="white"
-                                        style={{ flex: 1, alignSelf: 'center', textAlign: 'right' }}
+                                        style={{flex: 1, alignSelf: 'center', textAlign: 'right'}}
                                     />
 
                                 </TouchableOpacity>

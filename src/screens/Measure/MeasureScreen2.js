@@ -1,15 +1,15 @@
 import React from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import SourceButton from '../../components/SourceButton';
 import * as constants from '../../components/constants';
 import NavButtons2 from '../../components/NavButtons2';
 import IconFA from "react-native-vector-icons/FontAwesome";
+import {width, height, NOISE_SOURCES} from "../../components/constants";
 // import {getHeader} from "../../../App";
 
 // '../../../App'
 
-const { width, height } = Dimensions.get('window');
 
 export function getHeader(rightComponent) {
     return {
@@ -104,8 +104,8 @@ export default class MeasureScreen2 extends React.Component {
         // make source buttons
         let buttons = [];
         let count = 0;
-        constants.NOISE_SOURCES.forEach((e) => {
-            buttons.push(<SourceButton
+        NOISE_SOURCES.forEach((e) => {
+         buttons.push(<SourceButton
                     key={count}
                     val={e.val}
                     text={e.text}
