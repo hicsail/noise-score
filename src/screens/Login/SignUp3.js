@@ -1,13 +1,18 @@
 import React from 'react';
-import {StyleSheet, Text, View, Button, ScrollView, Slider, Alert} from 'react-native';
-import axios from 'axios';
+import { StyleSheet, Text, View, ScrollView, Slider } from 'react-native';
+
 import AsyncStorage from '@react-native-community/async-storage';
-import * as constants from '../../components/constants';
+
+import CustomButton from '../../Base/CustomButton'
+import ProgressCircles from '../../Base/ProgressCircles'
+import { height, width, brightGreen, darkGray } from '../../components/constants'
 
 export default class AccountScreen extends React.Component {
 
     constructor(props) {
         super(props);
+
+        // ----- Instantiate state object with default values ------
         this.state = {
             weekdayCommuting: 10,
             weekdayActivities: 40,
@@ -22,366 +27,390 @@ export default class AccountScreen extends React.Component {
             weekendPhysical: 5,
             weekendRunning: 5,
             pressed: false,
-        }
-        ;
+        };
     }
 
-    // componentDidMount() {
-    //     this.next();
-    // }
-
+    // ------------ Method to move to next sign up step => "terms and conditions" ------------
     next() {
-        // Make API call to verify that we can create a user
-        // Then navigate to MapScreen.js
 
+        // ------ Retrieve, update and store user data in async storage for use in the last step of the signup process...
+        // ---- ... and navigate to the next step ("terms and conditions") of the signup process ------
         const { navigate } = this.props.navigation;
-        // We know all inputs will be valid
-        // Now we need to add it to form data
+        console.log(this.state);
+        AsyncStorage.getItem('formData', null).then(function (ret) {
+            let response = JSON.parse(ret);
 
-        AsyncStorage.getItem('formData').then(function (ret) {
-            var response = JSON.parse(ret);
-            var weekdayArray = [this.state.weekdayCommuting, this.state.weekdayActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekdayRunning];
-            var weekendArray = [this.state.weekendCommuting, this.state.weekendActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekendRunning];
+            let weekdayArray = [this.state.weekdayCommuting, this.state.weekdayActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekdayRunning];
+            let weekendArray = [this.state.weekendCommuting, this.state.weekendActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekendRunning];
             response['weekday'] = weekdayArray;
             response['weekend'] = weekendArray;
-            AsyncStorage.setItem("formData", JSON.stringify(response));
-            // We need to make the API call to create a new user
+
+            AsyncStorage.setItem("formData", JSON.stringify(response)).done();
+
         }.bind(this)).then(function () {
             navigate('TermsConditions');
         }.bind(this));
     }
 
+    // ------------ Rendering method of the Login Screen ------------
     render() {
         const step = 5;
         return (
 
 
-            <View style={styles.container}>
+            <View style={{ flex: 1 }}>
+                <ProgressCircles totalSteps={4} currentStep={3}/>
 
-                <View>
 
-                    <ScrollView>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Last few questions! </Text>
-                            </View>
-                        </View>
-                        <View style={styles.padding}>
-                            <Text>
-                                <Text style={styles.text}>On a general </Text>
-                                <Text style={styles.innerText}>weekday </Text>
-                                <Text style={styles.text}>what percentage of time do you spend:</Text>
+                <ScrollView>
+                    <View style={styles.wrapper}>
+
+                        <Text style={[styles.text, styles.mainHeader]}>
+                            Please tell us how you spend your time during the week!
+                        </Text>
+
+
+                        {/* ------------------------ Weekday percentages block ------------------------ */}
+                        <View style={styles.questionBlock}>
+
+                            <Text style={[styles.text, styles.questionText]}>
+                                On a general <Text style={styles.innerText}> weekday </Text> what percentage of time do
+                                you spend:
                             </Text>
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Commuting: {this.state.weekdayCommuting}%</Text>
-                            </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekdayCommuting}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekdayCommuting(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Activities at school or
-                                    work: {this.state.weekdayActivities}%</Text>
+
+                            <View style={styles.percentageBlock}>
+                                <Text style={styles.text}>
+                                    Commuting: {this.state.weekdayCommuting}%
+                                </Text>
+
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    size={100}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={10}
+                                    onValueChange={val => {
+                                        this.setState({ weekdayCommuting: val })
+                                    }}
+                                />
                             </View>
 
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekdayActivities}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekdayActivities(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>At home: {this.state.weekdayHome}%</Text>
-                            </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekdayHome}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekdayHome(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Sleeping: {this.state.weekdaySleeping}%</Text>
+                            <View style={styles.percentageBlock}>
+                                <Text style={styles.text}>
+                                    Activities at school or work: {this.state.weekdayActivities}%
+                                </Text>
+
+
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={40}
+                                    onValueChange={val => {
+                                        this.setState({ weekdayActivities: val })
+                                    }}
+                                />
                             </View>
 
-                            <Slider
-                                style={{ width: 300, color: 'red' }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekdaySleeping}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekdaySleeping(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Physical Activity: {this.state.weekdayPhysical}%</Text>
+                            <View style={styles.percentageBlock}>
+
+                                <Text style={styles.text}>
+                                    At home: {this.state.weekdayHome}%
+                                </Text>
+
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={20}
+                                    onValueChange={val => {
+                                        this.setState({ weekdayHome: val })
+                                    }}
+
+                                />
                             </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekdayPhysical}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekdayPhysical(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Running errands: {this.state.weekdayRunning}%</Text>
+
+                            <View style={styles.percentageBlock}>
+
+                                <Text style={styles.text}>
+                                    Sleeping: {this.state.weekdaySleeping}%
+                                </Text>
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={20}
+                                    onValueChange={val => {
+                                        this.setState({ weekdaySleeping: val })
+                                    }}
+
+                                />
                             </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekdayRunning}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekdayRunning(val)}
-                            />
+
+                            <View style={styles.percentageBlock}>
+
+                                <Text style={styles.text}>
+                                    Physical Activity: {this.state.weekdayPhysical}%
+                                </Text>
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={5}
+                                    onValueChange={val => {
+                                        this.setState({ weekdayPhysical: val })
+                                    }}
+
+                                />
+                            </View>
+
+                            <View style={styles.percentageBlock}>
+
+                                <Text style={styles.text}>
+                                    Running errands: {this.state.weekdayRunning}%
+                                </Text>
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={5}
+                                    onValueChange={val => {
+                                        this.setState({ weekdayRunning: val })
+                                    }}
+
+                                />
+                            </View>
+
                         </View>
-                        <View style={styles.padding}>
-                            <Text>
-                                <Text style={styles.text}>On a general </Text>
-                                <Text style={styles.innerText}>weekend </Text>
-                                <Text style={styles.text}>what percentage of time do you spend:</Text>
+
+                        {/* ------------------------ Weekend percentages block ------------------------ */}
+                        <View style={styles.questionBlock}>
+
+                            <Text style={[styles.text, styles.questionText]}>
+                                On a general <Text style={styles.innerText}>weekend</Text> what percentage of time do
+                                you spend:
                             </Text>
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Commuting: {this.state.weekendCommuting}%</Text>
+
+
+                            <View style={styles.percentageBlock}>
+                                <Text style={styles.text}>
+                                    Commuting: {this.state.weekendCommuting}%
+                                </Text>
+
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    size={100}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={10}
+                                    onValueChange={val => {
+                                        this.setState({ weekendCommuting: val })
+                                    }}
+                                />
                             </View>
 
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekendCommuting}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekendCommuting(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Activities at school or
-                                    work: {this.state.weekendActivities}%</Text>
+                            <View style={styles.percentageBlock}>
+                                <Text style={styles.text}>
+                                    Activities at school or work: {this.state.weekendActivities}%
+                                </Text>
+
+
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={40}
+                                    onValueChange={val => {
+                                        this.setState({ weekendActivities: val })
+                                    }}
+                                />
                             </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekendActivities}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekendActivities(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>At home: {this.state.weekendHome}%</Text>
+
+                            <View style={styles.percentageBlock}>
+
+                                <Text style={styles.text}>
+                                    At home: {this.state.weekendHome}%
+                                </Text>
+
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={20}
+                                    onValueChange={val => {
+                                        this.setState({ weekendHome: val })
+                                    }}
+
+                                />
                             </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekendHome}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekendHome(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Sleeping: {this.state.weekendSleeping}%</Text>
+
+                            <View style={styles.percentageBlock}>
+
+                                <Text style={styles.text}>
+                                    Sleeping: {this.state.weekendSleeping}%
+                                </Text>
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={20}
+                                    onValueChange={val => {
+                                        this.setState({ weekendSleeping: val })
+                                    }}
+
+                                />
                             </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekendSleeping}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekendSleeping(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Physical Activity: {this.state.weekendPhysical}%</Text>
+
+                            <View style={styles.percentageBlock}>
+
+                                <Text style={styles.text}>
+                                    Physical Activity: {this.state.weekendPhysical}%
+                                </Text>
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={5}
+                                    onValueChange={val => {
+                                        this.setState({ weekendPhysical: val })
+                                    }}
+
+                                />
                             </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekendPhysical}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekendPhysical(val)}
-                            />
-                        </View>
-                        <View style={styles.padding}>
-                            <View style={styles.wrapText}>
-                                <Text style={styles.text}>Running errands: {this.state.weekendRunning}%</Text>
+
+                            <View style={styles.percentageBlock}>
+
+                                <Text style={styles.text}>
+                                    Running errands: {this.state.weekendRunning}%
+                                </Text>
+                                <Slider
+                                    style={{ width: '90%', }}
+                                    step={step}
+                                    maximumValue={100}
+                                    maximumTrackTintColor={darkGray}
+                                    minimumTrackTintColor={brightGreen}
+                                    thumbTintColor={brightGreen}
+                                    thumbTouchSize={{ height: 60, width: 60 }}
+
+                                    value={5}
+                                    onValueChange={val => {
+                                        this.setState({ weekendRunning: val })
+                                    }}
+
+                                />
                             </View>
-                            <Slider
-                                style={{ width: 300 }}
-                                step={step}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={this.state.weekendRunning}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.setweekendRunning(val)}
-                            />
+
                         </View>
 
-                    {/*<View style={{ position: 'absolute', bottom: 0 }}>*/}
-                        <Button
-                            title="Next"
+                        <CustomButton
+                            text="Next"
                             onPress={() => this.next()}
                             buttonStyle={styles.button}
-                            // backgroundColor={'white'}
-                            // color={'#323232'}
                         />
-                    {/*</View>*/}
-                    </ScrollView>
-                </View>
-
+                    </View>
+                </ScrollView>
             </View>
 
         );
     }
 
-    setweekdayCommuting(value) {
-        this.setState({
-            weekdayCommuting: value
-        });
-    }
-
-    setweekdayActivities(value) {
-        this.setState({
-            weekdayActivities: value
-        });
-    }
-
-    setweekdayHome(value) {
-        this.setState({
-            weekdayHome: value
-        });
-    }
-
-    setweekdaySleeping(value) {
-        this.setState({
-            weekdaySleeping: value
-        });
-    }
-
-    setweekdayPhysical(value) {
-        this.setState({
-            weekdayPhysical: value
-        });
-    }
-
-    setweekdayRunning(value) {
-        this.setState({
-            weekdayRunning: value
-        });
-    }
-
-
-    setweekendCommuting(value) {
-        this.setState({
-            weekendCommuting: value
-        });
-    }
-
-    setweekendActivities(value) {
-        this.setState({
-            weekendActivities: value
-        });
-    }
-
-    setweekendHome(value) {
-        this.setState({
-            weekendHome: value
-        });
-    }
-
-    setweekendSleeping(value) {
-        this.setState({
-            weekendSleeping: value
-        });
-    }
-
-    setweekendPhysical(value) {
-        this.setState({
-            weekendPhysical: value
-        });
-    }
-
-    setweekendRunning(value) {
-        this.setState({
-            weekendRunning: value
-        });
-    }
 }
 
 const styles = StyleSheet.create({
-    padding: {
-        padding: 20,
-    },
-    wrapText: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-evenly'
-    },
-    text: {
-        fontSize: 26,
-        color: "black",
-        justifyContent: 'center',
-        textAlignVertical: "center",
-        textAlign: "center"
-    },
-    container: {
-        flex: 1,
-        padding: 10,
-        backgroundColor: 'white',
-        alignItems: 'center'
-    },
-    button: {
-        marginBottom: 30,
-        marginTop: 20,
-        backgroundColor: '#323232',
-        alignItems: 'center'
-    },
-    innerText: {
-        fontSize: 26,
-        color: "black",
-        justifyContent: 'center',
-        textAlignVertical: "center",
-        textAlign: "center",
-        fontStyle: 'italic'
-    }
-});
+        wrapper: {
+            flex: 1,
+            backgroundColor: 'white',
+            width: "100%",
+            paddingHorizontal: 30,
+            paddingBottom: 20,
+
+        },
 
 
+        text: {
+            fontSize: width * 0.055,
+            color: 'black',
+            justifyContent: 'center',
+            textAlignVertical: "center",
+            textAlign: "center",
+            marginBottom: 10,
+        },
+
+        questionText: {
+            fontSize: width * 0.06,
+        },
+
+        mainHeader: {
+            fontFamily: 'Euphemia UCAS',
+            fontSize: width * 0.07,
+        },
+
+        innerText: {
+            fontWeight: 'bold'
+        },
+
+        questionBlock: {
+            marginVertical: 20,
+        },
+
+        percentageBlock: {
+            marginBottom: 5,
+            alignItems: 'center',
+        },
+    })
+;
 

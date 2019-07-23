@@ -1,36 +1,27 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView, Alert, TextInput, Dimensions } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import { Input,} from 'react-native-elements';
 import PropTypes from 'prop-types';
-import { Input, Text, SocialIcon, Button } from 'react-native-elements';
+const { width, height, } = Dimensions.get('window');
 
 
-const { width, height } = Dimensions.get('window');
+export default class CustomInput extends React.Component {
 
-
-export default class CustomInput extends Component {
-
+    // ------  Define acceptable props and which of them are required ------
     static propTypes = {
-        placeholder: PropTypes.any,
-        placeholderStyle: PropTypes.any,
-
-        controlFunc: PropTypes.func,
-
-        name: PropTypes.string,
         label: PropTypes.string,
-        content: PropTypes.string,
-        isPassword: PropTypes.bool,
-        isEmail: PropTypes.bool,
-        value: PropTypes.string,
+        placeholder: PropTypes.any,
         errorMessage: PropTypes.string,
+        controlFunc: PropTypes.func.isRequired,
+        iconName: PropTypes.string,
+        iconColor: PropTypes.string,
     };
 
     constructor(props) {
         super(props);
+
         this.state = {
-            isLoaded: false,
-            isError: false,
             field: '\t',
-            errorMessage: null,
         }
     }
 
@@ -38,88 +29,60 @@ export default class CustomInput extends Component {
         return (this.props.errorMessage === '' || this.props.errorMessage === undefined);
     }
 
-    async getMessage() {
-        console.log("in here");
-        if (this.isValid()) {
-            console.log("in here");
-            return "Field is required";
-        }
-        return "";
-    }
-
-
-    emptyCheck() {
-        return (this.state.field === '\t' || this.state.field !== '')
-    }
-
-    getValue() {
-        return this.state.field;
-    }
-
-    events() {
-        this.props.controlFunc();
-        this.setState({ username: username })
-    }
-
-
+    // ----------------------- Rendering method of the Custom Button component -----------------------
     render() {
 
         return (
 
-            <View style={styles.inputWrapper}>
+            <View style={{ marginVertical: 5 }}>
+                <Input
+                    {...this.props}
+                    labelStyle={styles.text}
 
-                {/*If label was specified add the component to the input block*/}
-                {this.props.label ?
-                    <Text style={styles.text}>
-                        {this.props.label}
-                    </Text>
-                    : null
-                }
+                    inputContainerStyle={[styles.inputBox, this.isValid() ? null : styles.errorInputBox]}
+                    inputStyle={[styles.text, styles.placeholderText]}
 
-                {/*Initialize input box with a default style and add the error style when the input is left empty*/}
-                <View style={[styles.inputBox, this.isValid() ? null : styles.errorInputBox]}>
-                    <TextInput
-                        {...this.props}
-                        style={[styles.text, styles.placeholderText]}
-                        underlineColorAndroid='rgba(0,0,0,0)'
+                    //Make default input underline invisible
+                    underlineColorAndroid='rgba(0,0,0,0)'
 
-                        onChangeText={(field) => {
-                            this.props.controlFunc(field);
-                            this.setState({ field: field })
-                        }}
+                    //Add a right icon, if specified and style its container
+                    rightIcon={this.props.iconName ? {
+                        type: 'font-awesome',
+                        name: this.props.iconName,
+                        color: this.props.iconColor ? this.props.iconColor : '#383838'
+                    } : null}
+                    rightIconContainerStyle={{ marginRight: 25 }}
 
-                    />
-                </View>
+                    errorStyle={[styles.errorStyle, styles.placeholderText]}
 
-                <Text
-                    style={this.isValid() ? {
-                        display: "none"
-                    } : [{ color: "red" }, styles.placeholderText]}>
-                    {this.props.errorMessage}
-                </Text>
+                    onChangeText={(field) => {
+                        this.props.controlFunc(field);
+                        this.setState({ field: field })
+                    }}
+
+
+                />
             </View>
         );
     }
 }
 
-
+//------------ Styling for custom button component ------------
 const styles = StyleSheet.create({
     inputWrapper: {
         flex: 1,
         flexDirection: 'column',
         alignItems: 'stretch',
-        // minHeight: 60,
-        // height: 80,
-        // paddingHorizontal: 40,
         marginVertical: 5,
     },
 
     text: {
         fontSize: width / 20,
-        color: "black",
+        color: "#383838",
         textAlignVertical: "center",
         fontFamily: 'Euphemia UCAS',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontWeight: 'normal',
     },
 
     placeholderText: {
@@ -129,15 +92,20 @@ const styles = StyleSheet.create({
 
     inputBox: {
         borderColor: '#31BD4B',
-        // borderWidth: 1,
         borderRadius: 30,
         borderBottomWidth: 3,
-        // borderWidth: 3,
         alignItems: 'stretch',
     },
 
     errorInputBox: {
         borderColor: 'red',
+    },
+
+    errorStyle: {
+        color: "red",
+        paddingVertical: 0,
+        marginTop: 3,
+        marginBottom: 0,
     },
 
 });

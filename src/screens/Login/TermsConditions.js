@@ -1,57 +1,75 @@
 import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    Button,
-    ScrollView,
-    Slider,
-    Alert,
-    Dimensions,
-    TouchableOpacity,
-  TextInput
-} from 'react-native';
-import axios from 'axios';
-import IconFA from "react-native-vector-icons/FontAwesome";
-import AsyncStorage from '@react-native-community/async-storage';
-import * as constants from '../../components/constants';
+import {StyleSheet, Text, View, ScrollView, Alert, TouchableOpacity} from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+import AsyncStorage from '@react-native-community/async-storage';
+import * as Keychain from "react-native-keychain";
+import axios from 'axios';
+
+import ProgressCircles from '../../Base/ProgressCircles'
+import {width, height, IP_ADDRESS} from '../../components/constants'
+
+
 export default class TermsConditions extends React.Component {
     constructor(props) {
         super(props);
     }
 
+    save = async (username, password, accessControl) => {
+        console.log(this.state);
+
+        try {
+            await Keychain.setGenericPassword(
+                username,
+                password,
+            );
+
+        } catch (err) {
+            console.log('Could not save credentials, ' + err);
+        }
+        // --- Store "Remember password" checked status in async storage ---
+        await AsyncStorage.setItem("checkBtn", 'checked').then(function () {
+        }).done();
+    };
+
+
     next() {
         // Make API call to verify that we can create a user
         // Then navigate to MapScreen.js
 
-        const { navigate } = this.props.navigation;
+        const {navigate} = this.props.navigation;
         // We know all inputs will be valid
         // Now we need to add it to form data
 
-        AsyncStorage.getItem('formData').then(function (ret) {
-            var response = JSON.parse(ret);
-            //console.log("response is ");
-            //console.log(response);
+        let thisVar = this;
+
+        AsyncStorage.getItem('formData', null).then(function (ret) {
+            let userData = JSON.parse(ret);
             // We need to make the API call to create a new user
-            axios.post('http://' + constants.IP_ADDRESS + '/api/signup', response).then(function (response2) {
-                // Lets save relevent information and login!
+            axios.post('http://' + IP_ADDRESS + '/api/signup', userData).then(function (response) {
+                // Lets save relevant information and login!
+
+                console.log('---------------------------------------------');
+                console.log('\n\n\n\n\n\n\n\n\nthe result is : ', response, '\n\n\n\n\n\n\n\n');
+                console.log('---------------------------------------------');
+                thisVar.save(userData['username'], userData['password']).done();
+
+
                 Alert.alert(
                     'Welcome to Noise Score!',
                     'Click measurements to get started.',
                     [
-                        { text: 'Lets go!', onPress: () => console.log('OK Pressed') },
+                        {text: 'Lets go!'},
                     ],
-                    { cancelable: false },
+                    {cancelable: false},
                 );
-                let ret2 = response2['data'];
-                AsyncStorage.setItem("userData", JSON.stringify(ret2));
+                let ret = response['data'];
+                AsyncStorage.setItem("userData", JSON.stringify(ret)).done();
+
+
                 navigate("App")
             }).catch(function (error) {
                 console.log(error);
                 alert(error.message);
-
             });
         }.bind(this));
     }
@@ -60,19 +78,22 @@ export default class TermsConditions extends React.Component {
         return (
 
 
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
 
-                <View style={{ flex: 1 }}>
-
+                <View style={{flex: 1}}>
+                    <ProgressCircles totalSteps={4} currentStep={4}/>
                     <ScrollView>
+
                         <View style={styles.wrapper}>
-                            <TextInput multiline editable={false}>
+
                             <Text style={styles.text}>
+
                                 <Text style={styles.h1}>
                                     Before you register and begin using this app, you must agree to our Consent process,
                                     Terms and Conditions, and Privacy Statement.
                                 </Text>
                                 {'\n\n'}
+
                                 <Text style={styles.h2}>
                                     What is NoiseScore?
                                 </Text>
@@ -85,16 +106,18 @@ export default class TermsConditions extends React.Component {
 
                                 You can use NoiseScore to:
                                 {'\n'}
-                                {'\n\t'} • Objectively describe your community noise levels by recording its sound level
+                                {'\n\t'} '• Objectively describe your community noise levels by recording its sound
+                                level
                                 (measured in decibels)
                                 {'\n\t'} • Subjectively describe this noise level by answering a short survey
-                                {'\n\t'} • Add your response to our live noise heat map that can be used to gauge the sound
+                                {'\n\t'} • Add your response to our live noise heat map that can be used to gauge the
+                                sound
                                 and noise climate in not only your community but communities all over the globe.
 
                                 {'\n'}{'\n'}
                                 NoiseScore is currently being administered and managed by Community Noise Lab, a
                                 research lab at Boston University’s School of Public Health.
-                                <Text style={{ fontWeight: 'bold' }}>
+                                <Text style={{fontWeight: 'bold'}}>
                                     By downloading and using this app, you are participating in a research study.
                                 </Text>
 
@@ -260,6 +283,7 @@ export default class TermsConditions extends React.Component {
                                 effect.
                                 No waiver of any of these Terms of Use shall be deemed a further or continuing waiver of
                                 such term or condition or any other term or condition.
+
                                 {'\n\n'}
                                 <Text style={[styles.text, styles.h2]}>
                                     Privacy Policy
@@ -277,7 +301,6 @@ export default class TermsConditions extends React.Component {
                                 When you download and use the app, you will be asked to read our terms and conditions
                                 and agree with them. If you do not agree with the terms of this Privacy Policy, please
                                 do not access or use the App.
-                                {'\n\n'}
                                 It is your decision whether to participate in this study and you may choose to stop
                                 using the App at any time. The Lab is conducting this research to gather a deeper
                                 understanding about your thoughts, feelings, and behaviors about the sounds you
@@ -287,7 +310,7 @@ export default class TermsConditions extends React.Component {
                                 create a noise event. With each noise event you create, you will measure its sound level
                                 (in decibels), map your location, record the noise sources (barking dog, siren,
                                 aircraft, etc.) and answer a series of questions designed to gather your opinions on how
-                                this noise event made you feel.  Once you submit your noise event, your responses will be
+                                this noise event made you feel. Once you submit your noise event, your responses will be
                                 added to our live heat map. The data provided by you and other research participants
                                 ("participants") will be collected and used for research purposes. Upon completion of a
                                 NoiseScore noise event, you will be able to view an aggregation of ALL participant
@@ -357,28 +380,39 @@ export default class TermsConditions extends React.Component {
                                 {'\n\n'}
                                 The University will share de-identified, aggregate data collected via the App in the
                                 NoiseScore map accessible in the App. The map shows decibel measurements, locations,
-                                dates, times, and noise sources. The map does not show user names or personally identifiable
-                                information. Researchers will share data where we have removed anything that we think would show your
+                                dates, times, and noise sources. The map does not show user names or personally
+                                identifiable
+                                information. Researchers will share data where we have removed anything that we think
+                                would show your
                                 identity. There still may be a small chance that someone could figure out that the
                                 information is about you. Such sharing includes:
                                 {'\n'} • Publishing results in a medical book or journal.
                                 {'\n'} • Adding results to a Federal government database.
                                 {'\n'} • Using research data in future studies, done by us or by other scientists.
-                                {'\n\n'}
+                                {'\n'}
                                 Like most smartphone applications, the App uses third-party entities, such as hosting
                                 companies or technology platforms, to facilitate the App. These third-party entities
-                                track Internet services and record the data in log files. The log files include information
-                                such as Internet Protocol addresses, the date and time that users accessed web pages or other
+                                track Internet services and record the data in log files. The log files include
+                                information
+                                such as Internet Protocol addresses, the date and time that users accessed web pages or
+                                other
                                 Internet services, installation events, app crashes, browser types, and cookies. These
-                                third parties will provide protection at least as strong as the protections described in this
-                                Privacy Policy. Otherwise, the University will share information about you with third-parties only to
-                                the extent necessary to deliver the App’s services (i.e. with third party hosting companies
+                                third parties will provide protection at least as strong as the protections described in
+                                this
+                                Privacy Policy. Otherwise, the University will share information about you with
+                                third-parties only to
+                                the extent necessary to deliver the App’s services (i.e. with third party hosting
+                                companies
                                 or technology companies subject to confidentiality obligations or in circumstances where
-                                the University reasonably believes that doing so is necessary or appropriate to: satisfy any
+                                the University reasonably believes that doing so is necessary or appropriate to: satisfy
+                                any
                                 applicable law, regulation, legal process or governmental request; investigate
-                                compliance with or enforce University policies; detect, prevent or otherwise address fraud,
-                                security or technical issues; or protect the rights, property or safety of the University, its
-                                faculty, staff, and students or others. The information referred to in this section may include
+                                compliance with or enforce University policies; detect, prevent or otherwise address
+                                fraud,
+                                security or technical issues; or protect the rights, property or safety of the
+                                University, its
+                                faculty, staff, and students or others. The information referred to in this section may
+                                include
                                 personally identifiable information.
                                 {'\n\n'}
                                 <Text style={[styles.text, styles.h2]}>
@@ -436,12 +470,12 @@ export default class TermsConditions extends React.Component {
                                 subject. You should also call or email if you want to talk to someone who is not part of
                                 the
                                 study about your questions, concerns, or problems.
+
+
                             </Text>
-                            </TextInput>
                         </View>
                     </ScrollView>
-
-                    <View style={{ flexGrow: 1, position: 'relative', bottom: 0 }}>
+                    <View style={{flexGrow: 1, position: 'relative', bottom: 0}}>
                         <View style={{
                             flexGrow: 1,
                             alignSelf: 'flex-end',
@@ -452,7 +486,7 @@ export default class TermsConditions extends React.Component {
                         }}
                         >
                             <TouchableOpacity
-                                style={[styles.button, styles.clearButton, { flex: 1 }]}
+                                style={[styles.button, styles.clearButton, {flex: 1}]}
                                 // disabled={this.state.started}
                                 onPress={() => this.props.navigation.replace('SignIn')}
                             >
@@ -472,7 +506,7 @@ export default class TermsConditions extends React.Component {
 
 
                             <TouchableOpacity
-                                style={[styles.button, styles.submitButton, { flex: 3, alignSelf: 'stretch' }]}
+                                style={[styles.button, styles.submitButton, {flex: 3, alignSelf: 'stretch'}]}
                                 // disabled={this.state.started}
                                 onPress={() => this.next()}
                             >
@@ -485,137 +519,57 @@ export default class TermsConditions extends React.Component {
                                     alignSelf: 'center',
                                     textAlign: 'center',
                                     color: 'white',
-                                    // backgroundColor:'red'
                                 }}>Accept and Signup</Text>
 
 
                             </TouchableOpacity>
                         </View>
                     </View>
-
                 </View>
             </View>
 
-            // <View style={{ height:height-300}}>
-            //
-            //
-            //
-            //
-            //
-            //     <View style={styles.wrapper}>
-            //         <View style={{ flex: 1, flexGrow:1 }}>
-            //             <Text style={[styles.text, styles.h1, { textAlign: 'center', paddingTop: 10 }]}> Please read and
-            //                 accept the privacy policy of NoiseScore</Text>
-            //         </View>
-            //
-            //
-            //
-            //     </View>
-            // </View>
         );
     }
 
 
-// Function used to set the state
-    setPlace(value) {
-        this.setState({
-            place: value[0]
-        });
-    }
-
-    setLoudness(value) {
-        this.setState({
-            loudness: value[0]
-        });
-    }
-
-    setOneWord(value) {
-        this.setState({
-            oneWord: value[0]
-        });
-    }
-
-    setFeeling(value) {
-        this.setState({
-            feeling: value[0]
-        });
-    }
-
 }
 
-
-const lightGreen = '#31BD4B';
-const darkGray = "#383838";
-
-const fontSize = width / 15;
-
-const fontStyle = { fontSize: fontSize, padding: 5 };
-
-
-const questionButtonsStyle = {
-    borderColor: lightGreen,
-    backgroundColor: "transparent",
-    textColor: darkGray,
-    borderTintColor: lightGreen,
-    backgroundTintColor: lightGreen,
-    textTintColor: "white",
-    // padding:20
-};
-
-const questionButtonSize = {
-    borderRadius: 15,
-    height: 'auto',
-    borderWidth: 3,
-    // padding: 20,
-    // margin:10
-};
-
-
 const styles = StyleSheet.create({
-    padding: {
-        paddingVertical: 10,
-    },
-    wrapText: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-evenly'
-    },
+
+
     wrapper: {
         flexGrow: 1,
         alignItems: 'stretch',
         padding: 30,
         alignContent: 'center',
     },
-    scrollWrapper: {
-        // flexGrow: 1,
-        // justifyContent: "space-between",
-        // height: height - 25,
-        // alignItems: 'stretch',
-        // // padding: 80,
-        // flexWrap: 'wrap',
-        // alignContent: 'center'
-    },
+
+
     text: {
         fontSize: 15,
         color: "black",
         marginBottom: 10,
         textAlign: 'left'
     },
+
     h1: {
         fontSize: 25,
         fontWeight: 'bold',
         textAlign: 'center'
     },
+
     h2: {
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center'
     },
+
     h3: {
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'justify'
     },
+
     button: {
         flex: 1,
         minHeight: 40,

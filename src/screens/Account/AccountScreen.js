@@ -1,10 +1,11 @@
 import React from 'react';
 import { Picker, StyleSheet, View, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
 import axios from "axios";
-import { ListItem, Button, Text, Header, } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
+import {IP_ADDRESS} from "../../components/constants";
 
 const { width, height } = Dimensions.get('window');
 
@@ -166,7 +167,7 @@ export default class AccountScreen extends React.Component {
                         userID: this.state.userID,
                         username: this.state.username
                     };
-                    axios.get('http://' + constants.IP_ADDRESS + '/api/userMeasurements', {
+                    axios.get('http://' + IP_ADDRESS+ '/api/userMeasurements', {
                         headers: header,
                         params: params
                     }).then(function (ret) {
@@ -290,7 +291,7 @@ export default class AccountScreen extends React.Component {
                         'Content-Type': 'application/json',
                         'Authorization': authHeader
                     };
-                    axios.get('http://' + constants.IP_ADDRESS + '/api/userMeasurements', {
+                    axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', {
                         headers: header,
                         params: params
                     }).then(function (ret) {

@@ -1,50 +1,17 @@
 import React from 'react';
-import { StackActions, NavigationActions } from 'react-navigation';
-import AsyncStorage from '@react-native-community/async-storage';
-import * as constants from '../../components/constants';
-import {
-    StyleSheet,
-    Text,
-    ScrollView,
-    View,
-    TextInput,
-    Alert,
-    TouchableOpacity,
-    Dimensions, Platform, PermissionsAndroid
-} from 'react-native';
+import {StackActions, NavigationActions} from 'react-navigation';
+import {StyleSheet, Text, ScrollView, View, TextInput, Alert, TouchableOpacity,} from 'react-native';
 import NavButtons from '../../components/NavButtons';
 import ClearSubmitButtons from '../../components/ClearSubmitButtons';
+
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
 import IconFA from "react-native-vector-icons/FontAwesome";
 
 
-const  requestPermission = () => {
-    if(Platform.OS === 'ios') return Promise.resolve(true)
-    return PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-            'title': '',
-            'message': 'Please allow NoiseScore to access your location.'
-        }
-    ).then(granted => {
-        if(granted === PermissionsAndroid.RESULTS.GRANTED) {
-            return Promise.resolve("You can use the location")
-        } else {
-            return Promise.reject("Location permission denied")
-        }
-    })
-};
+import {width, height, getCoordinates, IP_ADDRESS} from "../../components/constants";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
-const getCoordinates = () => {
-    return requestPermission().then(ok => {
-        return new Promise((resolve, reject) => {
-            const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:5000}
-                : {enableHighAccuracy:true,timeout:5000,maximumAge:2000};
-            global.navigator.geolocation.getCurrentPosition(resolve, reject, options)
-        })
-    })
-};
-const { width, height } = Dimensions.get('window');
 export default class MeasureScreen3 extends React.Component {
 
     static navigationOptions = {
@@ -60,27 +27,30 @@ export default class MeasureScreen3 extends React.Component {
         super(props);
         this.state = {
             comment: '',
-            started: false
         };
     }
 
     clear = () => {
         this.setState({
-            comment: '',
-            started: false
+            comment: ''
         });
     };
-
 
     submit() {
         // Function to handle submitting a measurement
         // Get all needed data from local storage (AsyncStorage)
         // Make API call to input the measurement ('/api/inputMeasurement')
-        const { navigate } = this.props.navigation;
+        const {navigate} = this.props.navigation;
         var success = true;
+        let lat, long;
+
+        getCoordinates().then(position => {
+            lat = position.coords.latitude;
+            long = position.coords.longitude;
+        }).done();
 
         AsyncStorage.getItem('formData', null).then(function (ret) {
-            var response = JSON.parse(ret);
+            let response = JSON.parse(ret);
             console.log('\nresponse data is :\n');
             console.log(response);
             if (this.state.comment.length > 0) {
@@ -89,36 +59,43 @@ export default class MeasureScreen3 extends React.Component {
                 response["words"] = " ";
             }
             response['date'] = new Date();
-            AsyncStorage.getItem('userData').then(function (ret2) {
-                var userData = JSON.parse(ret2);
+            AsyncStorage.getItem('userData', null).then(function (ret2) {
+                let userData = JSON.parse(ret2);
                 response["username"] = userData['user']['username'];
                 response["userID"] = userData['user']['_id'];
 
-                getCoordinates().then(position => {
-                    // response['location'] = [position.coords.latitude+','+position.coords.longitude;
-                    // Alert.alert(coordinates)
-                    response['location'] = [position.coords.longitude, position.coords.latitude];
-                    axios.post('http://' + constants.IP_ADDRESS + '/api/inputMeasurement', response)
-                        .then(function (response1) {
-                            // Done!
-                        })
-                        .catch(function (error) {
-                            success = false;
-                        });
-                }).catch(error => {
-                    Alert.alert('','Please allow NoiseScore to access your location.')
-                });
 
-                navigator.geolocation.getCurrentPosition(
-                    position => {
-                        var longitude = position['coords']['latitude'];
-                        var latitude = position['coords']['longitude'];
+                // const coordinates = position.coords.latitude+','+position.coords.longitude;
+                // this.setState({
+                //     region: {
+                //         latitude: position.coords.latitude,
+                //         longitude: position.coords.longitude,
+                //         latitudeDelta: 0.0922,
+                //         longitudeDelta: 0.0421,
+                //     },
+                // });
+
+                // var longitude = ['coords']['latitude'];
+                // var latitude = position['coords']['longitude'];
+                response['location'] = [lat, long];
+                // console.log("we re going to add the following to the database\n");
+                // console.log(response);
+                axios.post('http://' + IP_ADDRESS + '/api/inputMeasurement', response)
+                    .then(function (response1) {
+                        // Done!
+                    })
+                    .catch(function (error) {
+                        Alert.alert("Error storing your measurement", "There was an error while trying to store your measurement's data. Please try again")
+                    }).done();
 
 
-                    },
-                    error => Alert.alert(error.message),
-                    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-                );
+                // navigator.geolocation.getCurrentPosition(
+                //     position => {
+                //
+                //     },
+                //     error => Alert.alert(error.message),
+                //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+                // );
             });
         }.bind(this)).then(function () {
             if (success) {
@@ -126,13 +103,13 @@ export default class MeasureScreen3 extends React.Component {
                     'Submitted Measurement',
                     'Thanks for contributing to the project!',
                     [
-                        { text: 'Continue' },
+                        {text: 'Continue'},
                     ],
-                    { cancelable: false },
+                    {cancelable: false},
                 );
                 const resetAction = StackActions.reset({
                     index: 0,
-                    actions: [NavigationActions.navigate({ routeName: 'Measure' })],
+                    actions: [NavigationActions.navigate({routeName: 'Measure'})],
                 });
                 this.props.navigation.dispatch(resetAction);
             } else {
@@ -146,55 +123,57 @@ export default class MeasureScreen3 extends React.Component {
 
     render() {
         return (
-            <ScrollView>
+            <KeyboardAwareScrollView>
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>Add a comment.</Text>
                 </View>
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>(up to 140 characters)</Text>
                 </View>
-
                 <TextInput
-                  multiline={true}
-                  style={styles.textInput}
-                  onChangeText={(comment) => {
-                      this.setState({ comment });
-                      this.state.started = true; }}
-                  value={this.state.comment}
-                  maxLength={140}
-                  blurOnSubmit={true}
+                    multiline={true}
+                    style={styles.textInput}
+                    onChangeText={(comment) => this.setState({comment})}
+                    value={this.state.comment}
+                    maxLength={140}
                 />
 
-                { this.state.started ?
-                  <View style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      justifyContent: 'flex-end',
-                      alignItems: 'stretch'
-                  }}>
 
-                      <TouchableOpacity
-                        style={[styles.clearButton, this.state.started ? styles.darkButton : styles.disabledButton]}
-                        onPress={() => this.clear()}>
-                          <IconFA
+                <View
+                    style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'flex-end',
+                        alignItems: 'stretch'
+                    }}>
+                    <TouchableOpacity
+                        style={[styles.button, this.state.started ? styles.disabledButton : styles.clearButton]}
+                        disabled={this.state.started}
+                        onPress={() => this.clear()}
+                    >
+
+                        <IconFA
                             name={'trash'}
+                            // size={width / 15}
                             color="white"
                             style={{
                                 flex: 1,
                                 alignSelf: 'center',
                                 textAlign: 'left',
                                 fontSize: width / 15
-                            }}/>
-                          <Text style={{
-                              fontSize: width / 15,
-                              color: 'white'
-                          }}>Clear Comment</Text>
-                      </TouchableOpacity>
-                  </View> : null }
+                            }}
+                        />
 
+                        <Text style={{
+                            fontSize: width / 15,
+                            alignSelf: 'center',
+                            textAlign: 'center',
+                            color: 'white'
+                        }}>Clear</Text>
+                    </TouchableOpacity>
+                </View>
 
-
-                <View style={{ alignItems: 'flex-end' }}>
+                <View style={{alignItems: 'flex-end'}}>
                     <View
                         style={{
                             flex: 1,
@@ -203,18 +182,21 @@ export default class MeasureScreen3 extends React.Component {
                             alignItems: 'stretch'
                         }}>
                         <TouchableOpacity
-                            style={[styles.button, styles.darkButton]}
+                            style={[styles.button, styles.clearButton]}
+                            // disabled={this.state.started}
                             onPress={() => this.props.navigation.navigate('Measure2')}
                         >
 
                             <IconFA
                                 name={'arrow-left'}
+                                // size={width / 15}
                                 color="white"
                                 style={{
                                     flex: 1,
                                     alignSelf: 'center',
                                     textAlign: 'left',
                                     fontSize: width / 15,
+                                    // backgroundColor:'white'
                                 }}
                             />
                             <View style={{
@@ -228,8 +210,13 @@ export default class MeasureScreen3 extends React.Component {
                                 alignItems: 'center'
                             }}>
                                 <Text style={{
+                                    // flex: 3,
+                                    // position: 'absolute',
                                     fontSize: width / 15,
+                                    // alignSelf: 'stretch',
+                                    // textAlign: 'left',
                                     color: 'white',
+                                    // backgroundColor:'red'
                                 }}>Back</Text>
                             </View>
                         </TouchableOpacity>
@@ -237,6 +224,7 @@ export default class MeasureScreen3 extends React.Component {
 
                         <TouchableOpacity
                             style={[styles.button, styles.submitButton]}
+                            // disabled={this.state.started}
                             onPress={() => this.submit()}
                         >
 
@@ -251,24 +239,27 @@ export default class MeasureScreen3 extends React.Component {
                                 alignItems: 'center'
                             }}>
                                 <Text style={{
+                                    // flex: 3,
+                                    // position: 'absolute',
                                     fontSize: width / 15,
+                                    // alignSelf: 'stretch',
+                                    // textAlign: 'left',
                                     color: 'white',
+                                    // backgroundColor:'red'
                                 }}>Submit</Text></View>
 
                             <IconFA
                                 name={'paper-plane'}
                                 size={width / 15}
                                 color="white"
-                                style={{ flex: 1, alignSelf: 'center', textAlign: 'right' }}
+                                style={{flex: 1, alignSelf: 'center', textAlign: 'right'}}
                             />
 
                         </TouchableOpacity>
                     </View>
                 </View>
 
-
-
-            </ScrollView>
+            </KeyboardAwareScrollView>
         );
     }
 }
@@ -300,8 +291,14 @@ const styles = StyleSheet.create({
         flex: 1,
         minHeight: 40,
         flexDirection: 'row',
+        // justifyContent: 'center',
+
         alignSelf: 'stretch',
+        // borderWidth: 2,
         borderRadius: 10,
+
+        // borderColor: '#31BD4B',
+
         margin: 5,
         padding: 10,
     },
@@ -311,26 +308,8 @@ const styles = StyleSheet.create({
         borderColor: '#31BD4B'
     },
 
-    darkButton: {
+    clearButton: {
         backgroundColor: '#4E5255',
         borderColor: '#4E5255'
     },
-    clearButton: {
-        flex: 1,
-        flexDirection: 'row',
-        alignSelf: 'stretch',
-        minHeight: 40,
-        minWidth: 120,
-        marginLeft: 80,
-        marginRight: 80,
-        marginTop: 20,
-        marginBottom: 20,
-        padding: 10,
-        borderWidth: 2,
-        borderRadius: 10,
-    },
-    disabledButton: {
-        backgroundColor: '#B7BBBD',
-        borderColor: '#B7BBBD'
-    }
 });

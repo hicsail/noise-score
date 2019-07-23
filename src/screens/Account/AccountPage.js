@@ -1,37 +1,11 @@
 import React from 'react';
-import { Picker, StyleSheet, View, ScrollView, Image, Platform, PermissionsAndroid, Alert } from 'react-native';
-import axios from "axios";
-import { Button, Header } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {StyleSheet, View, Text} from 'react-native';
+
 import AsyncStorage from '@react-native-community/async-storage';
-import * as constants from '../../components/constants';
+import axios from "axios";
 
-const  requestPermission = () => {
-    if(Platform.OS === 'ios') return Promise.resolve(true)
-    return PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-            'title': 'Please provide access to your location.',
-            'message': ''
-        }
-    ).then(granted => {
-        if(granted === PermissionsAndroid.RESULTS.GRANTED) {
-            return Promise.resolve("You can use the location")
-        } else {
-            return Promise.reject("Location permission denied")
-        }
-    })
-};
-
-const getCoordinates = () => {
-    return requestPermission().then(ok => {
-        return new Promise((resolve, reject) => {
-            const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:5000}
-                : {enableHighAccuracy:true,timeout:5000,maximumAge:2000};
-            global.navigator.geolocation.getCurrentPosition(resolve, reject, options)
-        })
-    })
-};
+import CustomButton from "../../Base/CustomButton";
+import {width, IP_ADDRESS} from "../../components/constants"
 
 
 export default class AccountScreen extends React.Component {
@@ -47,18 +21,9 @@ export default class AccountScreen extends React.Component {
     }
 
 
-
-
     componentDidMount() {
         // When the component mounts, gather the user data from local storage (AsyncStorage)
         // Store the data as a local variable
-
-        getCoordinates().then(position => {
-            const coordinates = position.coords.latitude+','+position.coords.longitude;
-            // Alert.alert(coordinates)
-        }).catch(error => {
-            // Alert.alert(error.message)
-        });
         AsyncStorage.getItem('userData', null).then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
@@ -67,24 +32,24 @@ export default class AccountScreen extends React.Component {
                     'Content-Type': 'application/json',
                     'Authorization': authHeader
                 };
+                console.log(response['user']['username']);
                 this.setState({
                     username: response['user']['username'],
                     userID: response['user']['_id']
                 });
+                console.log(this.state)
             }
         }.bind(this));
-        console.log(this.props.navigation);
-        console.log(this.props.navigationOptions);
+        console.log(this.state)
     }
 
 
     // Helper function to remove local storage
-    async removeItemValue(key) {
+    static async removeItemValue(key) {
         try {
             await AsyncStorage.removeItem(key);
             return true;
-        }
-        catch (exception) {
+        } catch (exception) {
             return false;
         }
     }
@@ -92,7 +57,7 @@ export default class AccountScreen extends React.Component {
     logout() {
         // Function to log out and clear cookies (i.e. AsyncStorag)
         // Moves to LoginScreen.js
-        const { navigate } = this.props.navigation;
+        const {navigate} = this.props.navigation;
         AsyncStorage.getItem('userData', null).then(function (ret) {
             if (ret) {
                 // Get the auth header from storage
@@ -103,84 +68,62 @@ export default class AccountScreen extends React.Component {
                     'Authorization': authHeader
                 };
                 // Remove the cookie and make API call to log out
-                this.removeItemValue("userData").then(function (ret) {
+                AccountScreen.removeItemValue("userData").then(function (ret) {
                     if (ret) {
-                        axios.delete('http://' + constants.IP_ADDRESS + '/api/logout', { headers: header })
+                        axios.delete('http://' + IP_ADDRESS + '/api/logout', {headers: header})
                             .then(function () {
-                                navigate("UserLogin");
+                                navigate("SignIn");
                             })
                             .catch(function (error) {
                                 console.log(error);
-                                alert("Error logging out. Please close the app to log out.");
+                                alert("Something went wrong!");
                             });
                     } else {
-                        alert("Log out error. Please close the app to log out.")
+                        alert("Error")
                     }
                 });
             }
         }.bind(this));
     }
 
-    goBack() {
-        // Navigate to AccountScreen.js
-        const { navigate } = this.props.navigation;
-        navigate("Account1");
-    }
-
-    resetPassword() {
-        // Navigate to ResetPassword.js
-        const { navigate } = this.props.navigation;
-        navigate("Account4");
-    }
-
-
     render() {
-        const { username } = this.state;
+        AsyncStorage.getItem('userData', null).then(function (data) {
+            console.log(data);
+        });
+
         return (
             <View style={styles.container}>
-                <View style={styles.content}>
-                    <Button
-                        buttonStyle={styles.button}
-                        backgroundColor="transparent"
-                        textStyle={{ color: "#bcbec1" }}
-                        title="Sign Out"
-                        onPress={() => this.logout()}
-                    />
-                    {/*<Button*/}
-                    {/*buttonStyle={styles.button}*/}
-                    {/*backgroundColor="transparent"*/}
-                    {/*textStyle={{ color: "#bcbec1" }}*/}
-                    {/*title="Reset Password"*/}
-                    {/*onPress={() => this.resetPassword()}*/}
-                    {/*/>*/}
-                </View>
+                <Text style={styles.textStyle}>
+                    Hello {this.state.username.charAt(0).toUpperCase() + this.state.username.slice(1)},
+                </Text>
+
+                <CustomButton
+                    customStyle={styles.button}
+                    text="Sign Out"
+                    onPress={() => this.logout()}
+                />
             </View>
         )
     }
 }
 
-
+//------------ Styling for components of account-page screen ------------
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 30
     },
-    reload: {},
-    header: {
-        backgroundColor: '#31BD4B',
-    },
-    headerButton: {
-        backgroundColor: '#323232'
-    },
-    button: {
-        marginTop: 20,
-        backgroundColor: '#323232',
-        marginHorizontal: 100
-    },
-    content: {
-        marginTop: "50%",
-        width: '100%',
-        height: "100%",
 
+    textStyle: {
+        textAlign: 'center',
+        fontSize: width / 17,
+        marginVertical: 15,
+    },
+
+    button: {
+        backgroundColor: '#4E5255',
+        borderColor: '#4E5255'
     },
 
 });

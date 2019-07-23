@@ -1,14 +1,21 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView, Alert, Dimensions} from 'react-native';
-import { Text, Button  } from 'react-native-elements';
+import {StyleSheet, View, Alert} from 'react-native';
+import {Text,} from 'react-native-elements';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+
+import AsyncStorage from '@react-native-community/async-storage';
+
 import CustomInput from '../../Base/CustomInput'
 import CustomPasswordInput from '../../Base/CustomPasswordInput'
 import CustomButton from '../../Base/CustomButton'
-import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
+import ProgressCircles from '../../Base/ProgressCircles'
 
-import * as constants from '../../components/constants';
-import { height, width } from '../../components/constants';
+import {width, height, IP_ADDRESS, darkGray} from './../../components/constants';
+
+import axios from 'axios';
+
+
+
 
 export default class SignUp extends React.Component {
 
@@ -118,92 +125,91 @@ export default class SignUp extends React.Component {
     // ----------------------------------------------------------------------------------------------------------------
     // ------------ Handler methods, invoked when inputs' text change and when next button is pressed ------------
     UsernameHandle(e) {
-        this.setState({ username: e });
+        this.setState({username: e});
         if (e === '')
-            this.setState({ usernameError: 'empty' });
+            this.setState({usernameError: 'empty'});
         else
-            this.setState({ usernameError: '' });
+            this.setState({usernameError: ''});
     }
 
     PasswordHandle(e) {
         // --- Check password validity ---
-        this.setState({ password: e });
+        this.setState({password: e});
         if (e === '')
-            this.setState({ passwordError: 'empty' });
+            this.setState({passwordError: 'empty'});
         else {
-            this.setState({ passwordError: SignUp.passStrength(e) });
+            this.setState({passwordError: this.passStrength(e)});
         }
 
         // --- If confirm password has been edited, validate confirm password ---
         if (this.state.confirmPass !== '\t') {
             if (this.state.confirmPass !== e)
-                this.setState({ confirmError: 'match' });
+                this.setState({confirmError: 'match'});
             else
-                this.setState({ confirmError: '' });
+                this.setState({confirmError: ''});
         }
     }
 
     ConfirmHandle(e) {
-        this.setState({ confirmPass: e });
+        this.setState({confirmPass: e});
         if (e === '')
-            this.setState({ confirmError: 'empty' });
+            this.setState({confirmError: 'empty'});
         else if (e !== this.state.password)
-            this.setState({ confirmError: 'match' });
+            this.setState({confirmError: 'match'});
         else
-            this.setState({ confirmError: '' });
+            this.setState({confirmError: ''});
     }
 
     EmailHandle(e) {
-        this.setState({ email: e });
+        this.setState({email: e});
         if (e === '')
-            this.setState({ emailError: 'empty' });
+            this.setState({emailError: 'empty'});
         else if (!this.validateEmail(e))
-            this.setState({ emailError: 'invalid' });
+            this.setState({emailError: 'invalid'});
         else
-            this.setState({ emailError: '' });
+            this.setState({emailError: ''});
     }
 
     CityHandle(e) {
-        this.setState({ city: e });
+        this.setState({city: e});
         if (e === '')
-            this.setState({ cityError: 'empty' });
+            this.setState({cityError: 'empty'});
         else
-            this.setState({ cityError: '' });
+            this.setState({cityError: ''});
     }
 
     StateHandle(e) {
-        this.setState({ state: e });
+        this.setState({state: e});
         if (e === '')
-            this.setState({ stateError: 'empty' });
+            this.setState({stateError: 'empty'});
         else
-            this.setState({ stateError: '' });
+            this.setState({stateError: ''});
     }
 
     ZipHandle(e) {
-        this.setState({ zip: e });
+        this.setState({zip: e});
         if (e === '')
-            this.setState({ zipError: 'empty' });
+            this.setState({zipError: 'empty'});
         else
-            this.setState({ zipError: '' });
+            this.setState({zipError: ''});
     }
 
     // ----------------------------------------------------------------------------------------------------------------
 
-    // ---------------------- Password validattion ----------------------
+    // ---------------------- Email validattion ----------------------
     validateEmail(email) {
         let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
 
     // ---------------------- Password validattion ----------------------
-    static passStrength(password) {
+    passStrength(password) {
         let conditions = 0;
 
         // ------ Check if password satisfies length requirements and then check password's strength ------
         if (password.length < 8) {
             return 'length';
-        }
-        else {
+        } else {
 
             // --- Set up password strength condition ---
             let matchedCase = [];
@@ -241,8 +247,8 @@ export default class SignUp extends React.Component {
             username: this.state.username
         };
 
-        // ------ Call to the server ------
-        response = await axios.post('http://' + constants.IP_ADDRESS + '/api/available', credentials)
+        // Call to the server
+        response = await axios.post('http://' + IP_ADDRESS + '/api/available', credentials)
             .then(async function (response) {
                 return response;
             })
@@ -250,61 +256,57 @@ export default class SignUp extends React.Component {
                 return {}
             });
 
-        // ------ If username is in use, set appropriate error ------
+        // If username is in use, set appropriate error
         if (this.state.username !== '' && this.state.username !== '\t') {
             if (!response.data['username']) {
-                this.setState({ usernameError: 'inuse' });
+                this.setState({usernameError: 'inuse'});
             }
         }
 
-        // ------ If email is in use, set appropriate error ------
+        // If email is in use, set appropriate error
         if (this.state.email !== '' && this.state.username !== '\t') {
             if (!response.data['email']) {
-                this.setState({ emailError: 'inuse' });
+                this.setState({emailError: 'inuse'});
             }
         }
-        console.log(response);
-        // this.setState({ usernameError: res['usernameError'] });
-
 
         // ------------------------------------------------------------------------------------------------------------
         // ------------ Valiate city and state according to zip-code ------------
-        let location = {
-            city: this.state.city,
-            state: this.state.state,
-            zip: this.state.zip
-        };
-
-        // ------ Call to the server ------
-        response = await axios.post('http://' + constants.IP_ADDRESS + '/api/validateZip', location).then(
-            function (response) {
-                return response
-            })
-            .catch(function (error) {
-                return null
-            });
-
-
-        if (response !== null) {
-
-            // ------ If city-state don't correspond to the zip code set the appropriate errors ------
-            if (!(response.data.city === (this.state.city) && response.data.state === (this.state.state))) {
-                this.setState({
-                    cityError: 'invalid',
-                    stateError: 'invalid',
-                    zipError: 'invalid',
-                });
-            }
-            // ------ If changing zip code resulted in valid city-state-zip combination remove all errors ------
-            else {
-                this.setState({
-                    cityError: '',
-                    stateError: '',
-                    zipError: '',
-                });
-            }
-        }
-        // console.log(this.state);
+        // let location = {
+        //     city: this.state.city,
+        //     state: this.state.state,
+        //     zip: this.state.zip
+        // };
+        //
+        // // Call to the server
+        // response = await axios.post('http://' + IP_ADDRESS + '/api/validateZip', location).then(
+        //     function (response) {
+        //         return response
+        //     })
+        //     .catch(function (error) {
+        //         return null
+        //     });
+        //
+        //
+        // if (response !== null) {
+        //
+        //     // If city-state don't correspond to the zip code set the appropriate errors
+        //     if (!(response.data.city === (this.state.city) && response.data.state === (this.state.state))) {
+        //         this.setState({
+        //             cityError: 'invalid',
+        //             stateError: 'invalid',
+        //             zipError: 'invalid',
+        //         });
+        //     }
+        //     // If changing zip code resulted in valid city-state-zip combination remove all errors ------
+        //     else {
+        //         this.setState({
+        //             cityError: '',
+        //             stateError: '',
+        //             zipError: '',
+        //         });
+        //     }
+        // }
     };
 
     // ---------------------- Check if any of the inputs has an error ----------------------
@@ -318,7 +320,7 @@ export default class SignUp extends React.Component {
 
     // ----------------------- Method to move to next sign up step -----------------------
     async next() {
-        const { navigate } = this.props.navigation;
+        const {navigate} = this.props.navigation;
 
         // ------ If input fields were untouched, set them to empty text, this will trigger the error messages ------
         if (this.state.username === '\t')
@@ -347,18 +349,17 @@ export default class SignUp extends React.Component {
             // ------ Store user data in async storage for use in the last step of the signup process...
             // ---- ... and navigate to the next step of the signup process ------
             let signUpData = {
-                'username': this.state.username,
-                'password': this.state.password,
-                'email': this.state.email,
+                'username': this.state.username.replace(' ', ''),
+                'password': this.state.password.replace(' ', ''),
+                'email': this.state.email.replace(' ', ''),
                 'location': [this.state.city, this.state.state, this.state.zip]
             };
             AsyncStorage.setItem("formData", JSON.stringify(signUpData)).then(function () {
                 navigate('SignUp2');
             });
 
-        }
-        else {
-            Alert.alert("Invalid inputs", 'Please check again information you provided again.');
+        } else {
+            Alert.alert("Invalid inputs", 'Please check again the information you provided.');
         }
 
     }
@@ -368,10 +369,13 @@ export default class SignUp extends React.Component {
     render() {
 
         return (
+            <View style={styles.container}>
+                <ProgressCircles totalSteps={4} currentStep={1}/>
 
-            <ScrollView>
+                <KeyboardAwareScrollView contentContainerStyle={styles.wrapper}>
+                    {/*<ScrollView>*/}
 
-                <View style={styles.wrapper}>
+                    {/*<View style={styles.wrapper}>*/}
 
                     <Text style={styles.textHeader}>
                         Set up your account
@@ -381,19 +385,14 @@ export default class SignUp extends React.Component {
                     <CustomInput
                         label={this.inputs.username.label}
                         placeholder={this.inputs.username.placeholder}
-                        name={this.inputs.username.label}
-                        content={this.state.username}
                         errorMessage={this.inputs.username.errors[this.state.usernameError]}
                         controlFunc={this.UsernameHandle}
-                        // value={this.state.username}
                     />
 
                     {/* ------ Password input ------ */}
                     <CustomPasswordInput
                         label={this.inputs.password.label}
                         placeholder={this.inputs.password.placeholder}
-                        name={this.inputs.password.label}
-                        content={this.state.password}
                         errorMessage={this.inputs.password.errors[this.state.passwordError]}
                         controlFunc={this.PasswordHandle}
                     />
@@ -402,8 +401,6 @@ export default class SignUp extends React.Component {
                     <CustomPasswordInput
                         label={this.inputs.confirmPass.label}
                         placeholder={this.inputs.confirmPass.placeholder}
-                        name={this.inputs.confirmPass.label}
-                        content={this.state.confirmPass}
                         errorMessage={this.inputs.confirmPass.errors[this.state.confirmError]}
                         controlFunc={this.ConfirmHandle}
                     />
@@ -413,8 +410,6 @@ export default class SignUp extends React.Component {
                     <CustomInput
                         label={this.inputs.email.label}
                         placeholder={this.inputs.email.placeholder}
-                        name={this.inputs.email.label}
-                        content={this.state.email}
                         errorMessage={this.inputs.email.errors[this.state.emailError]}
                         controlFunc={this.EmailHandle}
                     />
@@ -423,18 +418,15 @@ export default class SignUp extends React.Component {
                     <CustomInput
                         label={this.inputs.city.label}
                         placeholder={this.inputs.city.placeholder}
-                        name={this.inputs.city.label}
-                        content={this.state.city}
                         errorMessage={this.inputs.city.errors[this.state.cityError]}
                         controlFunc={this.CityHandle}
                     />
 
                     {/* ------ State input ------ */}
                     <CustomInput
+                        autoCapitalize='characters'
                         label={this.inputs.state.label}
                         placeholder={this.inputs.state.placeholder}
-                        name={this.inputs.state.label}
-                        content={this.state.state}
                         errorMessage={this.inputs.state.errors[this.state.stateError]}
                         controlFunc={this.StateHandle}
                     />
@@ -443,8 +435,6 @@ export default class SignUp extends React.Component {
                     <CustomInput
                         label={this.inputs.zip.label}
                         placeholder={this.inputs.zip.placeholder}
-                        name={this.inputs.zip.label}
-                        content={this.state.zip}
                         errorMessage={this.inputs.zip.errors[this.state.zipError]}
                         controlFunc={this.ZipHandle}
                     />
@@ -455,22 +445,28 @@ export default class SignUp extends React.Component {
                         customStyle={styles.button}
                     />
 
-                </View>
-            </ScrollView>
+                    {/*</View>*/}
+                    {/* </ScrollView>*/}
+                </KeyboardAwareScrollView>
+            </View>
         );
     }
-
 }
 
+
+//------------ Styling for components of signup screen ------------
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
 
     wrapper: {
         flexGrow: 1,
-        minHeight: height - 25,
+        // minHeight: height - 25,
         alignItems: 'stretch',
         paddingLeft: 30,
         paddingRight: 30,
-        alignContent: 'center',
+        // alignContent: 'center',
     },
 
     textHeader: {
@@ -478,7 +474,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontWeight: 'bold',
         marginVertical: 10,
-        color: "black",
+        color: darkGray,
         justifyContent: 'center',
         textAlignVertical: "center",
         textAlign: "center",
@@ -487,13 +483,5 @@ const styles = StyleSheet.create({
     button: {
         marginBottom: 30,
         marginTop: 20,
-        // backgroundColor: '#323232',
-        alignItems: 'center'
-    },
-
-    buttonWrapper: {
-        marginBottom: 30,
-        width: "70%",
-        backgroundColor: '#323232',
     },
 });
