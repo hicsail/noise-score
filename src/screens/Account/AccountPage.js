@@ -93,9 +93,6 @@ export default class AccountScreen extends React.Component {
 
         return (
             <View style={styles.container}>
-                <Text style={styles.textStyle}>
-                    Hello {this.state.username.charAt(0).toUpperCase() + this.state.username.slice(1)},
-                </Text>
 
                 <CustomButton
                     customStyle={styles.button}

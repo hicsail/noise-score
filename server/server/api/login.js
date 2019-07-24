@@ -96,6 +96,7 @@ internals.applyRoutes = function (server, next) {
             }
 
             request.cookieAuth.set(session);
+            request.cookieAuth.ttl(1000 * 60 * 60 * 24 * 14);
             return reply(session);
           });
         }
@@ -307,6 +308,7 @@ internals.applyRoutes = function (server, next) {
       pre: [{
         assign: 'user',
         method: function (request, reply) {
+
           const conditions = {
             email: request.payload.email,
             'resetPassword.expires': { $gt: Date.now() }
@@ -319,7 +321,7 @@ internals.applyRoutes = function (server, next) {
             }
 
             if (!user) {
-              return reply(Boom.badRequest('Invalid email or key - user not found.'));
+              return reply(Boom.badRequest('Invalid email or key.'));
             }
 
             reply(user);

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, Alert, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TextInput, View, ScrollView, Alert, TouchableOpacity} from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Keychain from "react-native-keychain";
@@ -85,7 +85,7 @@ export default class TermsConditions extends React.Component {
                     <ScrollView>
 
                         <View style={styles.wrapper}>
-
+                            <TextInput multiline editable={false}>
                             <Text style={styles.text}>
 
                                 <Text style={styles.h1}>
@@ -301,6 +301,7 @@ export default class TermsConditions extends React.Component {
                                 When you download and use the app, you will be asked to read our terms and conditions
                                 and agree with them. If you do not agree with the terms of this Privacy Policy, please
                                 do not access or use the App.
+                                {'\n\n'}
                                 It is your decision whether to participate in this study and you may choose to stop
                                 using the App at any time. The Lab is conducting this research to gather a deeper
                                 understanding about your thoughts, feelings, and behaviors about the sounds you
@@ -389,7 +390,7 @@ export default class TermsConditions extends React.Component {
                                 {'\n'} • Publishing results in a medical book or journal.
                                 {'\n'} • Adding results to a Federal government database.
                                 {'\n'} • Using research data in future studies, done by us or by other scientists.
-                                {'\n'}
+                                {'\n\n'}
                                 Like most smartphone applications, the App uses third-party entities, such as hosting
                                 companies or technology platforms, to facilitate the App. These third-party entities
                                 track Internet services and record the data in log files. The log files include
@@ -470,9 +471,8 @@ export default class TermsConditions extends React.Component {
                                 subject. You should also call or email if you want to talk to someone who is not part of
                                 the
                                 study about your questions, concerns, or problems.
-
-
                             </Text>
+                            </TextInput>
                         </View>
                     </ScrollView>
                     <View style={{flexGrow: 1, position: 'relative', bottom: 0}}>
