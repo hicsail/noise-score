@@ -65,16 +65,17 @@ class User extends MongoModels {
             commuting: form[9][0],
             schoolWork: form[9][1],
             home: form[9][2],
-            sleeping: form[9][4],
-            errands: form[9][5]
+            sleeping: form[9][3],
+            errands: form[10][4],
+            physical: form[9][5]
           },
           weekend : {
             commuting: form[10][0],
             schoolWork: form[10][1],
             home: form[10][2],
             sleeping: form[10][3],
-            physical: form[10][4],
-            errands: form[10][5]
+            errands: form[10][4],
+            physical: form[9][5]
           }
 
         };
@@ -219,20 +220,20 @@ User.schema = Joi.object({
   health : Joi.string(),
   year: Joi.string(),
   weekday : {
-    commuting: Joi.string(),
-    schoolWork: Joi.string(),
-    home : Joi.string(),
-    sleeping: Joi.string(),
-    physical : Joi.string(),
-    errands: Joi.string()
+    commuting: Joi.number(),
+    schoolWork: Joi.number(),
+    home : Joi.number(),
+    sleeping: Joi.number(),
+    physical : Joi.number(),
+    errands: Joi.number()
   },
   weekend : {
-    commuting: Joi.string(),
-    schoolWork: Joi.string(),
-    home : Joi.string(),
-    sleeping: Joi.string(),
-    physical : Joi.string(),
-    errands: Joi.string()
+    commuting: Joi.number(),
+    schoolWork: Joi.number(),
+    home : Joi.number(),
+    sleeping: Joi.number(),
+    physical : Joi.number(),
+    errands: Joi.number()
   }
 });
 
@@ -252,20 +253,20 @@ User.payload = Joi.object({
   health : Joi.string(),
   year: Joi.string(),
   weekday : {
-    commuting: Joi.string(),
-    schoolWork: Joi.string(),
-    home : Joi.string(),
-    sleeping: Joi.string(),
-    physical : Joi.string(),
-    errands: Joi.string()
+    commuting: Joi.number(),
+    schoolWork: Joi.number(),
+    home : Joi.number(),
+    sleeping: Joi.number(),
+    physical : Joi.number(),
+    errands: Joi.number()
   },
   weekend : {
-    commuting: Joi.string(),
-    schoolWork: Joi.string(),
-    home : Joi.string(),
-    sleeping: Joi.string(),
-    physical : Joi.string(),
-    errands: Joi.string()
+    commuting: Joi.number(),
+    schoolWork: Joi.number(),
+    home : Joi.number(),
+    sleeping: Joi.number(),
+    physical : Joi.number(),
+    errands: Joi.number()
   }
 });
 

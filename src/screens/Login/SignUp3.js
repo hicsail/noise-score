@@ -40,8 +40,10 @@ export default class AccountScreen extends React.Component {
         AsyncStorage.getItem('formData', null).then(function (ret) {
             let response = JSON.parse(ret);
 
-            let weekdayArray = [this.state.weekdayCommuting, this.state.weekdayActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekdayRunning];
-            let weekendArray = [this.state.weekendCommuting, this.state.weekendActivities, this.state.weekdayHome, this.state.weekdaySleeping, this.state.weekendRunning];
+            let weekdayArray = [this.state.weekdayCommuting, this.state.weekdayActivities, this.state.weekdayHome,
+                this.state.weekdaySleeping, this.state.weekdayRunning, this.state.weekdayPhysical];
+            let weekendArray = [this.state.weekendCommuting, this.state.weekendActivities, this.state.weekdayHome,
+                this.state.weekdaySleeping, this.state.weekendRunning, this.state.weekendPhysical];
             response['weekday'] = weekdayArray;
             response['weekend'] = weekendArray;
 

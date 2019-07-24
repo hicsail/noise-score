@@ -13,20 +13,20 @@
             <table id="userTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
               <thead>
               <tr>
+
+
                 <th>Name</th>
                 <th>Username</th>
                 <th>Email</th>
-                <th>Year</th>
+                <th>Year Born</th>
                 <th>Ethnicity</th>
-                <th>Pronouns</th>
-                <th>Sensitive</th>
-                <th>Home</th>
-                <th>Community</th>
-                <th>Work</th>
-                <th>Health</th>
-                <th>Year</th>
-                <th>Weekday</th>
-                <th>Weekend</th>
+                <th>Sensitivity</th>
+                <th>Home Noise</th>
+                <th>Community Noise</th>
+                <th>Work Noise</th>
+                <th>Health Status</th>
+                <th>Weekday Percentages</th>
+                <th>Weekend Percentages</th>
                 <th>StudyID</th>
                 <th>Joined Study</th>
                 <th>Users Events</th>
@@ -58,12 +58,12 @@
       lengthChange: false,
       dom: 'Bfrtip',
       buttons: [
-        'copy', 'csv', 'excel', 'pdf', 'print','colvis'
+        'copy', 'csv', 'excel', 'pdf', 'print', 'colvis'
       ],
       ajax: {
         url: "/api/table/users",
         data: function (d) {
-          d.fields = "name username email year ethnicity pronouns sensitive home community work health year weekday weekend studyID timeCreated";
+          d.fields = "name username email ethnicity year sensitive home community work health weekday weekend studyID timeCreated";
         }
       },
       "columns": [
@@ -80,9 +80,67 @@
           defaultContent: ""
         },
         {
+          data: "year",
+          defaultContent: ""
+        },
+        {
           data: "ethnicity",
           defaultContent: ""
-         },
+        },
+        {
+          data: "sensitive",
+          defaultContent: ""
+        },
+        {
+          data: "home",
+          defaultContent: ""
+        },
+        {
+          data: "community",
+          defaultContent: ""
+        },
+        {
+          data: "work",
+          defaultContent: ""
+        },
+        {
+          data: "health",
+          defaultContent: ""
+        },
+        {
+          data: 'weekday',
+          defaultContent: '',
+          render: function (data, type, row) {
+            if (data !== undefined) {
+              return '<span>' +
+                'Commuting:' + data['commuting'] + '\n' +
+                'School/Work:' + data['schoolWork'] + '\n' +
+                'Home:' + data['home'] + '\n' +
+                'Sleeping:' + data['sleeping'] + '\n' +
+                'Physical:' + data['physical'] + '\n' +
+                'Errands:' + data['errands'] +
+                '</span>';
+            }
+            return '<span></span>';
+          }
+        },
+        {
+          data: 'weekend',
+          defaultContent: '',
+          render: function (data, type, row) {
+            if (data !== undefined) {
+              return '<span>' +
+                'Commuting:' + data['commuting'] + '\n' +
+                'School/Work:' + data['schoolWork'] + '\n' +
+                'Home:' + data['home'] + '\n' +
+                'Sleeping:' + data['sleeping'] + '\n' +
+                'Physical:' + data['physical'] + '\n' +
+                'Errands:' + data['errands'] +
+                '</span>';
+            }
+            return '<span></span>';
+          }
+        },
         {
           data: "studyID",
           render: function (data, type, row) {
@@ -128,14 +186,14 @@
           {
             data: "_id",
             render: function (data, type, row) {
-              return '<button class="btn btn-secondary" id="edit'+row._id+'" onclick="editDoc(\'' + row._id + '\')">Edit</button>';
+              return '<button class="btn btn-secondary" id="edit' + row._id + '" onclick="editDoc(\'' + row._id + '\')">Edit</button>';
             },
             visible: false
           },
           {
             data: "_id",
             render: function (data, type, row) {
-              return '<button class="btn btn-danger" id="delete'+row._id+'" onclick="deleteDoc(\'' + row._id + '\')">Delete</button>';
+              return '<button class="btn btn-danger" id="delete' + row._id + '" onclick="deleteDoc(\'' + row._id + '\')">Delete</button>';
             },
             visible: false
           }

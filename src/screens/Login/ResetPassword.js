@@ -8,6 +8,7 @@ import axios from "axios";
 import CustomButton from "../../Base/CustomButton";
 import {IP_ADDRESS} from "../../components/constants";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import SignUp from "./SignUp";
 
 export default class ResetPassword extends React.Component {
 
@@ -24,16 +25,29 @@ export default class ResetPassword extends React.Component {
     }
 
     checkEmpty() {
+
         if (this.state.key === '') {
             this.simpleAlert("Recovery key not filled", "Please fill the recovery key sent to your email");
             return false;
-        } else if (this.state.email === '') {
+        }
+
+        if (this.state.email === '') {
             this.simpleAlert("Email address not filled", "Please fill your email address");
             return false;
-        } else if (this.state.password === '') {
+        }
+
+        if (this.state.password === '') {
             this.simpleAlert("Password not filled", "Please fill your password");
             return false;
-        } else if (this.state.confirmPassword === '') {
+        }
+        else {
+            if (SignUp.passStrength(this.state.password) !== ''){
+                this.simpleAlert('Invalid password.', 'Use at least 3 of capital, lower, numbers, symbol.');
+                return false;
+            }
+        }
+
+        if (this.state.confirmPassword === '') {
             this.simpleAlert("Confirm password not filled", "Please confirm your password",);
             return false;
         }
@@ -45,7 +59,7 @@ export default class ResetPassword extends React.Component {
     PassCheck() {
         let result = true;
         if (this.state.password !== this.state.confirmPassword) {
-            this.simpleAlert("Passwords don't match", "Passwords inputed are not the same, try again");
+            this.simpleAlert("Passwords don't match", "Passwords are not the same, try again");
             result = false;
         }
         //axios post for complexity
@@ -67,9 +81,9 @@ export default class ResetPassword extends React.Component {
             if (this.PassCheck()) {
 
                 const userCredentials = {
-                    key: this.state.key,
-                    email: this.state.email,
-                    password: this.state.password
+                    key: this.state.key.replace(' ',''),
+                    email: this.state.email.replace(' ',''),
+                    password: this.state.password.replace(' ',''),
                 };
 
                 //axios post for reset password
@@ -79,8 +93,6 @@ export default class ResetPassword extends React.Component {
                         navigate("SignIn");
                     }).catch(function (error) {
                         alert("Invalid key or email.  Please try again.");
-                        console.log("THE ERROR:");
-                        console.log("*********************\n\n\n" + error + "****************\n\n\n");
                     });
             }
         }
