@@ -98,7 +98,8 @@ internals.applyRoutes = function (server, next) {
           var ret = "";
           ///const pushFrequencyArray = ["hour", "day", "week", "month", "never"];
           const pronounsArray = ["He/His", "She/Her", "They/Them", "undefined"];
-          const ethnicityArray =  ["Asian", "Black/African", "African American Descendant of Slavery", "Caucasian", "Hispanic/Latinx", "Pacific Islander", "Other", "undefined"];
+          //const ethnicityArray = ["Asian", "Black/African", "African American Descendant of Slavery", "Caucasian",
+          // "Hispanic/Latinx", "Pacific Islander", "Other", "undefined"];
           const sensitiveArray = ["Not at all", "Very Little", "A Little", "Moderately", "Severely"];
           const homeArray = ["Very quiet", "Quiet", "Neutral", "Loud", "Very Loud"];
           const communityArray = ["Very quiet", "Quiet", "Neutral", "Loud", "Very Loud"];
@@ -108,9 +109,9 @@ internals.applyRoutes = function (server, next) {
           if (!pronounsArray.includes(request.payload.pronouns)) {
             ret = ret + " + Problem with pronouns";
           }
-          if (!ethnicityArray.includes(request.payload.ethnicity)) {
-            ret = ret + " + Problem with ethnicity";
-          }
+          //if (!ethnicityArray.includes(request.payload.ethnicity)) {
+          //  ret = ret + " + Problem with ethnicity";
+          //}
           if (!sensitiveArray.includes(request.payload.sensitive)) {
             ret = ret + " + Problem with sensitive";
           }
@@ -139,7 +140,6 @@ internals.applyRoutes = function (server, next) {
           }
 
 
-
         }
       }]
     },
@@ -161,7 +161,7 @@ internals.applyRoutes = function (server, next) {
           const home = request.payload.home;
           const community = request.payload.community;
           const work = request.payload.work;
-          const health = request.payload.work;
+          const health = request.payload.health;
           const year = request.payload.year;
           // Weekday and Weekend are Arrays
           const weekday = request.payload.weekday;
