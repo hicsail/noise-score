@@ -110,8 +110,8 @@ android {
         applicationId "com.noisescore"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10
-        versionName "10.0"
+        versionCode 11
+        versionName "2.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
