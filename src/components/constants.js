@@ -63,7 +63,7 @@ const  requestPermission = () => {
 export const getCoordinates = () => {
     return requestPermission().then(ok => {
         return new Promise((resolve, reject) => {
-            const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:5000}
+            const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:20000}
                 : {enableHighAccuracy:true,timeout:5000,maximumAge:2000};
             global.navigator.geolocation.getCurrentPosition(resolve, reject, options)
         })
