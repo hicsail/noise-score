@@ -1,5 +1,5 @@
 
-
+import Geolocation from 'react-native-geolocation-service';
 
 export const NOISE_SOURCES = [
 
@@ -65,7 +65,7 @@ export const getCoordinates = () => {
         return new Promise((resolve, reject) => {
             const options = Platform.OS === 'android' ? {enableHighAccuracy:true,timeout:20000}
                 : {enableHighAccuracy:true,timeout:5000,maximumAge:2000};
-            global.navigator.geolocation.getCurrentPosition(resolve, reject, options)
+            Geolocation.getCurrentPosition(resolve, reject, options)
         })
     })
 };

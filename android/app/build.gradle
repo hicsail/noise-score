@@ -110,8 +110,8 @@ android {
         applicationId "com.noisescore"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 11
-        versionName "2.0"
+        versionCode 12
+        versionName "2.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -162,6 +162,7 @@ android {
 configurations.all {exclude group: 'com.android.support', module: 'support-v4'}
 
 dependencies {
+    implementation project(':react-native-geolocation-service')
     implementation project(':react-native-keychain')
     implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-svg')
@@ -179,7 +180,7 @@ dependencies {
     //implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-maps')
-//    implementation "org.osmdroid:osmdroid-android:${project.osmdroidVersion}"
+
 }
 
 // Run this once to be able to run the application with BUCK

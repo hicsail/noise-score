@@ -357,7 +357,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: "100%",
         paddingHorizontal: 30,
-        paddingBottom: 20,
 
     },
 
@@ -395,7 +394,7 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 5,
         justifyContent: 'center',
-
+        marginBottom: 20
     },
 
 

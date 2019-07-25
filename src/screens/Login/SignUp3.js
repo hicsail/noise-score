@@ -131,6 +131,7 @@ export default class AccountScreen extends React.Component {
                                 </Text>
 
                                 <Slider
+                                    step={step}
                                     style={{ width: '90%', }}
                                     maximumValue={100}
                                     maximumTrackTintColor={darkGray}

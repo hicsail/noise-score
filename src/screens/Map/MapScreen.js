@@ -7,6 +7,7 @@ import { Text, List } from 'react-native-elements';
 import SearchBar from 'react-native-searchbar'
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
+import Geolocation from 'react-native-geolocation-service';
 
 import {Alert} from "react-native";
 
@@ -43,7 +44,7 @@ export default class MapScreen extends React.Component {
 
         // TODO - is this necessary for IOS?
         if (Platform.OS === "ios") {
-            navigator.geolocation.requestAuthorization();
+            Geolocation.requestAuthorization();
         }
 
         // this.requestCameraPermission().done();
