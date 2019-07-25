@@ -73,6 +73,7 @@
 		3046435321EE5DDB001C39D4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3046435221EE5DDB001C39D4 /* SystemConfiguration.framework */; };
 		3046435521EE5DE0001C39D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3046435421EE5DE0001C39D4 /* UIKit.framework */; };
 		304A315722B9614100089B24 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 304A315622B9614100089B24 /* JavaScriptCore.framework */; };
+		305BA00322EA177A005E6F26 /* libRNCGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 305B9FF922EA170A005E6F26 /* libRNCGeolocation.a */; };
 		3091005A21EE4D0900B6BAC8 /* AIRDummyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3091000521EE4D0900B6BAC8 /* AIRDummyView.m */; };
 		3091005B21EE4D0900B6BAC8 /* AIRGoogleMapUrlTile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3091000721EE4D0900B6BAC8 /* AIRGoogleMapUrlTile.m */; };
 		3091005C21EE4D0900B6BAC8 /* AIRGoogleMapPolygonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3091000A21EE4D0900B6BAC8 /* AIRGoogleMapPolygonManager.m */; };
@@ -306,6 +307,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 83CBBA2D1A601D0E00E9B192;
 			remoteInfo = React;
+		};
+		305B9FF822EA170A005E6F26 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 305B9FCE22EA170A005E6F26 /* RNCGeolocation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNCGeolocation;
 		};
 		308257D522BE48CE00D2E9BE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -561,6 +569,7 @@
 		3046435221EE5DDB001C39D4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3046435421EE5DE0001C39D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		304A315622B9614100089B24 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		305B9FCE22EA170A005E6F26 /* RNCGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCGeolocation.xcodeproj; path = "../node_modules/@react-native-community/geolocation/ios/RNCGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		308257D122BE48CD00D2E9BE /* AirMaps.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
 		3091000521EE4D0900B6BAC8 /* AIRDummyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIRDummyView.m; sourceTree = "<group>"; };
 		3091000621EE4D0900B6BAC8 /* AIRGoogleMapPolyline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIRGoogleMapPolyline.h; sourceTree = "<group>"; };
@@ -696,6 +705,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				305BA00322EA177A005E6F26 /* libRNCGeolocation.a in Frameworks */,
 				302915A622CD2E7300F4F95B /* MapKit.framework in Frameworks */,
 				30C9184C22BFD164006C3837 /* libRCTGeolocation.a in Frameworks */,
 				30C9184B22BFD100006C3837 /* Accelerate.framework in Frameworks */,
@@ -944,6 +954,14 @@
 			path = "../node_modules/react-native-vector-icons/Fonts";
 			sourceTree = "<group>";
 		};
+		305B9FCF22EA170A005E6F26 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				305B9FF922EA170A005E6F26 /* libRNCGeolocation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		308257D222BE48CD00D2E9BE /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1155,6 +1173,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				305B9FCE22EA170A005E6F26 /* RNCGeolocation.xcodeproj */,
 				308257D122BE48CD00D2E9BE /* AirMaps.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -1404,6 +1423,10 @@
 					ProjectRef = EA4255E3ED864CE0B6C552CA /* RNCAsyncStorage.xcodeproj */;
 				},
 				{
+					ProductGroup = 305B9FCF22EA170A005E6F26 /* Products */;
+					ProjectRef = 305B9FCE22EA170A005E6F26 /* RNCGeolocation.xcodeproj */;
+				},
+				{
 					ProductGroup = 30D4CE1E21EE326900F291C8 /* Products */;
 					ProjectRef = 54305CB197CC48119A57DED5 /* RNGestureHandler.xcodeproj */;
 				},
@@ -1583,6 +1606,13 @@
 			fileType = archive.ar;
 			path = "libjsiexecutor-tvOS.a";
 			remoteRef = 3047365422BE3B4500216CF3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		305B9FF922EA170A005E6F26 /* libRNCGeolocation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCGeolocation.a;
+			remoteRef = 305B9FF822EA170A005E6F26 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		308257D622BE48CE00D2E9BE /* libAirMaps.a */ = {
