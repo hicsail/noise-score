@@ -1,9 +1,9 @@
 import React from 'react';
-import { Platform, StyleSheet, Image, View, TouchableHighlight } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { Marker, Callout, Overlay, LocalTile } from 'react-native-maps';
+import {Platform, StyleSheet, Image, View, TouchableHighlight} from 'react-native';
+import MapView, {PROVIDER_GOOGLE, Circle} from 'react-native-maps';
+import {Marker, Callout, Overlay, LocalTile} from 'react-native-maps';
 import axios from "axios";
-import { Text, List } from 'react-native-elements';
+import {Text, List} from 'react-native-elements';
 import SearchBar from 'react-native-searchbar'
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
@@ -14,6 +14,8 @@ import {Alert} from "react-native";
 const currentLocationImage = require('./mapMarker3.png');
 import {getCoordinates} from "../../components/constants";
 import {IP_ADDRESS} from "../../components/constants";
+import WebView from "react-native-webview";
+import CustomButton from "../../Base/CustomButton";
 
 export default class MapScreen extends React.Component {
     constructor(props) {
@@ -29,6 +31,7 @@ export default class MapScreen extends React.Component {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             },
+            toggled: true,
             points: [],
             authHeader: "",
             pathTemplate: './../../../assets/greenBox.png',
@@ -51,14 +54,16 @@ export default class MapScreen extends React.Component {
 
         getCoordinates().then(position => {
             // const coordinates = position.coords.latitude+','+position.coords.longitude;
-            this.setState({region: {
+            this.setState({
+                region: {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
-                },})
+                },
+            })
         }).catch(error => {
-            Alert.alert('','Please allow NoiseScore to access your location.')
+            Alert.alert('', 'Please allow NoiseScore to access your location.')
         });
 
         // THIS WORKS FOR ANDROID - uncomment out marker in render
@@ -130,8 +135,7 @@ export default class MapScreen extends React.Component {
         try {
             await AsyncStorage.removeItem(key);
             return true;
-        }
-        catch (exception) {
+        } catch (exception) {
             return false;
         }
     }
@@ -212,6 +216,7 @@ export default class MapScreen extends React.Component {
         // The iterator used to generate what is displayed for the data.
         // It will create Marker objects (as a Callout) and append them to the render
 
+
         if (data != null) {
             return data.map((data) => {
                 var id = data['id'].toString();
@@ -256,7 +261,7 @@ export default class MapScreen extends React.Component {
 
         const map = this.mapView;
         const query = this.state.query;
-        if (this.state.query != "") {
+        if (this.state.query !== "") {
             AsyncStorage.getItem('userData').then(function (ret) {
                 if (ret) {
                     var response = JSON.parse(ret);
@@ -318,47 +323,85 @@ export default class MapScreen extends React.Component {
         // this.searchBar.show();
     }
 
+    passValues() {
+
+        // AsyncStorage.getItem('userData').then(function (ret) {
+        //     if (ret) {
+        //         var response = JSON.parse(ret);
+        //         var authHeader = response['authHeader'];
+        //         const header = {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': authHeader
+        //         };
+        //
+        //         axios.get('http://' + constants.IP_ADDRESS + '/api/allMeasurements', {
+        //             headers: header,
+        //             params: {}
+        //         }).then(function (ret) {
+        //             self.setState({
+        //                 points: ret['data']
+        //             });
+        //
+        //             // this.generateData(self);
+        //         }).catch(function (error) {
+        //             alert(error);
+        //         });
+        //     }
+        // });
+        console.log(JSON.stringify("this state 1 is : ", this.state));
+        let temp = JSON.stringify(this.state);
+        console.log("this state 2 is :", temp);
+        this.refs.webview.postMessage(temp);
+    }
+
+
     render() {
         var iterator = this.generateMarkers(this.state.markers);
-
 
         return (
 
             <View style={styles.container}>
-                <MapView
-                    ref={ref => {
-                        this.mapView = ref;
-                    }}
+                <View style={{position: 'absolute', top: 10, left: 10, zIndex: 1000}}>
+                    <CustomButton text={'Toggle heatmap'} onPress={() => this.passValues()}/>
+                </View>
+                <View style={{flex: 1}}>
+                    <MapView
+                        ref={ref => {
+                            this.mapView = ref;
+                        }}
 
-                    style={styles.mapView}
-                    //provider={"google"} // remove if not using Google Maps
-                    provider={PROVIDER_GOOGLE}
+                        style={styles.mapView}
+                        //provider={"google"} // remove if not using Google Maps
+                        provider={PROVIDER_GOOGLE}
 
-                    // style={styles.map}
-                    // provider={Platform.OS === 'ios' ? null : 'osmdroid'}
-                    region={this.state.region}
-                    moveOnMarkerPress={true}
-                    showsUserLocation={true}
-                    showsCompass={true}
-                    showsPointsOfInterest={true}
-                    // onPress={() => this.searchBarHandler()}
-                >
-                    {iterator}
+                        // style={styles.map}
+                        // provider={Platform.OS === 'ios' ? null : 'osmdroid'}
+                        region={this.state.region}
+                        moveOnMarkerPress={true}
+                        showsUserLocation={true}
+                        showsCompass={true}
+                        showsPointsOfInterest={true}
+                        // onPress={() => this.searchBarHandler()}
+                    >
+                        {iterator}
 
-                    {/*Marker to show users location in Android*/}
-                    {/*Comment out when using on IOS */}
-                    {/*<Marker*/}
-                    {/*key={-1}*/}
-                    {/*coordinate={{*/}
-                    {/*latitude: this.state.region['latitude'],*/}
-                    {/*longitude: this.state.region['longitude']*/}
-                    {/*}}*/}
-                    {/*tracksViewChanges={false}*/}
-                    {/*image={currentLocationImage}*/}
-                    {/*/>*/}
-
-                </MapView>
-
+                        {/*Marker to show users location in Android*/}
+                        {/*Comment out when using on IOS */}
+                        {/*<Marker*/}
+                        {/*key={-1}*/}
+                        {/*coordinate={{*/}
+                        {/*latitude: this.state.region['latitude'],*/}
+                        {/*longitude: this.state.region['longitude']*/}
+                        {/*}}*/}
+                        {/*tracksViewChanges={false}*/}
+                        {/*image={currentLocationImage}*/}
+                        {/*/>*/}
+                        <Circle center={{
+                            latitude: 37.422,
+                            longitude: -122.084,
+                        }} radius={20000}/>
+                    </MapView>
+                </View>
                 {/*------------- Search bar funcionality - will incure costs to our PI if used -------------*/}
                 {/*<SearchBar*/}
                 {/*ref={(ref) => this.searchBar = ref}*/}
@@ -366,6 +409,12 @@ export default class MapScreen extends React.Component {
                 {/*showOnLoad*/}
                 {/*onSubmitEditing={() => this.searchDriver()}*/}
                 {/*/>*/}
+
+                <View style={[{flex: 1,}, this.state.toggled ? {} : {display: 'none'}]}>
+                    <WebView ref="webview"
+                             onLoadEnd={() => this.passValues()}
+                             source={{uri: 'file:///android_asset/heatmap.html'}}/>
+                </View>
 
             </View>
 
