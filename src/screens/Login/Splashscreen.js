@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, View } from "react-native";
+import {Image, Platform, View} from "react-native";
 
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from "axios";
@@ -17,7 +17,7 @@ export default class Splashscreen extends React.Component {
                 () => {
                     resolve(this.AuthenticateUser());
                 },
-                2000
+                1000
             )
         )
     };
@@ -83,34 +83,41 @@ export default class Splashscreen extends React.Component {
 
     render() {
         return (
-            <View style={styles.viewStyles}>
-                <View style={{ flex: 1, justifyContent: 'center' }}>
+            Platform.OS === 'ios' ?
+                <View style={{flex: 1, alignItems: 'center', justifyContent:'center'}}>
                     <Image
-                        source={require('../../../assets/splash-logo-transp.png')}
-                        style={{
-                            flex: 1,
-                            alignSelf: 'center',
-                            resizeMode: 'contain',
-                            width: width - 40,
-                            // backgroundColor:'red'
-                            // height: undefined,
-                        }}
-                    />
+                        source={require('../../../assets/ajax-loader.gif')}/>
                 </View>
-                <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                    <Image
-                        source={require('../../../assets/splash-image-transparent.png')}
-                        style={{
-                            flex: 1,
-                            alignSelf: 'center',
-                            resizeMode: 'contain',
-                            width: width - 40,
-                            // backgroundColor:'red'
-                            // height: undefined,
-                        }}
-                    />
+
+                :
+                <View style={styles.viewStyles}>
+                    <View style={{flex: 1, justifyContent: 'center'}}>
+                        <Image
+                            source={require('../../../assets/splash-logo-transp.png')}
+                            style={{
+                                flex: 1,
+                                alignSelf: 'center',
+                                resizeMode: 'contain',
+                                width: width - 40,
+                                // backgroundColor:'red'
+                                // height: undefined,
+                            }}
+                        />
+                    </View>
+                    <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                        <Image
+                            source={require('../../../assets/splash-image-transparent.png')}
+                            style={{
+                                flex: 1,
+                                alignSelf: 'center',
+                                resizeMode: 'contain',
+                                width: width - 40,
+                                // backgroundColor:'red'
+                                // height: undefined,
+                            }}
+                        />
+                    </View>
                 </View>
-            </View>
         );
     }
 }

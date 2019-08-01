@@ -8,14 +8,19 @@ import SearchBar from 'react-native-searchbar'
 import AsyncStorage from '@react-native-community/async-storage';
 import * as constants from '../../components/constants';
 import Geolocation from 'react-native-geolocation-service';
+import {FloatingAction} from "react-native-floating-action";
+import ToggleSwitch from 'toggle-switch-react-native'
 
 import {Alert} from "react-native";
 
 const currentLocationImage = require('./mapMarker3.png');
 import {getCoordinates} from "../../components/constants";
-import {IP_ADDRESS} from "../../components/constants";
+import {IP_ADDRESS, brightGreen} from "../../components/constants";
 import WebView from "react-native-webview";
 import CustomButton from "../../Base/CustomButton";
+import {width} from "../../components/constants";
+import Icon from "react-native-vector-icons/FontAwesome";
+
 
 export default class MapScreen extends React.Component {
     constructor(props) {
@@ -23,15 +28,20 @@ export default class MapScreen extends React.Component {
         super(props);
 
 
+        this.default = {
+            latitude: 42.361145,
+            longitude: -71.057083,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        };
+
         this.state = {
+            // actions: actions,
             markers: [],
-            region: {
-                latitude: 42.361145,
-                longitude: -71.057083,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            },
-            toggled: true,
+            heatmapData: [],
+            region: null,
+            toggled: false,
+            toggle: 'dbs',
             points: [],
             authHeader: "",
             pathTemplate: './../../../assets/greenBox.png',
@@ -54,14 +64,17 @@ export default class MapScreen extends React.Component {
 
         getCoordinates().then(position => {
             // const coordinates = position.coords.latitude+','+position.coords.longitude;
-            this.setState({
-                region: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                },
-            })
+            if (this.state.region === null) {
+                console.log('true')
+                this.setState({
+                    region: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    },
+                })
+            }
         }).catch(error => {
             Alert.alert('', 'Please allow NoiseScore to access your location.')
         });
@@ -98,46 +111,37 @@ export default class MapScreen extends React.Component {
         this.updateMarkers();
         // this.getHeatMapPoints();
 
-    }
+        this.passValues2().done();
 
-    // getHeatMapPoints() {
-    //     // Function that can be used to make a call 'allMeasurement'
-    //     // Could be used to help with the heatmap
-    //     // Currently unused
-    //
-    //     var self = this;
-    //
-    //     AsyncStorage.getItem('userData').then(function (ret) {
-    //         if (ret) {
-    //             var response = JSON.parse(ret);
-    //             var authHeader = response['authHeader'];
-    //             const header = {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': authHeader
-    //             };
-    //
-    //             axios.get('http://' + constants.IP_ADDRESS + '/api/allMeasurements', {
-    //                 headers: header,
-    //                 params: {}
-    //             }).then(function (ret) {
-    //                 self.setState({
-    //                     points: ret['data']
-    //                 })
-    //                 // this.generateData(self);
-    //             }).catch(function (error) {
-    //                 alert(error);
-    //             });
-    //         }
-    //     });
-    // }
+        // if (this.state.region === null) {
+        //     this.setState({region: this.default})
+        // }
+    }
 
     async removeItemValue(key) {
         try {
             await AsyncStorage.removeItem(key);
             return true;
-        } catch (exception) {
+        }
+        catch (exception) {
             return false;
         }
+    }
+
+    evalFeelWeight(feelWeight) {
+        switch (feelWeight.toLowerCase()) {
+            case 'very quiet':
+                return 1;
+            case 'quiet':
+                return 3;
+            case 'moderately loud':
+                return 5;
+            case 'loud':
+                return 7;
+            case 'very loud':
+                return 9;
+        }
+        return 1;
     }
 
     updateMarkers() {
@@ -146,6 +150,8 @@ export default class MapScreen extends React.Component {
 
         var self = this;
         var newMarkers = [];
+        let heatData = [];
+        let thisRef = this;
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
@@ -170,6 +176,8 @@ export default class MapScreen extends React.Component {
                 }).then(function (ret) {
                     var dateFormat = require('dateformat');
                     for (var i = 0; i < ret['data'].length; i++) {
+                        // console.log("Return data is : \n\n ", ret['data']);
+
                         newMarkers = newMarkers.concat([
                             {
                                 latlng: {
@@ -179,12 +187,23 @@ export default class MapScreen extends React.Component {
                                 title: ret['data'][i]['rawData']['average'],
                                 date: dateFormat(ret['data'][i]['date'], "yyyy-mmm-d h:MM TT"),
                                 id: ret['data'][i]['_id'],
-                                majorSources: ret['data'][i]['sources']
+                                majorSources: ret['data'][i]['sources'],
+                                avg: ret['data'][i]['rawData']['average']
+                            }
+                        ]);
+
+                        heatData = heatData.concat([
+                            {
+                                lat: ret['data'][i]['location']['lat'],
+                                lang: ret['data'][i]['location']['lang'],
+                                feelWeight: thisRef.evalFeelWeight(ret['data'][i]['loud']),
+                                dbWeight: ret['data'][i]['rawData']['average']
                             }
                         ]);
                     }
                     self.setState({
-                        markers: newMarkers
+                        markers: newMarkers,
+                        heatmapData: heatData
                     })
                 }).catch(function (error) {
                     if (error.response.status == 500) {
@@ -199,7 +218,8 @@ export default class MapScreen extends React.Component {
                                         alert("Something went wrong!");
                                     });
 
-                            } else {
+                            }
+                            else {
                                 this.props.navigation("SignedOut");
                             }
                         });
@@ -224,7 +244,8 @@ export default class MapScreen extends React.Component {
                 var majorSources;
                 if (data['majorSources'].length > 3) {
                     majorSources = "Major Sources: " + data['majorSources'][0] + "," + data['majorSources'][1] + "," + data['majorSources'][2]
-                } else {
+                }
+                else {
                     majorSources = "Major Sources: " + data['majorSources'];
                 }
                 var decibels = "Decibels: " + data['title'].toString();
@@ -323,6 +344,25 @@ export default class MapScreen extends React.Component {
         // this.searchBar.show();
     }
 
+    passValues2 = async () => {
+        try {
+            let userData = await AsyncStorage.getItem('userData');
+            if (userData) {
+                userData = JSON.parse(userData);
+                let authHeader = userData['authHeader'];
+                const header = {
+                    'Content-Type': 'application/json',
+                    'Authorization': authHeader
+                };
+                console.log(header)
+            }
+        }
+        catch {
+
+        }
+
+    };
+
     passValues() {
 
         // AsyncStorage.getItem('userData').then(function (ret) {
@@ -348,23 +388,132 @@ export default class MapScreen extends React.Component {
         //         });
         //     }
         // });
-        console.log(JSON.stringify("this state 1 is : ", this.state));
-        let temp = JSON.stringify(this.state);
+        this.setState({toggled: !this.state.toggled});
+
+        let temp = JSON.stringify({data: this.state.heatmapData, region: this.state.region, toggle: ''});
         console.log("this state 2 is :", temp);
         this.refs.webview.postMessage(temp);
+    }
+
+    toggleValues() {
+        console.log('in here' + this.state.toggle);
+        if (this.state.toggle === 'feel')
+            this.setState({toggle: 'dbs'}, this.refs.webview.postMessage(JSON.stringify({toggle: 'dbs'})));
+        else
+            this.setState({toggle: 'feel'}, this.refs.webview.postMessage(JSON.stringify({toggle: 'feel'})));
+
+    }
+
+    checkToggleCaller(caller) {
+        console.log("hello caller with state ", caller, this.state.toggle);
+        if (caller !== this.state.toggle)
+            this.toggleValues();
     }
 
 
     render() {
         var iterator = this.generateMarkers(this.state.markers);
 
+        const actions2 =
+            [{
+                text: this.state.toggled ? "Measurements" : "Heatmap",
+                icon: <Icon
+                    name={this.state.toggled? 'map-marker' : 'map'}
+                    size={0.05 * width}
+                    color="white"
+                />,
+                name: "toggler",
+                position: 5,
+                color: '#31BD4B'
+            }];
+
+        const label = this.state.toggle === 'feel' ? "Perception" : "Noise level";
+        const typeActions = [
+            // {
+            //     text: this.state.toggle === 'feel' ? "Perception" : "Noise level",
+            //     name: 'type',
+            //     position: 1,
+            //     icon: <Icon
+            //         name={this.state.toggle === 'feel' ? 'comments' : 'volume-up'}
+            //         size={0.05 * width}
+            //         color="white"
+            //     />,
+            //     color: this.state.toggled ? '#31BD4B' : 'gray'
+            // },
+            // {
+            //     name: 'type2',
+            //     position: 2,
+            //     render: props =>
+            //         <View {...props} style={{flexDirection: 'row'}} key={5}>
+            //             <ToggleSwitch
+            //                 isOn={this.state.toggle === 'feel'}
+            //                 onColor='#31BD4B'
+            //                 offColor='#31BD4B'
+            //                 label="DBs"
+            //                 labelStyle={{
+            //                     color: '#444444',
+            //                     backgroundColor: 'white',
+            //                     paddingVertical: 2,
+            //                     paddingHorizontal: 4,
+            //                     borderRadius: 3
+            //                 }}
+            //                 size='medium'
+            //                 onToggle={(isOn) => this.toggleValues()}
+            //             />
+            //             <Text style={{
+            //                 color: '#444444',
+            //                 backgroundColor: 'white',
+            //                 paddingVertical: 2,
+            //                 paddingHorizontal: 4,
+            //                 borderRadius: 3, marginLeft: 5, alignSelf: 'center'
+            //             }}>Perception</Text>
+            //         </View>
+            // },
+            {
+                text: 'Sound level',
+                icon: <Icon
+                    name={'line-chart'}
+                    size={0.05 * width}
+                    color="white"
+                />,
+                name: "dbs",
+                position: 3,
+                color: this.state.toggle !== 'feel' ? '#31BD4B' : 'gray'
+            },
+
+            {
+                text: 'Noise perception',
+                icon: <Icon
+                    name={'comments'}
+                    size={0.05 * width}
+                    color="white"
+                />,
+                name: "feel",
+                position: 4,
+                color: this.state.toggle === 'feel' ? '#31BD4B' : 'gray'
+            }];
+
+
         return (
 
             <View style={styles.container}>
-                <View style={{position: 'absolute', top: 10, left: 10, zIndex: 1000}}>
-                    <CustomButton text={'Toggle heatmap'} onPress={() => this.passValues()}/>
-                </View>
-                <View style={{flex: 1}}>
+                {/*<View style={{position: 'absolute', bottom: 10, left: 10, zIndex: 1000}}>*/}
+                {/*    <CustomButton text={'Toggle heatmap'} onPress={() => this.passValues()}/>*/}
+
+                {/*</View>*/}
+                {/*<View style={[{*/}
+                {/*    position: 'absolute',*/}
+                {/*    bottom: 10,*/}
+                {/*    right: 10,*/}
+                {/*    zIndex: 1000*/}
+                {/*}, this.state.toggled ? {} : {zIndex: -1000}]}>*/}
+                {/*    <CustomButton text={this.state.toggle === 'feel' ? "Noise Perception" : "Sound Level"}*/}
+                {/*                  onPress={() => this.toggleValues()}/>*/}
+                {/*</View>*/}
+
+                <View style={[{flex: 1}, this.state.toggled ? {display: 'none'} : {}]}>
+                    {/*<Text style={styles.example}>Floating Action example</Text>*/}
+
                     <MapView
                         ref={ref => {
                             this.mapView = ref;
@@ -381,7 +530,11 @@ export default class MapScreen extends React.Component {
                         showsUserLocation={true}
                         showsCompass={true}
                         showsPointsOfInterest={true}
+                        showsMyLocationButton={true}
                         // onPress={() => this.searchBarHandler()}
+                        // onRegionChangeComplete={(data) => {
+                        //     this.setState({region: data})
+                        // }}
                     >
                         {iterator}
 
@@ -396,11 +549,8 @@ export default class MapScreen extends React.Component {
                         {/*tracksViewChanges={false}*/}
                         {/*image={currentLocationImage}*/}
                         {/*/>*/}
-                        <Circle center={{
-                            latitude: 37.422,
-                            longitude: -122.084,
-                        }} radius={20000}/>
                     </MapView>
+
                 </View>
                 {/*------------- Search bar funcionality - will incure costs to our PI if used -------------*/}
                 {/*<SearchBar*/}
@@ -412,9 +562,32 @@ export default class MapScreen extends React.Component {
 
                 <View style={[{flex: 1,}, this.state.toggled ? {} : {display: 'none'}]}>
                     <WebView ref="webview"
-                             onLoadEnd={() => this.passValues()}
+                        // onLoadEnd={() => this.passValues()}
                              source={{uri: 'file:///android_asset/heatmap.html'}}/>
                 </View>
+                <FloatingAction
+                    ref={(ref) => {
+                        this.floatingAction = ref;
+                    }}
+                    color={brightGreen}
+                    actions={!this.state.toggled ? actions2 : typeActions.concat(actions2)}
+                    onPressItem={(name) => {
+                        if (name === 'toggler') {
+                            this.passValues();
+                        }
+                        else if (name === 'type ' || 'type2') {
+                            this.toggleValues();
+                        }
+                        else if (name === 'feel' || name === 'dbs') {
+                            console.log("in here 5");
+                            this.checkToggleCaller(name)
+                        }
+                        console.log("the data we got is ", name);
+                        console.log(name === 'feel')
+                    }}
+                    overlayColor={'transparent'}
+                    // floatingIcon={require('../../../assets/mic-white.png')}
+                />
 
             </View>
 
@@ -429,11 +602,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     mapView: {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        position: 'absolute',
+        // left: 0,
+        // right: 0,
+        // top: 0,
+        // bottom: 0,
+        // position: 'absolute',
+        height: '100%',
+        width: '100%',
+        // zIndex:-1,
     },
     calloutHeader: {
         textAlign: 'center',

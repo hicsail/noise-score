@@ -189,14 +189,14 @@ export const root = createStackNavigator({
 let AppNavigator;
 
 // iOS uses LaunchScreen.xib as splashscreen
-if (Platform.OS === 'ios') {
-
-    AppNavigator = createSwitchNavigator({
-        UserLogin: Login,
-        App: home
-    });
-
-} else {
+// if (Platform.OS === 'ios') {
+//
+//     AppNavigator = createSwitchNavigator({
+//         UserLogin: Login,
+//         App: home
+//     });
+//
+// } else {
     AppNavigator = createSwitchNavigator({
             Splash: Splashscreen,
             App: home,
@@ -205,7 +205,7 @@ if (Platform.OS === 'ios') {
         {
             initialRoute: Splashscreen
         });
-}
+// }
 
 
 export default createAppContainer(AppNavigator);
