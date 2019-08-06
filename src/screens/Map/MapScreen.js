@@ -20,6 +20,7 @@ import WebView from "react-native-webview";
 import CustomButton from "../../Base/CustomButton";
 import {width} from "../../components/constants";
 import Icon from "react-native-vector-icons/FontAwesome";
+import {isAndroid} from "../../components/constants";
 
 
 export default class MapScreen extends React.Component {
@@ -79,29 +80,6 @@ export default class MapScreen extends React.Component {
             Alert.alert('', 'Please allow NoiseScore to access your location.')
         });
 
-        // THIS WORKS FOR ANDROID - uncomment out marker in render
-        // navigator.geolocation.getCurrentPosition((position) => {
-        //         let lat = (position.coords.latitude);
-        //         let long = (position.coords.longitude);
-        //
-        //         let initialRegion = {
-        //             latitude: lat,
-        //             longitude: long,
-        //             latitudeDelta: 0.0922,
-        //             longitudeDelta: 0.05,
-        //         };
-        //         map.animateToRegion(initialRegion, 2000);
-        //         this.setState({ region: initialRegion });
-        //     },
-        //           (error) => {
-        //         alert('Error getting location')
-        //     },
-        //     {
-        //         enableHighAccuracy: true, timeout: 20000, maximumAge: 1000
-        //     }
-        // );
-
-
         // Add listeners to update the markers (in the situation that a user takes a new measurements)
         this.subs = [
             this.props.navigation.addListener('willFocus', () => this.updateMarkers()),
@@ -144,6 +122,14 @@ export default class MapScreen extends React.Component {
         return 1;
     }
 
+    getUserData(userInfo) {
+        return axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', data);
+    }
+
+    getHeatmapData(userInfo) {
+        return axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', data);
+    }
+
     updateMarkers() {
         // Update the marker. Make the call to the backend to get the markers as an array data
         // Save the array as a local variable
@@ -155,26 +141,28 @@ export default class MapScreen extends React.Component {
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
-                var username = response['user']['username'];
-                var userID = response['user']['_id'];
 
                 // Now we need to get all their measurement information
-                var params = {
-                    userID: userID,
-                    username: username
+
+                const params = {
+                    userID: response['user']['_id'],
+                    username: response['user']['username']
                 };
-                var authHeader = response['authHeader'];
+
                 const header = {
                     'Content-Type': 'application/json',
-                    'Authorization': authHeader
+                    'Authorization': response['authHeader']
+                };
+
+                let userData = {
+                    headers: header,
+                    params: params
                 };
 
 
-                axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', {
-                    headers: header,
-                    params: params
-                }).then(function (ret) {
+                axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', userData).then(function (ret) {
                     var dateFormat = require('dateformat');
+                    console.log(ret['data'].length);
                     for (var i = 0; i < ret['data'].length; i++) {
                         // console.log("Return data is : \n\n ", ret['data']);
 
@@ -192,15 +180,38 @@ export default class MapScreen extends React.Component {
                             }
                         ]);
 
+
                         heatData = heatData.concat([
                             {
                                 lat: ret['data'][i]['location']['lat'],
                                 lang: ret['data'][i]['location']['lang'],
                                 feelWeight: thisRef.evalFeelWeight(ret['data'][i]['loud']),
-                                dbWeight: ret['data'][i]['rawData']['average']
+                                dbWeight: Math.round(ret['data'][i]['rawData']['average'])
                             }
                         ]);
+
                     }
+                    console.log(heatData);
+
+                    // axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', {
+                    //     headers: header,
+                    //     params: params
+                    // }).then(function (ret2) {
+                    //     for (let i = 0; i < ret2['data'].length; i++) {
+                    //         heatData = heatData.concat(
+                    //             [{
+                    //                 lat: ret2['data'][i]['latitude'],
+                    //                 lang: ret2['data'][i]['longitude'],
+                    //                 feelWeight: 1,
+                    //                 dbWeight: ret2['data'][i]['weight']
+                    //             }]
+                    //         )
+                    //     }
+                    // }).then(function () {
+                    //     thisRef.setState({heatmapData: heatData}, () => console.log(thisRef.state))
+                    // });
+
+
                     self.setState({
                         markers: newMarkers,
                         heatmapData: heatData
@@ -365,29 +376,6 @@ export default class MapScreen extends React.Component {
 
     passValues() {
 
-        // AsyncStorage.getItem('userData').then(function (ret) {
-        //     if (ret) {
-        //         var response = JSON.parse(ret);
-        //         var authHeader = response['authHeader'];
-        //         const header = {
-        //             'Content-Type': 'application/json',
-        //             'Authorization': authHeader
-        //         };
-        //
-        //         axios.get('http://' + constants.IP_ADDRESS + '/api/allMeasurements', {
-        //             headers: header,
-        //             params: {}
-        //         }).then(function (ret) {
-        //             self.setState({
-        //                 points: ret['data']
-        //             });
-        //
-        //             // this.generateData(self);
-        //         }).catch(function (error) {
-        //             alert(error);
-        //         });
-        //     }
-        // });
         this.setState({toggled: !this.state.toggled});
 
         let temp = JSON.stringify({data: this.state.heatmapData, region: this.state.region, toggle: ''});
@@ -418,7 +406,7 @@ export default class MapScreen extends React.Component {
             [{
                 text: this.state.toggled ? "Measurements" : "Heatmap",
                 icon: <Icon
-                    name={this.state.toggled? 'map-marker' : 'map'}
+                    name={this.state.toggled ? 'map-marker' : 'map'}
                     size={0.05 * width}
                     color="white"
                 />,
@@ -429,46 +417,6 @@ export default class MapScreen extends React.Component {
 
         const label = this.state.toggle === 'feel' ? "Perception" : "Noise level";
         const typeActions = [
-            // {
-            //     text: this.state.toggle === 'feel' ? "Perception" : "Noise level",
-            //     name: 'type',
-            //     position: 1,
-            //     icon: <Icon
-            //         name={this.state.toggle === 'feel' ? 'comments' : 'volume-up'}
-            //         size={0.05 * width}
-            //         color="white"
-            //     />,
-            //     color: this.state.toggled ? '#31BD4B' : 'gray'
-            // },
-            // {
-            //     name: 'type2',
-            //     position: 2,
-            //     render: props =>
-            //         <View {...props} style={{flexDirection: 'row'}} key={5}>
-            //             <ToggleSwitch
-            //                 isOn={this.state.toggle === 'feel'}
-            //                 onColor='#31BD4B'
-            //                 offColor='#31BD4B'
-            //                 label="DBs"
-            //                 labelStyle={{
-            //                     color: '#444444',
-            //                     backgroundColor: 'white',
-            //                     paddingVertical: 2,
-            //                     paddingHorizontal: 4,
-            //                     borderRadius: 3
-            //                 }}
-            //                 size='medium'
-            //                 onToggle={(isOn) => this.toggleValues()}
-            //             />
-            //             <Text style={{
-            //                 color: '#444444',
-            //                 backgroundColor: 'white',
-            //                 paddingVertical: 2,
-            //                 paddingHorizontal: 4,
-            //                 borderRadius: 3, marginLeft: 5, alignSelf: 'center'
-            //             }}>Perception</Text>
-            //         </View>
-            // },
             {
                 text: 'Sound level',
                 icon: <Icon
@@ -478,7 +426,7 @@ export default class MapScreen extends React.Component {
                 />,
                 name: "dbs",
                 position: 3,
-                color: this.state.toggle !== 'feel' ? '#31BD4B' : 'gray'
+                color: this.state.toggle === 'feel' ? 'gray' : '#31BD4B'
             },
 
             {
@@ -491,26 +439,22 @@ export default class MapScreen extends React.Component {
                 name: "feel",
                 position: 4,
                 color: this.state.toggle === 'feel' ? '#31BD4B' : 'gray'
+            },
+            {
+                text: 'Filters',
+                icon: <Icon name={'filter'}
+                            size={0.05 * width}
+                            color='white'
+                />,
+                name: 'filters',
+                position: 5,
+                color: '#31BD4B'
             }];
 
 
         return (
 
             <View style={styles.container}>
-                {/*<View style={{position: 'absolute', bottom: 10, left: 10, zIndex: 1000}}>*/}
-                {/*    <CustomButton text={'Toggle heatmap'} onPress={() => this.passValues()}/>*/}
-
-                {/*</View>*/}
-                {/*<View style={[{*/}
-                {/*    position: 'absolute',*/}
-                {/*    bottom: 10,*/}
-                {/*    right: 10,*/}
-                {/*    zIndex: 1000*/}
-                {/*}, this.state.toggled ? {} : {zIndex: -1000}]}>*/}
-                {/*    <CustomButton text={this.state.toggle === 'feel' ? "Noise Perception" : "Sound Level"}*/}
-                {/*                  onPress={() => this.toggleValues()}/>*/}
-                {/*</View>*/}
-
                 <View style={[{flex: 1}, this.state.toggled ? {display: 'none'} : {}]}>
                     {/*<Text style={styles.example}>Floating Action example</Text>*/}
 
@@ -520,11 +464,10 @@ export default class MapScreen extends React.Component {
                         }}
 
                         style={styles.mapView}
-                        //provider={"google"} // remove if not using Google Maps
                         provider={PROVIDER_GOOGLE}
 
                         // style={styles.map}
-                        // provider={Platform.OS === 'ios' ? null : 'osmdroid'}
+
                         region={this.state.region}
                         moveOnMarkerPress={true}
                         showsUserLocation={true}
@@ -573,14 +516,20 @@ export default class MapScreen extends React.Component {
                     actions={!this.state.toggled ? actions2 : typeActions.concat(actions2)}
                     onPressItem={(name) => {
                         if (name === 'toggler') {
+                            console.log("in toggler", name);
                             this.passValues();
                         }
-                        else if (name === 'type ' || 'type2') {
+                        else if (name === 'type ' || name === 'type2') {
+                            console.log("in type", name);
                             this.toggleValues();
                         }
                         else if (name === 'feel' || name === 'dbs') {
-                            console.log("in here 5");
+                            console.log("in feel", name);
                             this.checkToggleCaller(name)
+                        }
+                        else if (name === 'filters') {
+                            console.log("in filters", name);
+                            this.props.navigation.navigate('HeatmapFilters')
                         }
                         console.log("the data we got is ", name);
                         console.log(name === 'feel')
