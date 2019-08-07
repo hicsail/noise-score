@@ -41,7 +41,7 @@ import { PermissionsAndroid, Platform } from 'react-native';
 // --------- AWS EC2 instance elastic IP address, use when deploying the app or when you need to test the remote server ---------
 export const IP_ADDRESS = '3.14.174.164:9000';
 
-
+export const isAndroid = Platform.OS !== 'ios';
 
 const  requestPermission = () => {
     if(Platform.OS === 'ios') return Promise.resolve(true);

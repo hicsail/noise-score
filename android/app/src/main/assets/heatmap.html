@@ -57,48 +57,69 @@
     // parameter when you first load the API. For example:
     // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization">
 
+
     var res;
+    var jsonData;
     document.addEventListener('message', function (data) {
 
         temp = JSON.parse(data.data);
 
         // alert('in here 2');
 
-        if (temp['toggle'] !== '') {
-            // alert(res['toggle']);
-            // alert('toggling type');
-            if (temp['toggle'] === 'feel')
+        if (temp['noiseType']) {
+            alert("here 2");
+            alert(temp['location']);
+            alert(temp['noiseType']);
+            if (temp['noiseType'] === 'feel')
                 getPoints3();
             else
                 getPoints2();
         }
         else {
-            // alert(temp['toggle']);
-            res = temp;
-            map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 15,
-                center: {lat: res['region']['latitude'], lng: res['region']['longitude']},
-                mapTypeId: 'roadmap',
-                styles: styles['hide'],
-                mapTypeControl: false,
-                zoomControl: true,
-                zoomControlOptions: {
-                    style: google.maps.ZoomControlStyle.LARGE,
-                    position: google.maps.ControlPosition.RIGHT_CENTER
-                },
-                streetViewControl: false,
-                clickableIcons: false,
-                scaleControl: false
-            });
+            if (temp['toggle'] !== '') {
+                // alert(res['toggle']);
+                // alert('toggling type');
+                alert(temp['noiseType']);
+                if (temp['toggle'] === 'feel')
+                    getPoints3();
+                else
+                    getPoints2();
 
-            // heatmap.setOptions({data: getPoints2()});
-            heatmap = new google.maps.visualization.HeatmapLayer({
-                map: map,
-                radius: 60,
-            });
-            getPoints2();
+            }
+            else {
+                alert("here 3");
+                // alert(temp['toggle']);
+                let base = 15;
+                res = temp;
+                map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 15,
+                    center: {lat: res['region']['latitude'], lng: res['region']['longitude']},
+                    mapTypeId: 'roadmap',
+                    styles: styles['hide'],
+                    mapTypeControl: false,
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        style: google.maps.ZoomControlStyle.LARGE,
+                        position: google.maps.ControlPosition.RIGHT_CENTER
+                    },
+                    streetViewControl: false,
+                    clickableIcons: false,
+                    scaleControl: false
+                });
 
+                // heatmap.setOptions({data: getPoints2()});
+                heatmap = new google.maps.visualization.HeatmapLayer({
+                    map: map,
+                    radius: 25,
+                    maxIntensity: 100,
+                    // dissipating: false,
+                });
+                getPoints2();
 
+                google.maps.event.addListener(map, 'zoom_changed', function () {
+                    heatmap.setOptions({radius: Math.min(25 * Math.pow(map.getZoom() - base > 0 ? 2 : 1, Math.abs(map.getZoom() - base)), 200)})
+                });
+            }
         }
     });
 
@@ -110,7 +131,7 @@
             if (i < 200) {
                 let point = {
                     location: new google.maps.LatLng(res['data'][i]['lat'], res['data'][i]['lang']),
-                    weight: 1000,
+                    weight: res['data'][i]['feelWeight'],
                 };
                 feelPoints.push(point);
             }
@@ -124,8 +145,8 @@
 
     function getPoints2() {
         let points = [];
-        alert(res['data'].length);
-        alert(res['data'][0]['dbWeight']);
+        // alert(res['data'].length);
+        // alert(res['data'][0]['dbWeight']);
         for (let i = 0; i < res['data'].length; i++) {
             let val = (res['data'][i]['dbWeight']);
             let point = {
@@ -161,6 +182,7 @@
     }
 
     var map, heatmap;
+
 
     function initMap() {
         // map = new google.maps.Map(document.getElementById('map'), {

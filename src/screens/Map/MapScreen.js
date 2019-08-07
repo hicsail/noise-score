@@ -10,6 +10,7 @@ import * as constants from '../../components/constants';
 import Geolocation from 'react-native-geolocation-service';
 import {FloatingAction} from "react-native-floating-action";
 import ToggleSwitch from 'toggle-switch-react-native'
+import {NavigationEvents} from 'react-navigation';
 
 import {Alert} from "react-native";
 
@@ -90,10 +91,8 @@ export default class MapScreen extends React.Component {
         // this.getHeatMapPoints();
 
         this.passValues2().done();
-
-        // if (this.state.region === null) {
-        //     this.setState({region: this.default})
-        // }
+        
+        console.log("mapscreen mounted");
     }
 
     async removeItemValue(key) {
@@ -162,7 +161,7 @@ export default class MapScreen extends React.Component {
 
                 axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', userData).then(function (ret) {
                     var dateFormat = require('dateformat');
-                    console.log(ret['data'].length);
+                    // console.log(ret['data'].length);
                     for (var i = 0; i < ret['data'].length; i++) {
                         // console.log("Return data is : \n\n ", ret['data']);
 
@@ -191,25 +190,25 @@ export default class MapScreen extends React.Component {
                         ]);
 
                     }
-                    console.log(heatData);
+                    // console.log(heatData);
 
-                    // axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', {
-                    //     headers: header,
-                    //     params: params
-                    // }).then(function (ret2) {
-                    //     for (let i = 0; i < ret2['data'].length; i++) {
-                    //         heatData = heatData.concat(
-                    //             [{
-                    //                 lat: ret2['data'][i]['latitude'],
-                    //                 lang: ret2['data'][i]['longitude'],
-                    //                 feelWeight: 1,
-                    //                 dbWeight: ret2['data'][i]['weight']
-                    //             }]
-                    //         )
-                    //     }
-                    // }).then(function () {
-                    //     thisRef.setState({heatmapData: heatData}, () => console.log(thisRef.state))
-                    // });
+                    axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', {
+                        headers: header,
+                        params: params
+                    }).then(function (ret2) {
+                        for (let i = 0; i < ret2['data'].length; i++) {
+                            heatData = heatData.concat(
+                                [{
+                                    lat: ret2['data'][i]['latitude'],
+                                    lang: ret2['data'][i]['longitude'],
+                                    feelWeight: 1,
+                                    dbWeight: ret2['data'][i]['weight']
+                                }]
+                            )
+                        }
+                    }).then(function () {
+                        thisRef.setState({heatmapData: heatData}, () => console.log(""))
+                    });
 
 
                     self.setState({
@@ -266,6 +265,7 @@ export default class MapScreen extends React.Component {
                         key={id}
                         coordinate={latlng}
                         tracksViewChanges={false}
+                        // image={require('../../../assets/mic-pin-black.png')}
                     >
                         <MapView.Callout>
                             <Text style={styles.calloutHeader}>{date}</Text>
@@ -379,7 +379,7 @@ export default class MapScreen extends React.Component {
         this.setState({toggled: !this.state.toggled});
 
         let temp = JSON.stringify({data: this.state.heatmapData, region: this.state.region, toggle: ''});
-        console.log("this state 2 is :", temp);
+        // console.log("this state 2 is :", temp);
         this.refs.webview.postMessage(temp);
     }
 
@@ -396,6 +396,23 @@ export default class MapScreen extends React.Component {
         console.log("hello caller with state ", caller, this.state.toggle);
         if (caller !== this.state.toggle)
             this.toggleValues();
+    }
+
+    async retrieveItem(key) {
+        try {
+            return await AsyncStorage.getItem(key);
+        }
+        catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    updateFilters() {
+        let thisRef = this;
+        this.retrieveItem('filters').then().then(function (filters) {
+            console.log(filters);
+            thisRef.refs.webview.postMessage(filters);
+        })
     }
 
 
@@ -451,10 +468,16 @@ export default class MapScreen extends React.Component {
                 color: '#31BD4B'
             }];
 
-
+        let thisRef = this;
         return (
 
             <View style={styles.container}>
+                <NavigationEvents
+                    onDidFocus={
+                        () => {
+                            this.updateFilters();
+                        }
+                    }/>
                 <View style={[{flex: 1}, this.state.toggled ? {display: 'none'} : {}]}>
                     {/*<Text style={styles.example}>Floating Action example</Text>*/}
 
@@ -479,6 +502,7 @@ export default class MapScreen extends React.Component {
                         //     this.setState({region: data})
                         // }}
                     >
+
                         {iterator}
 
                         {/*Marker to show users location in Android*/}
@@ -580,3 +604,4 @@ const styles = StyleSheet.create({
 
     }
 });
+
