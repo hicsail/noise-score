@@ -1,16 +1,28 @@
 'use strict';
 let table;
+let length;
 $(document).ready(function() {
   table = $('#table').DataTable({
+    initComplete: function(settings, json){
+      let info = this.api().page.info();
+      length = parseInt(info.recordsDisplay);
+    },
+    info: false,
     processing: true,
     serverSide: true,
     scrollX: true,
-    scrollY: '500px',
+    paging: true,
+    pagingType: "full_numbers",
+    lengthMenu: [[10, 25, 50, length], [10, 25, 50, "All"]],
+    pageLength: 10,
     scrollCollapse: true,
-    lengthChange: false,
-    dom: 'Bfrtip',
+    dom: 'Blfrtip',
     buttons: [
-      'copy', 'csv', 'excel', 'pdf', 'print', 'colvis'
+      { extend: 'csv', exportOptions: { modifier: { search: 'applied', order: 'applied' } } },
+      { extend: 'excel', exportOptions: { modifier: { search: 'applied', order: 'applied' } } },
+      { extend: 'pdf', exportOptions: { modifier: { search: 'applied', order: 'applied' } } },
+      { extend: 'print', exportOptions: { modifier: { search: 'applied', order: 'applied' } } },
+      'colvis'
     ],
     ajax: {
       url: '/api/table/measurements',

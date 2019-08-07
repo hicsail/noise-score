@@ -36,10 +36,10 @@ export const NOISE_SOURCES = [
 // --------- IP Addresses for local server, use for debugging along with a local instance of anchor ----------
 import { PermissionsAndroid, Platform } from 'react-native';
 
-//export const IP_ADDRESS = (Platform.OS === 'ios') ? 'localhost:9000' : '10.0.2.2:9000';
+export const IP_ADDRESS = (Platform.OS === 'ios') ? 'localhost:9000' : '10.0.2.2:9000';
 
 // --------- AWS EC2 instance elastic IP address, use when deploying the app or when you need to test the remote server ---------
-export const IP_ADDRESS = '3.14.174.164:9000';
+//export const IP_ADDRESS = '3.14.174.164:9000';
 
 
 
