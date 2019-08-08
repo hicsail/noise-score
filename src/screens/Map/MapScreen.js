@@ -1,28 +1,22 @@
 import React from 'react';
-import {Platform, StyleSheet, Image, View, TouchableHighlight} from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Circle} from 'react-native-maps';
-import {Marker, Callout, Overlay, LocalTile} from 'react-native-maps';
-import axios from "axios";
-import {Text, List} from 'react-native-elements';
-import SearchBar from 'react-native-searchbar'
-import AsyncStorage from '@react-native-community/async-storage';
-import * as constants from '../../components/constants';
-import Geolocation from 'react-native-geolocation-service';
+import {Platform, StyleSheet, View, Alert, Image} from 'react-native';
+import {Text} from 'react-native-elements';
+import WebView from "react-native-webview";
 import {FloatingAction} from "react-native-floating-action";
-import ToggleSwitch from 'toggle-switch-react-native'
+import Icon from "react-native-vector-icons/FontAwesome";
+import SearchBar from 'react-native-searchbar'
 import {NavigationEvents} from 'react-navigation';
 
-import {Alert} from "react-native";
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
+
+import axios from "axios";
+import AsyncStorage from '@react-native-community/async-storage';
+
+import {IP_ADDRESS, brightGreen, getCoordinates, width, isAndroid} from "../../components/constants";
+import CustomButton from "../../Base/CustomButton";
 
 const currentLocationImage = require('./mapMarker3.png');
-import {getCoordinates} from "../../components/constants";
-import {IP_ADDRESS, brightGreen} from "../../components/constants";
-import WebView from "react-native-webview";
-import CustomButton from "../../Base/CustomButton";
-import {width} from "../../components/constants";
-import Icon from "react-native-vector-icons/FontAwesome";
-import {isAndroid} from "../../components/constants";
-
 
 export default class MapScreen extends React.Component {
     constructor(props) {
@@ -46,7 +40,6 @@ export default class MapScreen extends React.Component {
             toggle: 'dbs',
             points: [],
             authHeader: "",
-            pathTemplate: './../../../assets/greenBox.png',
             query: "",
             searchBarShown: false,
         };
@@ -67,7 +60,6 @@ export default class MapScreen extends React.Component {
         getCoordinates().then(position => {
             // const coordinates = position.coords.latitude+','+position.coords.longitude;
             if (this.state.region === null) {
-                console.log('true')
                 this.setState({
                     region: {
                         latitude: position.coords.latitude,
@@ -90,8 +82,8 @@ export default class MapScreen extends React.Component {
         this.updateMarkers();
         // this.getHeatMapPoints();
 
-        this.passValues2().done();
-        
+        // this.passValues2().done();
+
         console.log("mapscreen mounted");
     }
 
@@ -108,26 +100,25 @@ export default class MapScreen extends React.Component {
     evalFeelWeight(feelWeight) {
         switch (feelWeight.toLowerCase()) {
             case 'very quiet':
-                return 1;
+                return 10;
             case 'quiet':
-                return 3;
+                return 30;
             case 'moderately loud':
-                return 5;
+                return 50;
             case 'loud':
-                return 7;
+                return 70;
             case 'very loud':
-                return 9;
+                return 90;
         }
         return 1;
     }
 
-    getUserData(userInfo) {
-        return axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', data);
-    }
 
-    getHeatmapData(userInfo) {
-        return axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', data);
-    }
+    getFilters = async () => {
+        return await AsyncStorage.getItem('filters').then(function (filters) {
+            return filters;
+        })
+    };
 
     updateMarkers() {
         // Update the marker. Make the call to the backend to get the markers as an array data
@@ -137,33 +128,31 @@ export default class MapScreen extends React.Component {
         var newMarkers = [];
         let heatData = [];
         let thisRef = this;
+
+
         AsyncStorage.getItem('userData').then(function (ret) {
             if (ret) {
                 var response = JSON.parse(ret);
 
                 // Now we need to get all their measurement information
 
-                const params = {
-                    userID: response['user']['_id'],
-                    username: response['user']['username']
-                };
-
-                const header = {
-                    'Content-Type': 'application/json',
-                    'Authorization': response['authHeader']
-                };
-
                 let userData = {
-                    headers: header,
-                    params: params
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': response['authHeader']
+                    },
+                    params: {
+                        userID: response['user']['_id'],
+                        username: response['user']['username']
+                    }
                 };
 
 
                 axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', userData).then(function (ret) {
-                    var dateFormat = require('dateformat');
-                    // console.log(ret['data'].length);
-                    for (var i = 0; i < ret['data'].length; i++) {
-                        // console.log("Return data is : \n\n ", ret['data']);
+                    let dateFormat = require('dateformat');
+                    console.log(ret['data'].length);
+
+                    for (let i = 0; i < ret['data'].length; i++) {
 
                         newMarkers = newMarkers.concat([
                             {
@@ -185,32 +174,11 @@ export default class MapScreen extends React.Component {
                                 lat: ret['data'][i]['location']['lat'],
                                 lang: ret['data'][i]['location']['lang'],
                                 feelWeight: thisRef.evalFeelWeight(ret['data'][i]['loud']),
-                                dbWeight: Math.round(ret['data'][i]['rawData']['average'])
+                                dbWeight: Math.round(ret['data'][i]['rawData']['average']),
                             }
                         ]);
 
                     }
-                    // console.log(heatData);
-
-                    axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', {
-                        headers: header,
-                        params: params
-                    }).then(function (ret2) {
-                        for (let i = 0; i < ret2['data'].length; i++) {
-                            heatData = heatData.concat(
-                                [{
-                                    lat: ret2['data'][i]['latitude'],
-                                    lang: ret2['data'][i]['longitude'],
-                                    feelWeight: 1,
-                                    dbWeight: ret2['data'][i]['weight']
-                                }]
-                            )
-                        }
-                    }).then(function () {
-                        thisRef.setState({heatmapData: heatData}, () => console.log(""))
-                    });
-
-
                     self.setState({
                         markers: newMarkers,
                         heatmapData: heatData
@@ -219,7 +187,7 @@ export default class MapScreen extends React.Component {
                     if (error.response.status == 500) {
                         AsyncStorage.removeItem("userData").then(function (ret) {
                             if (ret) {
-                                axios.delete('http://' + IP_ADDRESS + '/api/logout', {headers: header})
+                                axios.delete('http://' + IP_ADDRESS + '/api/logout', userData)
                                     .then(function (response) {
                                         this.props.navigation("SignedOut");
                                     })
@@ -355,28 +323,45 @@ export default class MapScreen extends React.Component {
         // this.searchBar.show();
     }
 
-    passValues2 = async () => {
-        try {
-            let userData = await AsyncStorage.getItem('userData');
-            if (userData) {
-                userData = JSON.parse(userData);
-                let authHeader = userData['authHeader'];
-                const header = {
+    passValues2() {
+        let thisRef = this;
+        // console.log("ina pass values 2");
+        AsyncStorage.getItem('userData').then(function (ret) {
+            if (ret) {
+                let response = JSON.parse(ret);
+
+                // Now we need to get all their measurement information
+
+                let header = {
                     'Content-Type': 'application/json',
-                    'Authorization': authHeader
+                    'Authorization': response['authHeader']
                 };
-                console.log(header)
+                let params = {
+                    userID: response['user']['_id'],
+                    username: response['user']['username']
+                };
+
+                let heatData = [];
+
+                axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', {
+                    headers: header,
+                    params: params
+                }).then(function (measurements) {
+                    // console.log("axios request is done in passvalues 2");
+                    thisRef.setState({heatmapData: measurements}, () => console.log(thisRef.state))
+                });
             }
-        }
-        catch {
-
-        }
-
-    };
+        }.bind(this));
+    }
 
     passValues() {
 
+        this.passValues2();
+
+        // console.log("after passvalues 2 the state is ", this.state);
+
         this.setState({toggled: !this.state.toggled});
+
 
         let temp = JSON.stringify({data: this.state.heatmapData, region: this.state.region, toggle: ''});
         // console.log("this state 2 is :", temp);
@@ -384,7 +369,9 @@ export default class MapScreen extends React.Component {
     }
 
     toggleValues() {
-        console.log('in here' + this.state.toggle);
+        // this.passValues2();
+
+        // console.log('in here' + this.state.toggle);
         if (this.state.toggle === 'feel')
             this.setState({toggle: 'dbs'}, this.refs.webview.postMessage(JSON.stringify({toggle: 'dbs'})));
         else
@@ -393,7 +380,7 @@ export default class MapScreen extends React.Component {
     }
 
     checkToggleCaller(caller) {
-        console.log("hello caller with state ", caller, this.state.toggle);
+        // console.log("hello caller with state ", caller, this.state.toggle);
         if (caller !== this.state.toggle)
             this.toggleValues();
     }
@@ -472,12 +459,24 @@ export default class MapScreen extends React.Component {
         return (
 
             <View style={styles.container}>
+
                 <NavigationEvents
                     onDidFocus={
                         () => {
                             this.updateFilters();
                         }
                     }/>
+
+                <View style={{
+                    position: 'absolute',
+                    bottom: 35,
+                    left: 10,
+                    zIndex: 1000,
+                    width: undefined,
+                    height: undefined
+                }}>
+                    <Image source={require('../../../assets/txaimlqj.png')}/>
+                </View>
                 <View style={[{flex: 1}, this.state.toggled ? {display: 'none'} : {}]}>
                     {/*<Text style={styles.example}>Floating Action example</Text>*/}
 
@@ -532,6 +531,7 @@ export default class MapScreen extends React.Component {
                         // onLoadEnd={() => this.passValues()}
                              source={{uri: 'file:///android_asset/heatmap.html'}}/>
                 </View>
+
                 <FloatingAction
                     ref={(ref) => {
                         this.floatingAction = ref;

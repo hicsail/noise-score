@@ -27,16 +27,18 @@ internals.applyRoutes = function (server, next) {
     },
     handler: function (request, reply) {
       // Get latidude & longitude from address.
-      opencage.geocode({ q: request.query['query'] }).then(data => {
+      opencage.geocode({q: request.query['query']}).then(data => {
         if (data.status.code == 200) {
           if (data.results.length > 0) {
             var place = data.results[0];
             reply(place.geometry);
           }
-        } else if (data.status.code == 402) {
+        }
+        else if (data.status.code == 402) {
           console.log('hit free-trial daily limit');
           console.log('become a customer: https://opencagedata.com/pricing');
-        } else {
+        }
+        else {
           // other possible response codes:
           // https://opencagedata.com/api#codes
           console.log('error', data.status.message);
@@ -144,7 +146,8 @@ internals.applyRoutes = function (server, next) {
           }
           if (ret.length > 1) {
             reply(Boom.conflict(ret.substr(3)));
-          } else {
+          }
+          else {
             reply(true);
           }
         }
@@ -166,7 +169,8 @@ internals.applyRoutes = function (server, next) {
       const date = request.payload.date;
       try {
         Measurement.create(username, userID, rawData, location, loud, describe, feel, place, sources, words, date);
-      } catch (error) {
+      }
+      catch (error) {
         reply(error);
       }
       reply(200);
@@ -184,10 +188,11 @@ internals.applyRoutes = function (server, next) {
     },
     handler: function (request, reply) {
       var userID = request.state.AuthCookie.userId;
-      Measurement.find({ userID: userID }, (err, session) => {
+      Measurement.find({userID: userID}, (err, session) => {
         if (err) {
           reply(404);
-        } else {
+        }
+        else {
           reply(session);
 
         }
@@ -208,13 +213,15 @@ internals.applyRoutes = function (server, next) {
       Measurement.find({}, (err, session) => {
         if (err) {
           reply(400);
-        } else {
+        }
+        else {
           const ret = [];
           for (let i = 0; i < session.length; i++) {
             const pointData = {
-              latitude: session[i]['location']['lat'],
-              longitude: session[i]['location']['lang'],
-              weight: session[i]['rawData']['average']
+              lat: session[i]['location']['lat'],
+              lang: session[i]['location']['lang'],
+              feelWeight: session[i]['rawData']['average'],
+              dbWeight: session[i]['place'],
             };
             ret.push(pointData);
           }

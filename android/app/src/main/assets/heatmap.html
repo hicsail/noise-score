@@ -60,16 +60,38 @@
 
     var res;
     var jsonData;
+
+    var measurements;
+
+
+    function locationFilter(location) {
+        return measurements['data'].filter(measurement => measurement.location === location)
+    }
+
+    function sourceFilter(sources) {
+        return measurements['data'].filter(measurement => sources.includes(measurement))
+    }
+
+    function recieveData(data) {
+        measurements = JSON.parse(data.data)['data']
+        alert(measurements.length);
+    }
+
     document.addEventListener('message', function (data) {
-
+        alert("In hereeeee");
+        alert(data.data);
+        alert("in here too")
         temp = JSON.parse(data.data);
-
+        jsonData = data.data;
+        // let filtered = filterLocation("At work");
+        // alert("filtered length is " + filtered.length);
         // alert('in here 2');
 
+        let result = {};
+        // result['data'] = (temp['data'].filter(t => t.location === 'At work')).filter(t => t.location === 'indoors');
+        // alert(result['data'].length);
+
         if (temp['noiseType']) {
-            alert("here 2");
-            alert(temp['location']);
-            alert(temp['noiseType']);
             if (temp['noiseType'] === 'feel')
                 getPoints3();
             else

@@ -32,6 +32,7 @@
     "react-leaflet": "^2.2.1",
     "react-native": "^0.59.9",
     "react-native-check-box": "^2.1.7",
+    "react-native-collapsible": "^1.5.1",
     "react-native-elements": "^1.1.0",
     "react-native-floating-action": "^1.17.0",
     "react-native-geolocation-service": "^3.0.0",
