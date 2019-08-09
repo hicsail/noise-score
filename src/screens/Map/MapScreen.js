@@ -35,6 +35,10 @@ export default class MapScreen extends React.Component {
             // actions: actions,
             markers: [],
             heatmapData: [],
+            filters: {
+                noiseType: 'db',
+                location: 'Everything',
+            },
             region: null,
             toggled: false,
             toggle: 'dbs',
@@ -46,6 +50,7 @@ export default class MapScreen extends React.Component {
     }
 
     componentDidMount() {
+
 
         // Update the location of the maps focus
         const map = this.mapView;
@@ -71,6 +76,7 @@ export default class MapScreen extends React.Component {
             }
         }).catch(error => {
             Alert.alert('', 'Please allow NoiseScore to access your location.')
+            console.log("Error when fetching location ", error)
         });
 
         // Add listeners to update the markers (in the situation that a user takes a new measurements)
@@ -79,12 +85,13 @@ export default class MapScreen extends React.Component {
             // this.props.navigation.addListener('willFocus', () => this.searchBar.show())
         ];
 
+        // ------ Create the measurement markers for the map -------
         this.updateMarkers();
-        // this.getHeatMapPoints();
 
-        // this.passValues2().done();
+        // ------ Initialize the heatmap view
+        this.initHeatmap();
+        this.filterHeatmapData();
 
-        console.log("mapscreen mounted");
     }
 
     async removeItemValue(key) {
@@ -120,6 +127,29 @@ export default class MapScreen extends React.Component {
         })
     };
 
+
+    getUserData = async (thisRef) => {
+        await AsyncStorage.getItem('userData').then(function (ret) {
+            var response = JSON.parse(ret);
+
+            // Now we need to get all their measurement information
+
+            let userData = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': response['authHeader']
+                },
+                params: {
+                    userID: response['user']['_id'],
+                    username: response['user']['username']
+                }
+            };
+
+            thisRef.setState({userData: userData});
+        });
+    };
+
+
     updateMarkers() {
         // Update the marker. Make the call to the backend to get the markers as an array data
         // Save the array as a local variable
@@ -129,85 +159,56 @@ export default class MapScreen extends React.Component {
         let heatData = [];
         let thisRef = this;
 
-
-        AsyncStorage.getItem('userData').then(function (ret) {
-            if (ret) {
-                var response = JSON.parse(ret);
-
-                // Now we need to get all their measurement information
-
-                let userData = {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': response['authHeader']
-                    },
-                    params: {
-                        userID: response['user']['_id'],
-                        username: response['user']['username']
-                    }
-                };
+        this.getUserData(this).done();
 
 
-                axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', userData).then(function (ret) {
-                    let dateFormat = require('dateformat');
-                    console.log(ret['data'].length);
+        axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', this.state.userData)
+            .then(function (ret) {
+                let dateFormat = require('dateformat');
+                console.log(ret['data'].length);
 
-                    for (let i = 0; i < ret['data'].length; i++) {
+                for (let i = 0; i < ret['data'].length; i++) {
 
-                        newMarkers = newMarkers.concat([
-                            {
-                                latlng: {
-                                    latitude: ret['data'][i]['location']['lat'],
-                                    longitude: ret['data'][i]['location']['lang']
-                                },
-                                title: ret['data'][i]['rawData']['average'],
-                                date: dateFormat(ret['data'][i]['date'], "yyyy-mmm-d h:MM TT"),
-                                id: ret['data'][i]['_id'],
-                                majorSources: ret['data'][i]['sources'],
-                                avg: ret['data'][i]['rawData']['average']
-                            }
-                        ]);
+                    newMarkers = newMarkers.concat([
+                        {
+                            latlng: {
+                                latitude: ret['data'][i]['location']['lat'],
+                                longitude: ret['data'][i]['location']['lang']
+                            },
+                            title: ret['data'][i]['rawData']['average'],
+                            date: dateFormat(ret['data'][i]['date'], "yyyy-mmm-d h:MM TT"),
+                            id: ret['data'][i]['_id'],
+                            majorSources: ret['data'][i]['sources'],
+                            avg: ret['data'][i]['rawData']['average']
+                        }
+                    ]);
+                }
+                self.setState({
+                    markers: newMarkers,
+                })
+            })
+            .catch(function (error) {
+                if (error.response.status === 500) {
+                    alert("errrrror")
+                    AsyncStorage.removeItem("userData").then(function (ret) {
+                        if (ret) {
+                            axios.delete('http://' + IP_ADDRESS + '/api/logout', this.state.userData)
+                                .then(function (response) {
+                                    thisRef.props.navigation("SignedOut");
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                    alert("Something went wrong!");
+                                });
 
+                        }
+                        else {
+                            this.props.navigation("SignedOut");
+                        }
+                    });
+                }
 
-                        heatData = heatData.concat([
-                            {
-                                lat: ret['data'][i]['location']['lat'],
-                                lang: ret['data'][i]['location']['lang'],
-                                feelWeight: thisRef.evalFeelWeight(ret['data'][i]['loud']),
-                                dbWeight: Math.round(ret['data'][i]['rawData']['average']),
-                            }
-                        ]);
-
-                    }
-                    self.setState({
-                        markers: newMarkers,
-                        heatmapData: heatData
-                    })
-                }).catch(function (error) {
-                    if (error.response.status == 500) {
-                        AsyncStorage.removeItem("userData").then(function (ret) {
-                            if (ret) {
-                                axios.delete('http://' + IP_ADDRESS + '/api/logout', userData)
-                                    .then(function (response) {
-                                        this.props.navigation("SignedOut");
-                                    })
-                                    .catch(function (error) {
-                                        console.log(error);
-                                        alert("Something went wrong!");
-                                    });
-
-                            }
-                            else {
-                                this.props.navigation("SignedOut");
-                            }
-                        });
-                    }
-
-                });
-            }
-        }.bind(this));
-
-
+            });
     }
 
     generateMarkers(data) {
@@ -216,18 +217,22 @@ export default class MapScreen extends React.Component {
 
 
         if (data != null) {
+
             return data.map((data) => {
                 var id = data['id'].toString();
                 var latlng = data['latlng'];
                 var majorSources;
+
                 if (data['majorSources'].length > 3) {
                     majorSources = "Major Sources: " + data['majorSources'][0] + "," + data['majorSources'][1] + "," + data['majorSources'][2]
                 }
                 else {
                     majorSources = "Major Sources: " + data['majorSources'];
                 }
+
                 var decibels = "Decibels: " + data['title'].toString();
                 var date = data['date'];
+
                 return (
                     <Marker
                         key={id}
@@ -323,40 +328,51 @@ export default class MapScreen extends React.Component {
         // this.searchBar.show();
     }
 
-    passValues2() {
+
+    getHeatmapData() {
         let thisRef = this;
-        // console.log("ina pass values 2");
-        AsyncStorage.getItem('userData').then(function (ret) {
-            if (ret) {
-                let response = JSON.parse(ret);
 
-                // Now we need to get all their measurement information
+        this.getUserData(this).done();
 
-                let header = {
-                    'Content-Type': 'application/json',
-                    'Authorization': response['authHeader']
-                };
-                let params = {
-                    userID: response['user']['_id'],
-                    username: response['user']['username']
-                };
 
-                let heatData = [];
+        axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', this.state.userData)
+            .then((measurements) => {
+                let data = measurements.data.length ? measurements.data : [];
+                thisRef.setState({heatmapData: data}, () => console.log(thisRef.state))
+            }).catch(error => {
+            alert("Could not get the data for the heatmap");
+            console.log("Error when fetching the heatmap data", error);
+        });
 
-                axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', {
-                    headers: header,
-                    params: params
-                }).then(function (measurements) {
-                    // console.log("axios request is done in passvalues 2");
-                    thisRef.setState({heatmapData: measurements}, () => console.log(thisRef.state))
-                });
-            }
-        }.bind(this));
     }
+
+    initHeatmap() {
+        let data = JSON.stringify({operation: 'init'});
+        this.refs.webview.postMessage(data);
+    }
+
+    filterHeatmapData() {
+        let originalData = this.getHeatmapData();
+
+        let filters = this.getFilters();
+
+        console.log("Original heatmap data is ", this.state.heatmapData);
+        console.log("Filters are ", filters);
+
+    }
+
+    updateHeatmap() {
+        let filters = this.getFilters();
+
+
+        let data = JSON.stringify({operation: 'update', data: this.state.heatmapData, region: this.state.region})
+        this.refs.webview.postMessage(data);
+    }
+
 
     passValues() {
 
-        this.passValues2();
+        // this.passValues2();
 
         // console.log("after passvalues 2 the state is ", this.state);
 
@@ -370,6 +386,7 @@ export default class MapScreen extends React.Component {
 
     toggleValues() {
         // this.passValues2();
+
 
         // console.log('in here' + this.state.toggle);
         if (this.state.toggle === 'feel')
@@ -404,7 +421,7 @@ export default class MapScreen extends React.Component {
 
 
     render() {
-        var iterator = this.generateMarkers(this.state.markers);
+
 
         const actions2 =
             [{
@@ -502,7 +519,7 @@ export default class MapScreen extends React.Component {
                         // }}
                     >
 
-                        {iterator}
+                        {this.state.toggled ? null : this.generateMarkers(this.state.markers)}
 
                         {/*Marker to show users location in Android*/}
                         {/*Comment out when using on IOS */}

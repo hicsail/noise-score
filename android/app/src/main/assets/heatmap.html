@@ -74,13 +74,13 @@
 
     function recieveData(data) {
         measurements = JSON.parse(data.data)['data']
-        alert(measurements.length);
+        // alert(measurements.length);
     }
 
     document.addEventListener('message', function (data) {
-        alert("In hereeeee");
-        alert(data.data);
-        alert("in here too")
+        // alert("In hereeeee");
+        // alert(data.data);
+        // alert("in here too")
         temp = JSON.parse(data.data);
         jsonData = data.data;
         // let filtered = filterLocation("At work");
@@ -91,17 +91,17 @@
         // result['data'] = (temp['data'].filter(t => t.location === 'At work')).filter(t => t.location === 'indoors');
         // alert(result['data'].length);
 
-        if (temp['noiseType']) {
+        if (false) {
             if (temp['noiseType'] === 'feel')
                 getPoints3();
             else
                 getPoints2();
         }
         else {
-            if (temp['toggle'] !== '') {
+            if (false) {
                 // alert(res['toggle']);
                 // alert('toggling type');
-                alert(temp['noiseType']);
+                // alert(temp['noiseType']);
                 if (temp['toggle'] === 'feel')
                     getPoints3();
                 else

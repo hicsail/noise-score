@@ -114,7 +114,7 @@ internals.applyRoutes = function (server, next) {
           const intenseArray = ["not", "little", "moderately", "very"];
           const placeArray = ["Indoors", "Outdoors", "At work"];
           const feelArray = ["Relaxed", "Tranquil", "Neutral", "Irritated", "Anxious", "Frustrated", "Angry"];
-          const sourcesArray = ["aircraft", "alarm", "dog", "car music", "construction", "fireworks", "footsteps", "horn", "hvac",
+          const sourcesArray = ["airplane", "alarm", "dog", "car music", "construction", "fireworks", "footsteps", "horn", "hvac",
             "leaf blower", "trash", "music", "neighbor", "party", "delivery", "pickup", "quiet", "restaurant", "traffic", "trains", "voices", "other"];
           const locationTypeArray = ["work", "outdoors", "indoors"];
           if (request.payload.location[0] > 180 || request.payload.location[0] < -180) {
@@ -220,8 +220,8 @@ internals.applyRoutes = function (server, next) {
             const pointData = {
               lat: session[i]['location']['lat'],
               lang: session[i]['location']['lang'],
-              feelWeight: session[i]['rawData']['average'],
-              dbWeight: session[i]['place'],
+              dbWeight: session[i]['rawData']['average'],
+              feelWeight: session[i]['place'],
             };
             ret.push(pointData);
           }

@@ -13,6 +13,7 @@ import StartMicrophone from '../../components/StartMicrophone';
 
 
 import {Header} from 'react-navigation';
+import {darkGray} from "../../components/constants";
 
 
 const {width, height} = Dimensions.get('window');
@@ -74,7 +75,8 @@ export default class MeasureScreen extends React.Component {
                             let dec;
                             if (d.value < -160) {
                                 dec = 0;
-                            } else {
+                            }
+                            else {
                                 dec = this.state.decibels.concat(((parseInt(d.value) + 160) * (90 / 160)));
                             }
                             this.setState({
@@ -83,7 +85,8 @@ export default class MeasureScreen extends React.Component {
                                 stopped: false,
                                 initial: false,
                             });
-                        } else {
+                        }
+                        else {
                             ignored = ignored + 1;
                         }
 
@@ -172,9 +175,10 @@ export default class MeasureScreen extends React.Component {
                                     style={{
                                         fontSize: width / 15,
                                         textAlign: 'center',
-                                        textShadowRadius: 5,
+                                        // textShadowRadius: 5,
+                                        color: darkGray,
                                         fontWeight: 'bold',
-                                        textShadowColor: '#31BD4B',
+                                        // textShadowColor: '#31BD4B',
                                     }}>
                                     Press the button to begin your sound measurement
                                 </Text>
@@ -188,19 +192,20 @@ export default class MeasureScreen extends React.Component {
                             <View style={{
                                 flex: 1,
                                 backgroundColor: 'white',
-                                justifyContent: 'flex-start',
+                                justifyContent: 'center',
                                 alignItems: 'center',
+
 
                                 // marginHorizontal: '25%'
                                 // paddingHorizontal: width / 3
                             }}>
-                                <Text style={{}}>
+                                <Text style={{textAlign:'center'}}>
                                     <Text adjustFontSizeToFit
                                           style={{
                                               fontSize: 30,
-                                              textShadowRadius: 2,
-                                              textShadowColor: '#0f3916',
-                                              color: '#144c1e',
+                                              // textShadowRadius: 2,
+                                              // textShadowColor: '#0f3916',
+                                              color: darkGray,
                                           }}
                                     >
                                         1. Measure {'\n'}
@@ -208,18 +213,18 @@ export default class MeasureScreen extends React.Component {
                                     <Text
                                         style={{
                                             fontSize: 30,
-                                            textShadowRadius: 2,
-                                            textShadowColor: '#0f3916',
-                                            color: '#144c1e',
+                                            // textShadowRadius: 2,
+                                            // textShadowColor: '#0f3916',
+                                            color: darkGray,
                                         }}>
                                         2. Comment {'\n'}
                                     </Text>
                                     <Text
                                         style={{
                                             fontSize: 30,
-                                            textShadowRadius: 2,
-                                            textShadowColor: '#0f3916',
-                                            color: '#144c1e',
+                                            // textShadowRadius: 2,
+                                            // textShadowColor: '#0f3916',
+                                            color: darkGray,
                                         }}
                                     >
                                         3. Submit
