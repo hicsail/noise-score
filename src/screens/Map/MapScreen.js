@@ -18,21 +18,23 @@ import CustomButton from "../../Base/CustomButton";
 
 const currentLocationImage = require('./mapMarker3.png');
 
+
+// Default region (Center of Boston) for the map to center if the user does not give location access
+const defaultLoc = {
+    latitude: 42.361145,
+    longitude: -71.057083,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+};
+
+const defaultFilters = {}
+
 export default class MapScreen extends React.Component {
     constructor(props) {
 
         super(props);
 
-
-        this.default = {
-            latitude: 42.361145,
-            longitude: -71.057083,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        };
-
         this.state = {
-            // actions: actions,
             markers: [],
             heatmapData: [],
             filters: {
@@ -50,48 +52,57 @@ export default class MapScreen extends React.Component {
     }
 
     componentDidMount() {
-
-
+        let thisRef = this;
         // Update the location of the maps focus
         const map = this.mapView;
 
-        // TODO - is this necessary for IOS?
+        this.getUserLocation();
+
+        // --------- Add listeners to update the markers (in the situation that a user takes new measurements) ---------
+        this.subs = [
+            this.props.navigation.addListener('willFocus', () => {
+                this.getUserLocation();
+                this.updateMarkers();
+                this.sendHeatmapData();
+            }),
+
+            // this.props.navigation.addListener('willFocus', () => this.searchBar.show())
+        ];
+
+
+        // --------- Update markers' data in the state object ----------
+        this.updateMarkers();
+
+
+        // this.sendHeatmapData();
+    }
+
+    getUserLocation() {
+        let thisRef = this;
+        // ------ Get permission to use location and get user's coordinates ------
         if (Platform.OS === "ios") {
             Geolocation.requestAuthorization();
         }
 
-        // this.requestCameraPermission().done();
-
-        getCoordinates().then(position => {
-            // const coordinates = position.coords.latitude+','+position.coords.longitude;
-            if (this.state.region === null) {
-                this.setState({
+        if (this.state.region === null) {
+            getCoordinates().then(position => {
+                // const coordinates = position.coords.latitude+','+position.coords.longitude;
+                thisRef.setState({
                     region: {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     },
-                })
-            }
-        }).catch(error => {
-            Alert.alert('', 'Please allow NoiseScore to access your location.')
-            console.log("Error when fetching location ", error)
-        });
+                }, () =>
+                    // ------ Initialize the heatmap view
+                    this.initHeatmap())
 
-        // Add listeners to update the markers (in the situation that a user takes a new measurements)
-        this.subs = [
-            this.props.navigation.addListener('willFocus', () => this.updateMarkers()),
-            // this.props.navigation.addListener('willFocus', () => this.searchBar.show())
-        ];
-
-        // ------ Create the measurement markers for the map -------
-        this.updateMarkers();
-
-        // ------ Initialize the heatmap view
-        this.initHeatmap();
-        this.filterHeatmapData();
-
+            }).catch(error => {
+                Alert.alert('', 'Please allow NoiseScore to access your location.');
+                console.log("Error when fetching location ")
+            });
+        }
     }
 
     async removeItemValue(key) {
@@ -104,33 +115,12 @@ export default class MapScreen extends React.Component {
         }
     }
 
-    evalFeelWeight(feelWeight) {
-        switch (feelWeight.toLowerCase()) {
-            case 'very quiet':
-                return 10;
-            case 'quiet':
-                return 30;
-            case 'moderately loud':
-                return 50;
-            case 'loud':
-                return 70;
-            case 'very loud':
-                return 90;
-        }
-        return 1;
-    }
+    // --------------- Methods relating to rendering the mapview with user's measurements ---------------
 
-
-    getFilters = async () => {
-        return await AsyncStorage.getItem('filters').then(function (filters) {
-            return filters;
-        })
-    };
-
-
+    // --------- Retrieve user's data from async storage and update the state object ---------
     getUserData = async (thisRef) => {
-        await AsyncStorage.getItem('userData').then(function (ret) {
-            var response = JSON.parse(ret);
+        return await AsyncStorage.getItem('userData').then(function (ret) {
+            let response = JSON.parse(ret);
 
             // Now we need to get all their measurement information
 
@@ -146,26 +136,28 @@ export default class MapScreen extends React.Component {
             };
 
             thisRef.setState({userData: userData});
-        });
+            return userData;
+        }).catch((error) =>
+            console.log("Could not retrieve user's data from async storage", error));
     };
 
 
+    // --------- Updates state's marker's object with new data ---------
     updateMarkers() {
-        // Update the marker. Make the call to the backend to get the markers as an array data
-        // Save the array as a local variable
-
-        var self = this;
-        var newMarkers = [];
-        let heatData = [];
+        let self = this;
+        let newMarkers = [];
         let thisRef = this;
 
+        // --------- Get user's data to display as markers ---------
+
+        // Get/Update user's data
         this.getUserData(this).done();
+        let userData = this.state.userData;
 
-
-        axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', this.state.userData)
+        // Retrieve the data from the database
+        axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', userData)
             .then(function (ret) {
                 let dateFormat = require('dateformat');
-                console.log(ret['data'].length);
 
                 for (let i = 0; i < ret['data'].length; i++) {
 
@@ -189,7 +181,7 @@ export default class MapScreen extends React.Component {
             })
             .catch(function (error) {
                 if (error.response.status === 500) {
-                    alert("errrrror")
+                    alert("Could not retrieve your data from the database");
                     AsyncStorage.removeItem("userData").then(function (ret) {
                         if (ret) {
                             axios.delete('http://' + IP_ADDRESS + '/api/logout', this.state.userData)
@@ -197,7 +189,7 @@ export default class MapScreen extends React.Component {
                                     thisRef.props.navigation("SignedOut");
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    console.log("bad error");
                                     alert("Something went wrong!");
                                 });
 
@@ -209,48 +201,49 @@ export default class MapScreen extends React.Component {
                 }
 
             });
+        // });
     }
 
-    generateMarkers(data) {
+
+    // --- Uses state's markers data to create Marker components that will be displayed in the map ---
+    generateMarkers(measurements) {
         // The iterator used to generate what is displayed for the data.
         // It will create Marker objects (as a Callout) and append them to the render
 
 
-        if (data != null) {
+        return measurements.map((measurement) => {
+            var id = measurement['id'].toString();
+            var latlng = measurement['latlng'];
+            var majorSources;
 
-            return data.map((data) => {
-                var id = data['id'].toString();
-                var latlng = data['latlng'];
-                var majorSources;
+            if (measurement['majorSources'].length > 3) {
+                majorSources = "Major Sources: " + measurement['majorSources'][0] + "," + measurement['majorSources'][1] + "," + measurement['majorSources'][2]
+            }
+            else {
+                majorSources = "Major Sources: " + measurement['majorSources'];
+            }
 
-                if (data['majorSources'].length > 3) {
-                    majorSources = "Major Sources: " + data['majorSources'][0] + "," + data['majorSources'][1] + "," + data['majorSources'][2]
-                }
-                else {
-                    majorSources = "Major Sources: " + data['majorSources'];
-                }
+            var decibels = "Decibels: " + measurement['title'].toString();
+            var date = measurement['date'];
 
-                var decibels = "Decibels: " + data['title'].toString();
-                var date = data['date'];
-
-                return (
-                    <Marker
-                        key={id}
-                        coordinate={latlng}
-                        tracksViewChanges={false}
-                        // image={require('../../../assets/mic-pin-black.png')}
-                    >
-                        <MapView.Callout>
-                            <Text style={styles.calloutHeader}>{date}</Text>
-                            <Text style={styles.calloutContent}>{decibels}{"\n"}{majorSources}</Text>
-                        </MapView.Callout>
-                    </Marker>
+            return (
+                <Marker
+                    key={id}
+                    coordinate={latlng}
+                    tracksViewChanges={false}
+                    // image={require('../../../assets/mic-pin-black.png')}
+                >
+                    <MapView.Callout>
+                        <Text style={styles.calloutHeader}>{date}</Text>
+                        <Text style={styles.calloutContent}>{decibels}{"\n"}{majorSources}</Text>
+                    </MapView.Callout>
+                </Marker>
 
 
-                )
-            });
+            )
+        });
 
-        }
+
     }
 
     search(results) {
@@ -329,37 +322,116 @@ export default class MapScreen extends React.Component {
     }
 
 
-    getHeatmapData() {
+    // --------------- Methods relating to rendering the heatmap ---------------
+
+    initHeatmap() {
+        let data = JSON.stringify({operation: 'init'});
+        alert(data);
+        let thisRef = this;
+        this.refs.webview.postMessage(data);
+        // setTimeout(function () {
+        //     thisRef.refs.webview.postMessage(data)
+        // }, 2000);
+    }
+
+    // --- Retrieves all users' measurements data to render the heatmap. Updated the state object with the data ---
+    getHeatmapData = async () => {
         let thisRef = this;
 
+        // --- Get user's data so we can make the api call using an active session ---
         this.getUserData(this).done();
+        let userData = this.state.userData;
+
+        await axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', userData)
+            .then(
+                (measurements) => {
+                    let data = measurements.data.length ? measurements.data : [];
+                    thisRef.setState({heatmapData: data}, () => console.log("Got 'em all"))
+                }
+            )
+            .catch(
+                error => {
+                    alert("Could not get the data for the heatmap");
+                    console.log("Error when fetching the heatmap data", error);
+                }
+            );
+
+    };
+
+    evalFeelWeight(feelWeight) {
+        switch (feelWeight.toLowerCase()) {
+            case 'very quiet':
+                return 10;
+            case 'quiet':
+                return 30;
+            case 'moderately loud':
+                return 50;
+            case 'loud':
+                return 70;
+            case 'very loud':
+                return 90;
+        }
+        return 1;
+    }
 
 
-        axios.get('http://' + IP_ADDRESS + '/api/allMeasurements', this.state.userData)
-            .then((measurements) => {
-                let data = measurements.data.length ? measurements.data : [];
-                thisRef.setState({heatmapData: data}, () => console.log(thisRef.state))
-            }).catch(error => {
-            alert("Could not get the data for the heatmap");
-            console.log("Error when fetching the heatmap data", error);
+    getFilters = async () => {
+        let thisRef = this;
+        return await AsyncStorage.getItem('filters').done(function (data) {
+            thisRef.setState({filters: data})
+        });
+    };
+
+
+    sendHeatmapData() {
+        let thisRef = this;
+        this.getHeatmapData().done(() => {
+            let originalData = this.state.heatmapData;
+            AsyncStorage.getItem('filters').then(function (filters) {
+                console.log(filters);
+                console.log(originalData);
+                filters = JSON.parse(filters);
+
+                let filteredData = thisRef.filterData(filters, originalData);
+                console.log("filtered data is ", filteredData);
+
+
+                let jsonData = JSON.stringify({data: filteredData, region: thisRef.state.region, operation: 'show'});
+                // console.log("this state 2 is :", temp);
+                thisRef.refs.webview.postMessage(jsonData);
+                console.log("Sent new data")
+
+            }).catch(error => console.log("could not retrieve the filters", error));
+
         });
 
     }
 
-    initHeatmap() {
-        let data = JSON.stringify({operation: 'init'});
-        this.refs.webview.postMessage(data);
+    filterData(filters, originalData) {
+        console.log("the location int he filters is ", filters.location);
+        let filteredData = originalData;
+
+        // --- Keep only the requested weight ---
+        if (filters.noiseType === 'db') {
+            for (let i = 0; i < filteredData.length; i++) {
+                filteredData[i].weight = filteredData[i]['dbWeight'];
+                delete filteredData[i].dbWeight;
+                delete filteredData[i].feelWeight;
+            }
+        }
+        else {
+            for (let i = 0; i < filteredData.length; i++) {
+                filteredData[i].weight = this.evalFeelWeight(filteredData[i]['feelWeight']);
+                delete filteredData[i].feelWeight;
+                delete filteredData[i].dbWeight;
+            }
+        }
+
+        // --- Filter according to the location ---
+        filteredData = filteredData.filter(measurement => filters['location'] !== 'everywhere' ? measurement.location = filters['location'] : true);
+        return filteredData
     }
 
-    filterHeatmapData() {
-        let originalData = this.getHeatmapData();
-
-        let filters = this.getFilters();
-
-        console.log("Original heatmap data is ", this.state.heatmapData);
-        console.log("Filters are ", filters);
-
-    }
 
     updateHeatmap() {
         let filters = this.getFilters();
@@ -407,14 +479,14 @@ export default class MapScreen extends React.Component {
             return await AsyncStorage.getItem(key);
         }
         catch (error) {
-            console.log(error.message);
+            console.log("Error retrieving filters");
         }
     }
 
     updateFilters() {
         let thisRef = this;
         this.retrieveItem('filters').then().then(function (filters) {
-            console.log(filters);
+            // console.log(filters);
             thisRef.refs.webview.postMessage(filters);
         })
     }
@@ -423,44 +495,32 @@ export default class MapScreen extends React.Component {
     render() {
 
 
-        const actions2 =
+        const measureMapAction =
             [{
-                text: this.state.toggled ? "Measurements" : "Heatmap",
+                text: "Heatmap",
                 icon: <Icon
-                    name={this.state.toggled ? 'map-marker' : 'map'}
+                    name={'map'}
                     size={0.05 * width}
                     color="white"
                 />,
                 name: "toggler",
-                position: 5,
+                position: 2,
                 color: '#31BD4B'
             }];
 
-        const label = this.state.toggle === 'feel' ? "Perception" : "Noise level";
-        const typeActions = [
+        const heatMapActions = [
             {
-                text: 'Sound level',
+                text: "Measurements",
                 icon: <Icon
-                    name={'line-chart'}
+                    name={'map-marker'}
                     size={0.05 * width}
                     color="white"
                 />,
-                name: "dbs",
-                position: 3,
-                color: this.state.toggle === 'feel' ? 'gray' : '#31BD4B'
+                name: "toggler",
+                position: 2,
+                color: '#31BD4B'
             },
 
-            {
-                text: 'Noise perception',
-                icon: <Icon
-                    name={'comments'}
-                    size={0.05 * width}
-                    color="white"
-                />,
-                name: "feel",
-                position: 4,
-                color: this.state.toggle === 'feel' ? '#31BD4B' : 'gray'
-            },
             {
                 text: 'Filters',
                 icon: <Icon name={'filter'}
@@ -468,7 +528,7 @@ export default class MapScreen extends React.Component {
                             color='white'
                 />,
                 name: 'filters',
-                position: 5,
+                position: 1,
                 color: '#31BD4B'
             }];
 
@@ -484,16 +544,20 @@ export default class MapScreen extends React.Component {
                         }
                     }/>
 
-                <View style={{
-                    position: 'absolute',
-                    bottom: 35,
-                    left: 10,
-                    zIndex: 1000,
-                    width: undefined,
-                    height: undefined
-                }}>
-                    <Image source={require('../../../assets/txaimlqj.png')}/>
-                </View>
+                {this.state.toggled ?
+                    <View style={{
+                        position: 'absolute',
+                        bottom: 35,
+                        left: 10,
+                        zIndex: 1000,
+                        width: undefined,
+                        height: undefined
+                    }}>
+                        <Image source={require('../../../assets/vlampzyg.png')}/>
+                    </View>
+                    :
+                    null
+                }
                 <View style={[{flex: 1}, this.state.toggled ? {display: 'none'} : {}]}>
                     {/*<Text style={styles.example}>Floating Action example</Text>*/}
 
@@ -507,16 +571,17 @@ export default class MapScreen extends React.Component {
 
                         // style={styles.map}
 
-                        region={this.state.region}
+                        initialRegion={this.state.region}
                         moveOnMarkerPress={true}
                         showsUserLocation={true}
                         showsCompass={true}
                         showsPointsOfInterest={true}
                         showsMyLocationButton={true}
                         // onPress={() => this.searchBarHandler()}
-                        // onRegionChangeComplete={(data) => {
-                        //     this.setState({region: data})
-                        // }}
+                        onRegionChangeComplete={(data) => {
+                            console.log("nrew region is ", data);
+                            this.setState({region: data})
+                        }}
                     >
 
                         {this.state.toggled ? null : this.generateMarkers(this.state.markers)}
@@ -544,9 +609,22 @@ export default class MapScreen extends React.Component {
                 {/*/>*/}
 
                 <View style={[{flex: 1,}, this.state.toggled ? {} : {display: 'none'}]}>
-                    <WebView ref="webview"
-                        // onLoadEnd={() => this.passValues()}
-                             source={{uri: 'file:///android_asset/heatmap.html'}}/>
+                    {isAndroid ?
+                        <WebView ref="webview"
+                            // onLoadEnd={() => this.passValues()}
+                                 source={{uri: 'file:///android_asset/heatmap.html'}}/>
+                        :
+                        <WebView ref="webview"
+                            // onLoadEnd={() => this.passValues()}
+                                 automaticallyAdjustContentInsets={false}
+                                 originWhitelist={['*']}
+                                 allowFileAccess={true}
+                                 javaScriptEnabled={true}
+                                 domStorageEnabled={true}
+                                 startInLoadingState={true}
+
+                                 source={{uri: 'heatmap.bundle/heatmap.html'}}/>
+                    }
                 </View>
 
                 <FloatingAction
@@ -554,19 +632,12 @@ export default class MapScreen extends React.Component {
                         this.floatingAction = ref;
                     }}
                     color={brightGreen}
-                    actions={!this.state.toggled ? actions2 : typeActions.concat(actions2)}
+                    actions={this.state.toggled ? heatMapActions : measureMapAction}
                     onPressItem={(name) => {
                         if (name === 'toggler') {
-                            console.log("in toggler", name);
-                            this.passValues();
-                        }
-                        else if (name === 'type ' || name === 'type2') {
-                            console.log("in type", name);
-                            this.toggleValues();
-                        }
-                        else if (name === 'feel' || name === 'dbs') {
-                            console.log("in feel", name);
-                            this.checkToggleCaller(name)
+                            if (!this.state.toggled)
+                                this.sendHeatmapData();
+                            this.setState({toggled: !this.state.toggled})
                         }
                         else if (name === 'filters') {
                             console.log("in filters", name);

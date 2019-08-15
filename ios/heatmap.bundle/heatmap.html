@@ -46,7 +46,7 @@
 <body>
 <!--<div id="floating-panel">-->
 <!--    <button onclick="toggleHeatmap()">Toggle Heatmap</button>-->
-    <button onclick="changeGradient()">Change gradient</button>
+<button onclick="changeGradient()">Change gradient</button>
 <!--    <button onclick="changeRadius()">Change radius</button>-->
 <!--    <button onclick="changeOpacity()">Change opacity</button>-->
 <!--</div>-->
@@ -69,7 +69,7 @@
         // alert(measurements.length);
     }
 
-    document.addEventListener('message', function (data) {
+    window.addEventListener('message', function (data) {
 
         let parsedData = JSON.parse(data.data);
 
@@ -153,13 +153,13 @@
                 // heatmap.setOptions({data: getPoints2()});
                 heatmap = new google.maps.visualization.HeatmapLayer({
                     map: map,
-                    radius: 25,
+                    radius: 50,
                     maxIntensity: 100,
                     // dissipating: false,
                     points:[]
                 });
                 google.maps.event.addListener(map, 'zoom_changed', function () {
-                    heatmap.setOptions({radius: Math.min(25 * Math.pow(map.getZoom() - base > 0 ? 2 : 1, Math.abs(map.getZoom() - base)), 200)})
+                    heatmap.setOptions({radius: Math.min(50 * Math.pow(map.getZoom() - base > 0 ? 2 : 1, Math.abs(map.getZoom() - base)), 200)})
                 });
                 // getPoints2();
 
@@ -231,31 +231,31 @@
 
     function initMap() {
         // alert("get the map ready");
-        // map = new google.maps.Map(document.getElementById('map'), {
-        //     center: {lat: 42.3601, lng: -71.0589},
-        //     zoom: 15,
-        //     mapTypeId: 'roadmap',
-        //
-        //     styles: styles['hide'],
-        //     mapTypeControl: false,
-        //     zoomControl: true,
-        //
-        //     zoomControlOptions: {
-        //         position: google.maps.ControlPosition.TOP_RIGHT,
-        //         style: google.maps.ZoomControlStyle.DEFAULT,
-        //     },
-        //     streetViewControl: false,
-        //     clickableIcons: false,
-        //     scaleControl: false
-        // });
-        //
-        // // heatmap.setOptions({data: getPoints2()});
-        // heatmap = new google.maps.visualization.HeatmapLayer({
-        //     map: map,
-        //     radius: 25,
-        //     maxIntensity: 100,
-        //     // dissipating: false,
-        // });
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 42.3601, lng: -71.0589},
+            zoom: 15,
+            mapTypeId: 'roadmap',
+
+            styles: styles['hide'],
+            mapTypeControl: false,
+            zoomControl: true,
+
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.TOP_RIGHT,
+                style: google.maps.ZoomControlStyle.DEFAULT,
+            },
+            streetViewControl: false,
+            clickableIcons: false,
+            scaleControl: false
+        });
+
+        // heatmap.setOptions({data: getPoints2()});
+        heatmap = new google.maps.visualization.HeatmapLayer({
+            map: map,
+            radius: 25,
+            maxIntensity: 100,
+            // dissipating: false,
+        });
         //
         // google.maps.event.addListener(map, 'zoom_changed', function () {
         //     heatmap.setOptions({radius: Math.min(25 * Math.pow(map.getZoom() - base > 0 ? 2 : 1, Math.abs(map.getZoom() - base)), 200)})
@@ -817,7 +817,7 @@
     };
 </script>
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_KEY&libraries=visualization&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization&callback=initMap">
 </script>
 </body>
 </html>
