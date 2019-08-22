@@ -26,6 +26,7 @@ import ForgotResetPassword from "./src/screens/Login/ForgotResetPassword";
 import ResetPassword from "./src/screens/Login/ResetPassword"
 import Splashscreen from "./src/screens/Login/Splashscreen";
 import Text from "react-native-elements/src/text/Text";
+import HeatmapFilters from "./src/screens/Map/HeatmapFilters";
 
 const { width, height } = Dimensions.get('window');
 console.disableYellowBox = ["Unable to symbolicate"];
@@ -50,6 +51,7 @@ const AccountStack = createStackNavigator({
 });
 
 
+
 const SignUpStack = createStackNavigator({
     SignUp: SignUp,
     SignUp1: SignUp2,
@@ -58,7 +60,8 @@ const SignUpStack = createStackNavigator({
 
 
 const MapStack = createStackNavigator({
-    normalMap: { screen: MapScreen, navigationOptions: getHeader(false) }
+    normalMap: { screen: MapScreen, navigationOptions: getHeader(false) },
+    HeatmapFilters: {screen: HeatmapFilters, navigationOptions:getHeader(true)}
 });
 
 
@@ -189,14 +192,14 @@ export const root = createStackNavigator({
 let AppNavigator;
 
 // iOS uses LaunchScreen.xib as splashscreen
-if (Platform.OS === 'ios') {
-
-    AppNavigator = createSwitchNavigator({
-        UserLogin: Login,
-        App: home
-    });
-
-} else {
+// if (Platform.OS === 'ios') {
+//
+//     AppNavigator = createSwitchNavigator({
+//         UserLogin: Login,
+//         App: home
+//     });
+//
+// } else {
     AppNavigator = createSwitchNavigator({
             Splash: Splashscreen,
             App: home,
@@ -205,7 +208,7 @@ if (Platform.OS === 'ios') {
         {
             initialRoute: Splashscreen
         });
-}
+// }
 
 
 export default createAppContainer(AppNavigator);

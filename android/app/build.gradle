@@ -162,6 +162,7 @@ android {
 configurations.all {exclude group: 'com.android.support', module: 'support-v4'}
 
 dependencies {
+    implementation project(':react-native-webview')
     implementation project(':react-native-geolocation-service')
     implementation project(':react-native-keychain')
     implementation project(':@react-native-community_async-storage')

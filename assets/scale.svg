@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="1000" viewBox="0 0 200 1000">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="lime"/>
+      <stop offset="0.315" stop-color="#ff0"/>
+      <stop offset="0.704" stop-color="#f90"/>
+      <stop offset="1" stop-color="red"/>
+    </linearGradient>
+    <filter id="High" x="6" y="20" width="188" height="112" filterUnits="userSpaceOnUse">
+      <feOffset dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#8b0100" flood-opacity="0.502"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Low" x="17" y="878" width="166" height="112" filterUnits="userSpaceOnUse">
+      <feOffset dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-color="#004d00" flood-opacity="0.502"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_3884" data-name="Group 3884" transform="translate(-11714 -4452)">
+    <rect id="Rectangle_669" data-name="Rectangle 669" width="200" height="1000" rx="16" transform="translate(11914 5452) rotate(180)" fill="url(#linear-gradient)"/>
+    <g transform="matrix(1, 0, 0, 1, 11714, 4452)" filter="url(#High)">
+      <text id="High-2" data-name="High" transform="translate(100 98)" fill="#fff" font-size="80" font-family="Roboto-Bold, Roboto" font-weight="700"><tspan x="-84.082" y="0">High</tspan></text>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 11714, 4452)" filter="url(#Low)">
+      <text id="Low-2" data-name="Low" transform="translate(100 956)" fill="#fff" font-size="80" font-family="Roboto-Bold, Roboto" font-weight="700"><tspan x="-73.672" y="0">Low</tspan></text>
+    </g>
+  </g>
+</svg>

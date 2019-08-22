@@ -69,7 +69,7 @@ export default class MeasureScreen1 extends React.Component {
                         </View>
                         <View style={styles.padding}>
                             <View style={styles.wrapText}>
-                                <Text style={styles.text}>How loud were the sounds? {" "} </Text>
+                                <Text style={styles.text}>How loud {'\n'}were the sounds? {' '}</Text>
                             </View>
                             <SelectMultipleGroupButton
                                 multiple={false}
