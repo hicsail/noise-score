@@ -48,6 +48,7 @@ export default class MapScreen extends React.Component {
             authHeader: "",
             query: "",
             searchBarShown: false,
+            defaultLoc: defaultLoc
         };
     }
 
@@ -328,8 +329,8 @@ export default class MapScreen extends React.Component {
         let data = JSON.stringify({operation: 'init'});
         // alert(data);
         if (!isAndroid)
-            setTimeout(
-                this.refs.webview.postMessage(data), 400);
+            setTimeout(()=> {
+                this.refs.webview.postMessage(data)}, 200);
         else {
             this.refs.webview.postMessage(data);
         }
@@ -429,8 +430,16 @@ export default class MapScreen extends React.Component {
         }
 
         // --- Filter according to the location ---
-        filteredData = filteredData.filter(measurement => filters['location'] !== 'everywhere' ? measurement.location = filters['location'] : true);
-        return filteredData
+        if (filters['location'].toLowerCase() === 'indoors'){
+            return filteredData.filter(measurement => measurement.location.indexOf('ndoors') > -1);
+        } else if (filters['location'].toLowerCase() === 'outdoors'){
+            return filteredData.filter(measurement => measurement.location.indexOf('utdoors') > -1);
+        } else if (filters['location'].toLowerCase().indexOf('work') > -1){
+            return filteredData.filter(measurement => measurement.location.indexOf('ork') > -1);
+        } else {
+            return filteredData
+        }
+
     }
 
 
@@ -495,7 +504,6 @@ export default class MapScreen extends React.Component {
 
     render() {
 
-
         const measureMapAction =
             [
                 {
@@ -536,6 +544,8 @@ export default class MapScreen extends React.Component {
             }];
 
         let thisRef = this;
+
+
         return (
 
             <View style={styles.container}>
@@ -578,7 +588,7 @@ export default class MapScreen extends React.Component {
 
                         // style={styles.map}
 
-                        initialRegion={this.state.region}
+                        initialRegion={this.state.region === null ? this.state.defaultLoc : this.state.region}
                         moveOnMarkerPress={true}
                         showsUserLocation={true}
                         showsCompass={true}

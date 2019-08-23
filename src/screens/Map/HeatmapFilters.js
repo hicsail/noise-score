@@ -234,10 +234,9 @@ export default class HeatmapFilters extends React.Component {
                         marginBottom: 20
                     }, {width: '90%'}]}>
                         <Text style={{
-
                             fontSize: width * 0.04,
                             textAlignVertical: 'center', textAlign: 'center', marginBottom: 5,
-                        }}> Where the measurements were taken ? </Text>
+                        }}> Where were the measurements taken ? </Text>
                         <RNPickerSelect
                             placeholder={{label: 'All the possible locations', value: 'Everywhere'}}
                             items={filters.location}

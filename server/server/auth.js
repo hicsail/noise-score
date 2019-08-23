@@ -127,7 +127,7 @@ internals.applyStrategy = function (server, next) {
     isSecure: false,
     clearInvalid: true,
     keepAlive: true,
-    ttl: 60000 * 30, //30 Minutes
+    ttl: 1000 * 60 * 60 * 24 * 14, //30 Minutes
     redirectTo: '/login',
     appendNext: 'returnUrl',
     validateFunc: function (request, data, callback) {
