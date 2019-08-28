@@ -13,7 +13,7 @@ import Geolocation from 'react-native-geolocation-service';
 import axios from "axios";
 import AsyncStorage from '@react-native-community/async-storage';
 
-import {IP_ADDRESS, brightGreen, getCoordinates, width, isAndroid} from "../../components/constants";
+import {IP_ADDRESS, brightGreen, getCoordinates, width, height, isAndroid} from "../../components/constants";
 import CustomButton from "../../Base/CustomButton";
 
 const currentLocationImage = require('./mapMarker3.png');
@@ -348,7 +348,7 @@ export default class MapScreen extends React.Component {
             .then(
                 (measurements) => {
                     let data = measurements.data.length ? measurements.data : [];
-                    thisRef.setState({heatmapData: data}, () => console.log("Got 'em all"))
+                    thisRef.setState({heatmapData: data}, () => console.log("In getHeatmapData. Got allMeasurements data."))
                 }
             )
             .catch(
@@ -390,18 +390,20 @@ export default class MapScreen extends React.Component {
         this.getHeatmapData().done(() => {
             let originalData = this.state.heatmapData;
             AsyncStorage.getItem('filters').then(function (filters) {
-                console.log(filters);
-                console.log(originalData);
+                console.log("In sendHeatmapData.");
+                // console.log("filters:")
+                // console.log(filters);
+                // console.log('original data:');
+                // console.log(originalData);
                 filters = JSON.parse(filters);
 
                 let filteredData = thisRef.filterData(filters, originalData);
-                console.log("filtered data is ", filteredData);
-
+                //console.log("filtered data is ", filteredData);
 
                 let jsonData = JSON.stringify({data: filteredData, region: thisRef.state.region, operation: 'show'});
-                // console.log("this state 2 is :", temp);
+                // console.log("heatmap json data is:");
+                // console.log(jsonData);
                 thisRef.refs.webview.postMessage(jsonData);
-                console.log("Sent new data")
 
             }).catch(error => console.log("could not retrieve the filters", error));
 
@@ -625,24 +627,27 @@ export default class MapScreen extends React.Component {
                 {/*onSubmitEditing={() => this.searchDriver()}*/}
                 {/*/>*/}
 
-                <View style={[{flex: 1,}, this.state.toggled ? {} : {display: 'none'}]}>
+                <View style={[{flex: 1,}, this.state.toggled ? {} : {display: 'none'}, {overflow: 'hidden'}]}>
                     {isAndroid ?
-                        <WebView ref="webview"
-                            // onLoadEnd={() => this.passValues()}
-                                 source={{uri: 'file:///android_asset/heatmap.html'}}/>
-                        :
-                        <WebView ref="webview"
-                            // onLoadEnd={() => this.passValues()}
-                                 automaticallyAdjustContentInsets={false}
-                                 originWhitelist={['*']}
-                                 allowFileAccess={true}
-                                 javaScriptEnabled={true}
-                                 domStorageEnabled={true}
-                                 startInLoadingState={true}
-
-                                 source={{uri: 'heatmap.bundle/heatmap.html'}}/>
+                    <WebView ref="webview" style={[{flex: 1}, {opacity: 0.99}, {width: width}, {height: height}]}
+                        // onLoadEnd={() => this.passValues()}
+                           javaScriptEnabled={true}
+                           domStorageEnabled={true}
+                           startInLoadingState={true}
+                           originWhitelist={['*']}
+                           source={{uri: 'file:///android_asset/heatmap.html'}}/>
+                    :
+                    <WebView ref="webview"
+                        // onLoadEnd={() => this.passValues()}
+                           automaticallyAdjustContentInsets={false}
+                           originWhitelist={['*']}
+                           allowFileAccess={true}
+                           javaScriptEnabled={true}
+                           domStorageEnabled={true}
+                           startInLoadingState={true}
+                           source={{uri: 'heatmap.bundle/heatmap.html'}}/>
                     }
-                </View>
+                  </View>
 
 
                 {this.state.toggled ?
@@ -654,17 +659,19 @@ export default class MapScreen extends React.Component {
                         color={brightGreen}
                         actions={this.state.toggled ? heatMapActions : measureMapAction}
                         onPressItem={(name) => {
+                            console.log("state toggled is true, in FloatingAction.onPress, name is ", name);
                             if (name === 'toggler') {
+                                console.log("pressed toggler.");
                                 if (!this.state.toggled)
+                                    console.log("state.toggled is false.  Calling sendHeatmapData.");
                                     this.sendHeatmapData();
                                 this.setState({toggled: !this.state.toggled})
                             }
                             else if (name === 'filters') {
-                                console.log("in filters", name);
+                                console.log("pressed filters.");
                                 this.props.navigation.navigate('HeatmapFilters')
                             }
-                            console.log("the data we got is ", name);
-                            console.log(name === 'feel')
+                            console.log("the name of the item pressed is ", name);
                         }}
 
                         onPressMain={() => {
@@ -678,6 +685,7 @@ export default class MapScreen extends React.Component {
                     :
                     <TouchableOpacity
                         onPress={() => {
+                            console.log("state toggled is false, in TouchableOpacity.onPress.");
                             this.sendHeatmapData();
                             this.setState({toggled: !this.state.toggled})
                         }}
@@ -761,6 +769,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopWidth: 0, borderBottomWidth: 0,
 
-    }
+    },
 });
 

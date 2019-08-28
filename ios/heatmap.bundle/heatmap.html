@@ -73,10 +73,10 @@
 
         let parsedData = JSON.parse(data.data);
 
-        // alert(data.data);
+        //alert("in heatmap.addEventListener, parsedData['data'].length is ", parsedData['data'].length);
 
         if (parsedData.operation === 'init') {
-            // alert("will instantiate the map");
+            //alert("will instantiate the map");
             // initMap();
 
         }
@@ -136,7 +136,7 @@
                 // res = temp;
                 map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 15,
-                    center: {lat: 40, lng: 71},
+                    center: {lat: 40, lng: -71},
                     mapTypeId: 'roadmap',
                     styles: styles['hide'],
                     mapTypeControl: false,

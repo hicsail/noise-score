@@ -65,18 +65,18 @@
 
 
     function recieveData(data) {
-        measurements = JSON.parse(data.data)['data']
-        // alert(measurements.length);
+        measurements = JSON.parse(data.data)['data'];
+        //alert(measurements.length);
     }
 
     document.addEventListener('message', function (data) {
 
         let parsedData = JSON.parse(data.data);
 
-        // alert(data.data);
+        //alert("in heatmap.addEventListener, parsedData['data'].length is ", parsedData['data'].length);
 
         if (parsedData.operation === 'init') {
-            // alert("will instantiate the map");
+            //alert("will instantiate the map");
             // initMap();
 
         }
