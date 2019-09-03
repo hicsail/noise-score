@@ -627,14 +627,28 @@ export default class MapScreen extends React.Component {
                 {/*onSubmitEditing={() => this.searchDriver()}*/}
                 {/*/>*/}
 
-                <View style={[{flex: 1,}, this.state.toggled ? {} : {display: 'none'}, {overflow: 'hidden'}]}>
+
+                <View style={[{flex: 1}, this.state.toggled ? {} : {display: 'none'}, {overflow: 'hidden'}]}>
                     {isAndroid ?
-                    <WebView ref="webview" style={[{flex: 1}, {opacity: 0.99}, {width: width}, {height: height}]}
+                    <WebView ref="webview"
+                             //style={{flex:1}}
+                             //style={[{opacity: 0.99}, {width: width}, {height: height}]}
                         // onLoadEnd={() => this.passValues()}
                            javaScriptEnabled={true}
                            domStorageEnabled={true}
                            startInLoadingState={true}
                            originWhitelist={['*']}
+                           // scalesPageToFit={true}
+                           ignoreSslError={true}
+                           allowFileAccessFromFileURLs={true}
+                           allowFileAccess={true}
+                           geolocationEnabled={true}
+                           // cacheEnabled={false}
+                           onError={error => {
+                                 console.log("ERROR with webview");
+                                 console.log(error);}
+                           }
+                           renderError={errorName => <Error name={errorName}/>}
                            source={{uri: 'file:///android_asset/heatmap.html'}}/>
                     :
                     <WebView ref="webview"
@@ -648,6 +662,47 @@ export default class MapScreen extends React.Component {
                            source={{uri: 'heatmap.bundle/heatmap.html'}}/>
                     }
                   </View>
+
+
+                {/*{isAndroid ?*/}
+
+                  {/*<WebView ref="webview"*/}
+                           {/*style={[this.state.toggled ? {} : {display: 'none'}]}*/}
+                    {/*//style={[{opacity: 0.99}, {width: width}, {height: height}]}*/}
+                    {/*// onLoadEnd={() => this.passValues()}*/}
+                           {/*javaScriptEnabled={true}*/}
+                           {/*domStorageEnabled={true}*/}
+                           {/*startInLoadingState={true}*/}
+                           {/*originWhitelist={['*']}*/}
+                    {/*// scalesPageToFit={true}*/}
+                           {/*ignoreSslError={true}*/}
+                           {/*allowFileAccessFromFileURLs={true}*/}
+                           {/*allowFileAccess={true}*/}
+                           {/*geolocationEnabled={true}*/}
+                    {/*// cacheEnabled={false}*/}
+                           {/*onError={error => {*/}
+                               {/*console.log("ERROR with webview");*/}
+                               {/*console.log(error);*/}
+                           {/*}*/}
+                           {/*}*/}
+                           {/*renderError={errorName => <Error name={errorName}/>}*/}
+                           {/*source={{uri: 'file:///android_asset/heatmap.html'}}/>*/}
+
+                  {/*:*/}
+
+                  {/*<View style={[this.state.toggled ? {} : {display: 'none'}, {flex: 1}, {overflow: 'hidden'}]}>*/}
+                      {/*<WebView ref="webview"*/}
+                        {/*// onLoadEnd={() => this.passValues()}*/}
+                               {/*automaticallyAdjustContentInsets={false}*/}
+                               {/*originWhitelist={['*']}*/}
+                               {/*allowFileAccess={true}*/}
+                               {/*javaScriptEnabled={true}*/}
+                               {/*domStorageEnabled={true}*/}
+                               {/*startInLoadingState={true}*/}
+                               {/*source={{uri: 'heatmap.bundle/heatmap.html'}}/>*/}
+                  {/*</View>*/}
+                {/*}*/}
+
 
 
                 {this.state.toggled ?
@@ -739,7 +794,7 @@ export default class MapScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: 'white'
     },
     mapView: {
         // left: 0,
