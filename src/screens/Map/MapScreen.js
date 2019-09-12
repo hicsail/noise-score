@@ -1,7 +1,7 @@
 import React from 'react';
-import {Platform, StyleSheet, View, Alert, Image, TouchableOpacity} from 'react-native';
+import {Platform, StyleSheet, View, Alert, Image, TouchableOpacity } from 'react-native';
 import {Text} from 'react-native-elements';
-import WebView from "react-native-webview";
+import { WebView } from "react-native-webview";
 import {FloatingAction} from "react-native-floating-action";
 import Icon from "react-native-vector-icons/FontAwesome";
 import SearchBar from 'react-native-searchbar'
@@ -17,7 +17,7 @@ import {IP_ADDRESS, brightGreen, getCoordinates, width, height, isAndroid} from 
 import CustomButton from "../../Base/CustomButton";
 
 const currentLocationImage = require('./mapMarker3.png');
-
+//import { LocalHtml } from "./html/heatmap.html";
 
 // Default region (Center of Boston) for the map to center if the user does not give location access
 const defaultLoc = {
@@ -65,6 +65,7 @@ export default class MapScreen extends React.Component {
                 this.getUserLocation();
                 this.updateMarkers();
                 this.sendHeatmapData();
+                console.log("IN COMPONENT DID MOUNT.");
             }),
 
             // this.props.navigation.addListener('willFocus', () => this.searchBar.show())
@@ -137,6 +138,7 @@ export default class MapScreen extends React.Component {
             };
 
             thisRef.setState({userData: userData});
+            console.log("Got user data.");
             return userData;
         }).catch((error) =>
             console.log("Could not retrieve user's data from async storage", error));
@@ -332,6 +334,7 @@ export default class MapScreen extends React.Component {
             setTimeout(()=> {
                 this.refs.webview.postMessage(data)}, 200);
         else {
+            console.log("IN INIT HEATMAP.");
             this.refs.webview.postMessage(data);
         }
     }
@@ -349,6 +352,7 @@ export default class MapScreen extends React.Component {
                 (measurements) => {
                     let data = measurements.data.length ? measurements.data : [];
                     thisRef.setState({heatmapData: data}, () => console.log("In getHeatmapData. Got allMeasurements data."))
+                    console.log(data);
                 }
             )
             .catch(
@@ -387,32 +391,33 @@ export default class MapScreen extends React.Component {
 
     sendHeatmapData() {
         let thisRef = this;
-        this.getHeatmapData().done(() => {
+        let filters;
+
+        this.getHeatmapData().done(async () => {
             let originalData = this.state.heatmapData;
-            AsyncStorage.getItem('filters').then(function (filters) {
-                console.log("In sendHeatmapData.");
-                // console.log("filters:")
-                // console.log(filters);
-                // console.log('original data:');
-                // console.log(originalData);
+
+            filters = await AsyncStorage.getItem('filters');
+
+            if (!filters) {
+                filters = {};
+                console.log("Could not retrieve filters.  Using default filters (decibels, everywhere).");
+                filters.noiseType = "dbs";
+                filters.location = "Everywhere";
+            } else {
                 filters = JSON.parse(filters);
+            }
 
-                let filteredData = thisRef.filterData(filters, originalData);
-                //console.log("filtered data is ", filteredData);
-
-                let jsonData = JSON.stringify({data: filteredData, region: thisRef.state.region, operation: 'show'});
-                // console.log("heatmap json data is:");
-                // console.log(jsonData);
-                thisRef.refs.webview.postMessage(jsonData);
-
-            }).catch(error => console.log("could not retrieve the filters", error));
-
+            console.log("In sendHeatmapData. The filters are:");
+            console.log(filters);
+            
+            let filteredData = thisRef.filterData(filters, originalData);
+            let jsonData = JSON.stringify({data: filteredData, region: thisRef.state.region, operation: 'show'});
+            thisRef.refs.webview.postMessage(jsonData);
         });
-
     }
 
     filterData(filters, originalData) {
-        console.log("the filters are ", filters);
+        console.log("In filterData().  The filters are ", filters);
         let filteredData = originalData;
 
         // --- Keep only the requested weight ---
@@ -425,6 +430,7 @@ export default class MapScreen extends React.Component {
         }
         else {
             for (let i = 0; i < filteredData.length; i++) {
+                console.log(i, " filteredData[i] is ", filteredData[i]);
                 filteredData[i].weight = this.evalFeelWeight(filteredData[i]['feelWeight']);
                 delete filteredData[i].feelWeight;
                 delete filteredData[i].dbWeight;
@@ -435,6 +441,8 @@ export default class MapScreen extends React.Component {
         if (filters['location'].toLowerCase() === 'indoors'){
             return filteredData.filter(measurement => measurement.location.indexOf('ndoors') > -1);
         } else if (filters['location'].toLowerCase() === 'outdoors'){
+            console.log("filteredData is ");
+            console.log(filteredData);
             return filteredData.filter(measurement => measurement.location.indexOf('utdoors') > -1);
         } else if (filters['location'].toLowerCase().indexOf('work') > -1){
             return filteredData.filter(measurement => measurement.location.indexOf('ork') > -1);
@@ -628,28 +636,23 @@ export default class MapScreen extends React.Component {
                 {/*/>*/}
 
 
-                <View style={[{flex: 1}, this.state.toggled ? {} : {display: 'none'}, {overflow: 'hidden'}]}>
+                <View style={[this.state.toggled ? {} : {display: 'none'}, {width: width, height: height, overflow: 'hidden'}]}>
                     {isAndroid ?
-                    <WebView ref="webview"
-                             //style={{flex:1}}
-                             //style={[{opacity: 0.99}, {width: width}, {height: height}]}
-                        // onLoadEnd={() => this.passValues()}
-                           javaScriptEnabled={true}
-                           domStorageEnabled={true}
-                           startInLoadingState={true}
-                           originWhitelist={['*']}
-                           // scalesPageToFit={true}
-                           ignoreSslError={true}
-                           allowFileAccessFromFileURLs={true}
-                           allowFileAccess={true}
-                           geolocationEnabled={true}
-                           // cacheEnabled={false}
-                           onError={error => {
-                                 console.log("ERROR with webview");
-                                 console.log(error);}
-                           }
-                           renderError={errorName => <Error name={errorName}/>}
-                           source={{uri: 'file:///android_asset/heatmap.html'}}/>
+
+                        <WebView ref="webview"
+                             style={{width: width, height: height}}
+                             javaScriptEnabled={true}
+                             domStorageEnabled={true}
+                             startInLoadingState={true}
+                             originWhitelist={['*']}
+                             ignoreSslError={true}
+                             allowFileAccess={true}
+                             cacheEnabled={true}
+                             mixedContentMode={'always'}
+                             useWebKit={true}
+                             source={{uri: 'file:///android_asset/heatmap.html'}}
+                        />
+
                     :
                     <WebView ref="webview"
                         // onLoadEnd={() => this.passValues()}
@@ -663,48 +666,7 @@ export default class MapScreen extends React.Component {
                     }
                   </View>
 
-
-                {/*{isAndroid ?*/}
-
-                  {/*<WebView ref="webview"*/}
-                           {/*style={[this.state.toggled ? {} : {display: 'none'}]}*/}
-                    {/*//style={[{opacity: 0.99}, {width: width}, {height: height}]}*/}
-                    {/*// onLoadEnd={() => this.passValues()}*/}
-                           {/*javaScriptEnabled={true}*/}
-                           {/*domStorageEnabled={true}*/}
-                           {/*startInLoadingState={true}*/}
-                           {/*originWhitelist={['*']}*/}
-                    {/*// scalesPageToFit={true}*/}
-                           {/*ignoreSslError={true}*/}
-                           {/*allowFileAccessFromFileURLs={true}*/}
-                           {/*allowFileAccess={true}*/}
-                           {/*geolocationEnabled={true}*/}
-                    {/*// cacheEnabled={false}*/}
-                           {/*onError={error => {*/}
-                               {/*console.log("ERROR with webview");*/}
-                               {/*console.log(error);*/}
-                           {/*}*/}
-                           {/*}*/}
-                           {/*renderError={errorName => <Error name={errorName}/>}*/}
-                           {/*source={{uri: 'file:///android_asset/heatmap.html'}}/>*/}
-
-                  {/*:*/}
-
-                  {/*<View style={[this.state.toggled ? {} : {display: 'none'}, {flex: 1}, {overflow: 'hidden'}]}>*/}
-                      {/*<WebView ref="webview"*/}
-                        {/*// onLoadEnd={() => this.passValues()}*/}
-                               {/*automaticallyAdjustContentInsets={false}*/}
-                               {/*originWhitelist={['*']}*/}
-                               {/*allowFileAccess={true}*/}
-                               {/*javaScriptEnabled={true}*/}
-                               {/*domStorageEnabled={true}*/}
-                               {/*startInLoadingState={true}*/}
-                               {/*source={{uri: 'heatmap.bundle/heatmap.html'}}/>*/}
-                  {/*</View>*/}
-                {/*}*/}
-
-
-
+                
                 {this.state.toggled ?
                     <FloatingAction
                         ref={(ref) => {
@@ -826,4 +788,5 @@ const styles = StyleSheet.create({
 
     },
 });
+
 
