@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
@@ -125,6 +124,7 @@
 		D9A32FC568FA433ABD1D2D24 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F9DD4FCAD3F3409BAF170D24 /* libRNGestureHandler.a */; };
 		ECA8ACEBBD924A99829E1AE6 /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0506A1FCF096460DA5667A12 /* libRNCWebView.a */; };
 		F79078CC74624AEB834DDA90 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D35E3D73F1FB423E956958EB /* Feather.ttf */; };
+		688EE6E1EC314FD7A0C59FEB /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23205E84757F43D88A2086A6 /* libRCTOneSignal.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -689,6 +689,8 @@
 		ED1EA12FA43249BD912D901A /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		F9DD4FCAD3F3409BAF170D24 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		FFB2EBB2D422454BB8BA5789 /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; };
+		B34A7BA66EC1450D894C00A3 /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; name = "RCTOneSignal.xcodeproj"; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		23205E84757F43D88A2086A6 /* libRCTOneSignal.a */ = {isa = PBXFileReference; name = "libRCTOneSignal.a"; path = "libRCTOneSignal.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -740,6 +742,7 @@
 				5C95C30DDA254E8984D700A1 /* libRNCAsyncStorage.a in Frameworks */,
 				8C4C3F30B2354AEFA4AAA43F /* libRNKeychain.a in Frameworks */,
 				ECA8ACEBBD924A99829E1AE6 /* libRNCWebView.a in Frameworks */,
+				688EE6E1EC314FD7A0C59FEB /* libRCTOneSignal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1198,6 +1201,7 @@
 				EA4255E3ED864CE0B6C552CA /* RNCAsyncStorage.xcodeproj */,
 				53D6912FF1664B71A318AF2E /* RNKeychain.xcodeproj */,
 				5309A8A662AD4F10B1B8C5BF /* RNCWebView.xcodeproj */,
+				B34A7BA66EC1450D894C00A3 /* RCTOneSignal.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1345,6 +1349,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 9PYEKQ92GY;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1993,6 +1998,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 9PYEKQ92GY;
@@ -2021,11 +2027,13 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 				INFOPLIST_FILE = noisescore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
@@ -2038,6 +2046,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.bu.sail.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = noisescore;
+				PROVISIONING_PROFILE_SPECIFIER = "Noise Score";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2046,6 +2055,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9PYEKQ92GY;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
@@ -2072,11 +2082,13 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 				INFOPLIST_FILE = noisescore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
@@ -2089,6 +2101,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.bu.sail.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = noisescore;
+				PROVISIONING_PROFILE_SPECIFIER = "Noise Score";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2116,6 +2129,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 				INFOPLIST_FILE = "noisescore-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2159,6 +2173,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 				INFOPLIST_FILE = "noisescore-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2201,6 +2216,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 				INFOPLIST_FILE = "noisescore-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2243,6 +2259,7 @@
 					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 				INFOPLIST_FILE = "noisescore-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

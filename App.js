@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
@@ -27,6 +27,8 @@ import ResetPassword from "./src/screens/Login/ResetPassword"
 import Splashscreen from "./src/screens/Login/Splashscreen";
 import Text from "react-native-elements/src/text/Text";
 import HeatmapFilters from "./src/screens/Map/HeatmapFilters";
+
+import OneSignal from 'react-native-onesignal'; // Import package from node modules
 
 const { width, height } = Dimensions.get('window');
 console.disableYellowBox = ["Unable to symbolicate"];
@@ -210,6 +212,43 @@ let AppNavigator;
         });
 // }
 
+export default class App extends Component {
 
-export default createAppContainer(AppNavigator);
+    constructor(properties) {
+        super(properties);
+        OneSignal.init("4d875b13-0f22-47cb-ab01-1ca7ac0c2e90");
+    
+        OneSignal.addEventListener('received', this.onReceived);
+        OneSignal.addEventListener('opened', this.onOpened);
+        OneSignal.addEventListener('ids', this.onIds);
+      }
+    
+      componentWillUnmount() {
+        OneSignal.removeEventListener('received', this.onReceived);
+        OneSignal.removeEventListener('opened', this.onOpened);
+        OneSignal.removeEventListener('ids', this.onIds);
+      }
+    
+      onReceived(notification) {
+        console.log("Notification received: ", notification);
+      }
+    
+      onOpened(openResult) {
+        console.log('Message: ', openResult.notification.payload.body);
+        console.log('Data: ', openResult.notification.payload.additionalData);
+        console.log('isActive: ', openResult.notification.isAppInFocus);
+        console.log('openResult: ', openResult);
+      }
+    
+      onIds(device) {
+        console.log('Device info: ', device);
+      }
 
+      render() {
+        /* In the root component we are rendering the app navigator */
+        return <AppContainer />;
+      }
+    }
+
+
+    const AppContainer = createAppContainer(AppNavigator);
