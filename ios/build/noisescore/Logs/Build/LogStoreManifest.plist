@@ -6,7 +6,7 @@
 	<integer>10</integer>
 	<key>logs</key>
 	<dict>
-		<key>9618C1BB-9912-40DF-93D1-EE21458AC1C3</key>
+		<key>B3E50A27-CEEC-4B60-AEA2-900F8BDB58CD</key>
 		<dict>
 			<key>className</key>
 			<string>IDECommandLineBuildLog</string>
@@ -15,11 +15,11 @@
 			<key>domainType</key>
 			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
 			<key>fileName</key>
-			<string>9618C1BB-9912-40DF-93D1-EE21458AC1C3.xcactivitylog</string>
+			<string>B3E50A27-CEEC-4B60-AEA2-900F8BDB58CD.xcactivitylog</string>
 			<key>primaryObservable</key>
 			<dict>
 				<key>highLevelStatus</key>
-				<string>W</string>
+				<string>E</string>
 			</dict>
 			<key>schemeIdentifier-containerName</key>
 			<string>noisescore project</string>
@@ -30,13 +30,13 @@
 			<key>signature</key>
 			<string>Building project noisescore with scheme noisescore and configuration Debug</string>
 			<key>timeStartedRecording</key>
-			<real>593981015.69042206</real>
+			<real>597178159.97124004</real>
 			<key>timeStoppedRecording</key>
-			<real>593981017.36548603</real>
+			<real>597178162.72337401</real>
 			<key>title</key>
 			<string>Building project noisescore with scheme noisescore and configuration Debug</string>
 			<key>uniqueIdentifier</key>
-			<string>9618C1BB-9912-40DF-93D1-EE21458AC1C3</string>
+			<string>B3E50A27-CEEC-4B60-AEA2-900F8BDB58CD</string>
 		</dict>
 	</dict>
 </dict>
