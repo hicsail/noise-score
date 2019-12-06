@@ -22,7 +22,7 @@ const config = {
   baseUrl: {
     $filter: 'env',
     production: process.env.BASE_URL,
-    test: 'http://localhost:9090/',
+    test: 'localhost:9090',
     local: process.env.BASE_URL,
     $default: 'http://3.14.174.164:9000/'
   },
@@ -36,8 +36,8 @@ const config = {
     }
   },
   authAttempts: {
-    forIp: 100,
-    forIpAndUser: 100
+    forIp: 50,
+    forIpAndUser: 7
   },
   authSecret: {
     $filter: 'env',

@@ -27,8 +27,8 @@
 {
   NSURL *jsCodeLocation;
 
-  [GMSServices provideAPIKey:@"AIzaSyAfGO8M5ocLOiSV8CmPE-TRh8ifEXbtGqo"];
-  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8881/index.bundle?platform=ios"];
+  [GMSServices provideAPIKey:@"GOOGLE_API_KEY"];
+  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.bundle?platform=ios"];
   
   
   [[RCTBundleURLProvider sharedSettings] setJsLocation:jsCodeLocation.host];
