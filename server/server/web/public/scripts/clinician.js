@@ -78,6 +78,10 @@ $(document).ready(function() {
       {
         data: 'words',
         defaultContent: ''
+      },
+      {
+        data: 'date',
+        defaultContent: ''
       }
 
     ]
