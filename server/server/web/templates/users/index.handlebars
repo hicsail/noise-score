@@ -14,7 +14,7 @@
               <thead>
               <tr>
 
-                <th>UserID</th>
+
                 <th>Name</th>
                 <th>Username</th>
                 <th>Email</th>
@@ -75,14 +75,10 @@
       ajax: {
         url: "/api/table/users",
         data: function (d) {
-          d.fields = "_id name username email ethnicity year sensitive home community work health weekday weekend studyID timeCreated";
+          d.fields = "name username email ethnicity year sensitive home community work health weekday weekend studyID timeCreated";
         }
       },
       "columns": [
-        {
-          data: "_id",
-          defaultContent: ""
-        },
         {
           data: "name",
           defaultContent: ""
