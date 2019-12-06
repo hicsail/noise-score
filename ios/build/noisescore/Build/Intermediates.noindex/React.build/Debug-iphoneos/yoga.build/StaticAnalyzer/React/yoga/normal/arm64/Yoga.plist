@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
  <key>clang_version</key>
-<string>Apple clang version 11.0.0 (clang-1100.0.33.12)</string>
+<string>Apple LLVM version 10.0.1 (clang-1001.0.46.4)</string>
  <key>diagnostics</key>
  <array>
   <dict>
@@ -1902,16 +1902,16 @@
    </array>
    <key>3</key>
    <array>
-    <integer>1523</integer>
-    <integer>1524</integer>
-    <integer>1525</integer>
-    <integer>1526</integer>
-    <integer>1527</integer>
-    <integer>1575</integer>
-    <integer>1576</integer>
-    <integer>1577</integer>
-    <integer>1578</integer>
-    <integer>1579</integer>
+    <integer>1505</integer>
+    <integer>1506</integer>
+    <integer>1507</integer>
+    <integer>1508</integer>
+    <integer>1509</integer>
+    <integer>1557</integer>
+    <integer>1558</integer>
+    <integer>1559</integer>
+    <integer>1560</integer>
+    <integer>1561</integer>
    </array>
    <key>4</key>
    <array>
@@ -1983,9 +1983,9 @@
  <key>files</key>
  <array>
   <string>/Users/christophertrinh/prodev/sail2019/noise-score/node_modules/react-native/ReactCommon/yoga/yoga/Yoga.cpp</string>
-  <string>/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/math.h</string>
-  <string>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.2.sdk/usr/include/math.h</string>
-  <string>/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1/iterator</string>
+  <string>/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/math.h</string>
+  <string>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.4.sdk/usr/include/math.h</string>
+  <string>/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/iterator</string>
   <string>/Users/christophertrinh/prodev/sail2019/noise-score/node_modules/react-native/ReactCommon/yoga/yoga/Utils.h</string>
   <string>/Users/christophertrinh/prodev/sail2019/noise-score/node_modules/react-native/ReactCommon/yoga/yoga/YGNode.h</string>
   <string>/Users/christophertrinh/prodev/sail2019/noise-score/node_modules/react-native/ReactCommon/yoga/yoga/YGMarker.h</string>
