@@ -20,6 +20,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 //import com.airbnb.android.react.maps.MapsPackage;
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,11 +64,16 @@ public class MainApplication extends Application implements ReactApplication {
     return mReactNativeHost;
   }
 
+
   @Override
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-
     WebView.setWebContentsDebuggingEnabled(true);
+
   }
+
+
+
+
 }

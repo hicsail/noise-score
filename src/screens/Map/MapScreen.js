@@ -65,7 +65,6 @@ export default class MapScreen extends React.Component {
                 this.getUserLocation();
                 this.updateMarkers();
                 this.sendHeatmapData();
-                console.log("IN COMPONENT DID MOUNT.");
             }),
 
             // this.props.navigation.addListener('willFocus', () => this.searchBar.show())
@@ -123,7 +122,8 @@ export default class MapScreen extends React.Component {
     getUserData = async (thisRef) => {
         return await AsyncStorage.getItem('userData').then(function (ret) {
             let response = JSON.parse(ret);
-
+            console.log('response is ');
+            console.log(response);
             // Now we need to get all their measurement information
 
             let userData = {
@@ -138,7 +138,8 @@ export default class MapScreen extends React.Component {
             };
 
             thisRef.setState({userData: userData});
-            console.log("Got user data.");
+            console.log("in state, userData:");
+            console.log(thisRef.state.userData);
             return userData;
         }).catch((error) =>
             console.log("Could not retrieve user's data from async storage", error));
@@ -146,7 +147,7 @@ export default class MapScreen extends React.Component {
 
 
     // --------- Updates state's marker's object with new data ---------
-    updateMarkers() {
+    async updateMarkers() {
         let self = this;
         let newMarkers = [];
         let thisRef = this;
@@ -154,8 +155,11 @@ export default class MapScreen extends React.Component {
         // --------- Get user's data to display as markers ---------
 
         // Get/Update user's data
-        this.getUserData(this).done();
-        let userData = this.state.userData;
+        //this.getUserData(this).done();
+        // let userData = this.state.userData;
+        let userData = await this.getUserData(this);
+        console.log("userData:");
+        console.log(userData);
 
         // Retrieve the data from the database
         axios.get('http://' + IP_ADDRESS + '/api/userMeasurements', userData)
@@ -351,7 +355,8 @@ export default class MapScreen extends React.Component {
             .then(
                 (measurements) => {
                     let data = measurements.data.length ? measurements.data : [];
-                    thisRef.setState({heatmapData: data}, () => console.log("In getHeatmapData. Got allMeasurements data."))
+                    thisRef.setState({heatmapData: data}, () => console.log("In getHeatmapData. Got allMeasurements" +
+                      " data."));
                     console.log(data);
                 }
             )
@@ -413,6 +418,8 @@ export default class MapScreen extends React.Component {
             let filteredData = thisRef.filterData(filters, originalData);
             let jsonData = JSON.stringify({data: filteredData, region: thisRef.state.region, operation: 'show'});
             thisRef.refs.webview.postMessage(jsonData);
+            console.log('Data sending to webview for heatmap:');
+            console.log(jsonData);
         });
     }
 
@@ -430,7 +437,7 @@ export default class MapScreen extends React.Component {
         }
         else {
             for (let i = 0; i < filteredData.length; i++) {
-                console.log(i, " filteredData[i] is ", filteredData[i]);
+                //console.log(i, " filteredData[i] is ", filteredData[i]);
                 filteredData[i].weight = this.evalFeelWeight(filteredData[i]['feelWeight']);
                 delete filteredData[i].feelWeight;
                 delete filteredData[i].dbWeight;
@@ -441,8 +448,8 @@ export default class MapScreen extends React.Component {
         if (filters['location'].toLowerCase() === 'indoors'){
             return filteredData.filter(measurement => measurement.location.indexOf('ndoors') > -1);
         } else if (filters['location'].toLowerCase() === 'outdoors'){
-            console.log("filteredData is ");
-            console.log(filteredData);
+            // console.log("filteredData is ");
+            // console.log(filteredData);
             return filteredData.filter(measurement => measurement.location.indexOf('utdoors') > -1);
         } else if (filters['location'].toLowerCase().indexOf('work') > -1){
             return filteredData.filter(measurement => measurement.location.indexOf('ork') > -1);

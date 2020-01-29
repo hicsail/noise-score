@@ -6,6 +6,7 @@ ios/build/ModuleCache.noindex
 !**/*.xcodeproj
 !**/*.pbxproj
 !**/*.xcworkspacedata
+!**/*.xcuserstate
 !**/*.xcsettings
 !**/*.xcscheme
 *.pbxuser

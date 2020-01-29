@@ -216,8 +216,10 @@ export default class App extends Component {
 
     constructor(properties) {
         super(properties);
-        OneSignal.init("4d875b13-0f22-47cb-ab01-1ca7ac0c2e90");
-    
+
+        // TODO - make hicsail OneSignal Account
+        OneSignal.init("aa0fa885-0f3e-47c8-b21c-abcf075727ec");
+        OneSignal.configure();
         OneSignal.addEventListener('received', this.onReceived);
         OneSignal.addEventListener('opened', this.onOpened);
         OneSignal.addEventListener('ids', this.onIds);
