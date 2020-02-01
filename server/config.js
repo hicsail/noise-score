@@ -24,7 +24,7 @@ const config = {
     production: process.env.BASE_URL,
     test: 'localhost:9090',
     local: process.env.BASE_URL,
-    $default: 'http://3.14.174.164:9000/'
+    $default: 'http://3.12.168.21:9000/'
   },
   port: {
     web: {
