@@ -65,35 +65,33 @@
 
 
     function recieveData(data) {
-        measurements = JSON.parse(data.data)['data']
-        // alert(measurements.length);
+
+        measurements = JSON.parse(data.data)['data'];
+        //alert(measurements.length);
     }
 
     window.addEventListener('message', function (data) {
 
         let parsedData = JSON.parse(data.data);
-
-        //alert("in heatmap.addEventListener, parsedData['data'].length is ", parsedData['data'].length);
+        // alert(JSON.stringify(parsedData['data']));
 
         if (parsedData.operation === 'init') {
-            //alert("will instantiate the map");
             // initMap();
 
         }
         else {
-            // alert(parsedData['data'].length);
+
             var points = [];
             for (let i = 0; i < parsedData['data'].length; i++) {
                 let point = {
-                    location: new google.maps.LatLng(parsedData['data'][i]['latitude'], parsedData['data'][i]['longitude']),
+                    location: new google.maps.LatLng(parsedData['data'][i]['lat'], parsedData['data'][i]['lang']),
                     weight: Math.floor(parsedData['data'][i]['weight']),
                 };
-                // alert(JSON.stringify(point));
-                // alert(point['location']);
                 points.push(point);
             }
             map.setOptions({
                 center: {lat: parsedData['region']['latitude'], lng: parsedData['region']['longitude']},
+
             });
 
             heatmap.setOptions({
@@ -103,12 +101,10 @@
             return;
         }
 
-        // alert(data.data);
-
         temp = JSON.parse(data.data);
         jsonData = data.data;
 
-        let result = {};
+        // let result = {};
         // result['data'] = (temp['data'].filter(t => t.location === 'At work')).filter(t => t.location === 'indoors');
         // alert(result['data'].length);
 
@@ -120,9 +116,6 @@
         }
         else {
             if (false) {
-                // alert(res['toggle']);
-                // alert('toggling type');
-                // alert(temp['noiseType']);
                 if (temp['toggle'] === 'feel')
                     getPoints3();
                 else
@@ -130,10 +123,7 @@
 
             }
             else {
-                // alert("here 3");
-                // alert(temp['toggle']);
                 let base = 15;
-                // res = temp;
                 map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 15,
                     center: {lat: 40, lng: -71},
@@ -172,7 +162,6 @@
         let feelPoints = [];
 
         for (let i = 0; i < res['data'].length; i++) {
-            // alert(res['data'][i]['lang']);
             if (i < 200) {
                 let point = {
                     location: new google.maps.LatLng(res['data'][i]['lat'], res['data'][i]['lang']),
@@ -190,15 +179,12 @@
 
     function getPoints2() {
         let points = [];
-        // alert(res['data'].length);
-        // alert(res['data'][0]['dbWeight']);
         for (let i = 0; i < res['data'].length; i++) {
             let val = (res['data'][i]['dbWeight']);
             let point = {
                 location: new google.maps.LatLng(res['data'][i]['lat'], res['data'][i]['lang']),
                 weight: Math.floor(res['data'][i]['dbWeight']),
             };
-            // alert(point['location']);
             points.push(point);
         }
 
@@ -230,6 +216,7 @@
 
 
     function initMap() {
+
         // alert("get the map ready");
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 42.3601, lng: -71.0589},
