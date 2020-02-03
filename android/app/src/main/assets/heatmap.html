@@ -86,7 +86,7 @@
             var points = [];
             for (let i = 0; i < parsedData['data'].length; i++) {
                 let point = {
-                    location: new google.maps.LatLng(parsedData['data'][i]['latitude'], parsedData['data'][i]['longitude']),
+                    location: new google.maps.LatLng(parsedData['data'][i]['lat'], parsedData['data'][i]['lang']),
                     weight: Math.floor(parsedData['data'][i]['weight']),
                 };
                 // alert(JSON.stringify(point));
