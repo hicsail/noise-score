@@ -2187,7 +2187,7 @@
 					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2242,7 +2242,7 @@
 					"\"$(SRCROOT)/noisescore\"",
 					"\"$(SRCROOT)/noisescore\"",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				NEW_SETTING = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

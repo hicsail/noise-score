@@ -27,7 +27,7 @@
 {
   NSURL *jsCodeLocation;
 
-  [GMSServices provideAPIKey:@"AIzaSyAfGO8M5ocLOiSV8CmPE-TRh8ifEXbtGqo"];
+  [GMSServices provideAPIKey:@"GOOGLE_API_KEY"];
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.bundle?platform=ios"];
   
   
