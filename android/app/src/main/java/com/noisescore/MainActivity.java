@@ -63,7 +63,6 @@ public class MainActivity extends ReactActivity {
     protected void onResume() {
         super.onResume();
         checkGooglePlayServicesAvailable();
-        Log.d("ReactNative", "$$$$ MainActivity - IN ONCREATE().");
     }
 
 
