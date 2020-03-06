@@ -13,9 +13,11 @@ The NoiseScore application utilizes smart phone technology to capture both the o
 
 [description of application]
 
-## Motivation
+## Getting Started
 
-## Screenshots
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes in a mobile emulator instance of your choice of platform.
+
+## Setting up your environment
 
 ## Built With
 
@@ -26,47 +28,79 @@ The frontend was built primarily with the [React Native](https://facebook.github
 The backend was built primarily with SAIL's in-house backend, [Anchor](https://github.com/hicsail/anchor).
   * Node.js
   * hapi.js
-  * MongoDB
+  * MongoDBz
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes in a mobile emulator instance of your choice of platform.
 
 ### Prerequisites
 
-If you are new to React Native, Node.js, or MongoDB, please first:
+If you are new to Java, React Native, Node.js, or MongoDB, please first:
 
-* install React Native from the [official website](https://facebook.github.io/react-native/)
-* install Node.js from the [official website](https://nodejs.org/), or if you have `homebrew` installed, you can use `brew install node` instead
-* install MongoDB from the [official website](http://www.mongodb.org/downloads)
+* Download and install Java from https://www.java.com/ES/download/
+* React Native from the [official website](https://facebook.github.io/react-native/)
+* Install Node.js from the [official website](https://nodejs.org/), or if you have `homebrew` installed, you can use `brew install node` instead
+* Install MongoDB from the [official website](http://www.mongodb.org/downloads)
 
-### Installation
+### Installation and Setup
 
 First, you will need to clone this repo before installing all the `npm` dependencies in both the `server` folder and the project root directory. After that, you will need to run some first-time setup for the server. You can finally get the app up and running properly after creating and running an instance of both the server and client.
 
 You can follow step-by-step instructions for the full process below:
 
 * clone this repo at `https://github.com/hicsail/noise-score.git`
+
+#### Server setup
 * `cd` into the folder where the repo is located
 * `cd` into the `server` folder and run `npm install`
-* prepare your MongoDB instance by first starting `mongod` _without authentication_: `mongod --dbpath "<your_db_path>"`
-* if setting up this project for the first time, open a separate terminal window and run `npm run first-time-setup`
-* open a separate terminal window and start the server by running `npm start`
-* open a separate terminal window and `cd` out of the `server` folder back into the root directory
+* prepare your MongoDB instance by first starting `mongod` _without authentication_: `mongod --dbpath "<your_db_path>"` (in a separate terminal window)
+* If you want to access and view data collected through the app as an Administrator, run `npm run first-time-setup` to create the Admin user.
+* Start the server by running `npm start`
+
+#### React-Native setup (required for running the apps)
+* open a separate terminal window and `cd` into the root directory
 * if setting up this project for the first time, run `npm install`
 * in the same root directory, run `react-native start`
 * open a separate terminal window and follow the following steps for either Android or iOS
 
-### Android
+### Android Run Setup
 
-* run `npm run android`
-  * Note: you may get an error along the lines of `The SDK directory '/Users/sarahleinicke/Library/Android/sdk' does not exist.` This means that the path specified in the `/android/local.properties` file is not correct. To fix this, replace `sarahleinicke` in the `local.properties` file with `"<your_user_path>"`.
-  * Note: You may need to initialize `adb` beforehand by running these three `PATH` export lines in terminal: 
+* Make sure you have Android Studio and Android SDK installed. From the Android Studio SDK Manager, install the following packages as seen in the screenshots below. You will have to accept the license agreement before the installation takes place.
+
+<h1 align="center">
+  <a href="https://github.com/hicsail/noise-score/"><img src="assets/SDK-platform.png" alt="NOISE-SCORE SDK Platform Tools" ></a>
+  <br>
+  <br>
+  Platform Tools
+  <br>
+  <br>
+</h1>
+
+<h1 align="center">
+  <a href="https://github.com/hicsail/noise-score/"><img src="assets/sdk-tools.png" alt="NOISE-SCORE SDK Tools"></a>
+  <br>
+  <br>
+  Platform SDK
+  <br>
+  <br>
+</h1>
+
+* Make sure these packages are in your path. These are necessary for various android components to be recognized:
+
     * (1) `export ANDROID_HOME=/Users/"<your_user_path>"/Library/Android/sdk` 
     * (2) `export PATH=$ANDROID_HOME/platform-tools:$PATH` 
     * (3) `export PATH=$ANDROID_HOME/tools:$PATH`
+    
+* run `npm run android`
+  * Note: you may get an error along the lines of `The SDK directory '/Users/sarahleinicke/Library/Android/sdk' does not exist.` This means that the path specified in the `/android/local.properties` file is not correct. To fix this, replace `sarahleinicke` in the `local.properties` file with `"<your_user_path>"`.
 
-### iOS
+* If you face an issue with npm run android, try the following sequence of commands:
+```
+npm install --save-dev jetifier
+npx jetify
+npx react-native run-android
+```
+If the above gives no error, you should now see Noise Score launched on your virtual device or phone screen.
+
+### iOS Run Setup
 
 * run `npm run ios`
   * Note: you may get an error along the lines of `error Failed to build iOS project. We ran "xcodebuild" command but it exited with error code 65. To debug build logs further, consider building your app with Xcode.app, by opening noisescore.xcodeproj`. To fix this, open `/ios/noisescore.xcodeproj` in Xcode and build the app there.
@@ -74,7 +108,6 @@ You can follow step-by-step instructions for the full process below:
 
 # Old instructions
 
-## Setting up your environment
 
 ### Requirements
  To run and develop NoiseScore you will need :
