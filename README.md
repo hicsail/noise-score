@@ -180,7 +180,27 @@ The app should now open up in the Android simulator. Check the Metro Bundler tab
 
 
 The app should now open up in the iOS simulator. Check the Metro Bundler tab to check if the app is being deployed. 
-     
+
+## Managing the Anchor Server Installation on AWS
+
+* Login using the IAM link, username and password present in BU SAIL KeePass to be able to see the instance state and edit security groups etc. None of these have been provided here because of security concerns 
+
+* On terminal, SSH using The NoiseScoreKey.pem file found under this projects dropbox folder. Use the following command
+
+  
+  ``` ssh - <path to NoiseScoreKey.pem> ec2-user@ec2-3-12-168-21.us-east-2.compute.amazonaws.com```
+
+* Once logged on to server successfully, check server status using 
+
+    ``` pm2 status```
+    
+* If you wish to restart the server after pulling changes, please run the following command:
+  
+  ```pm2 start  server.js -o /home/ec2-user/server/server_logs/<output_filename.log> -e home/ec2-user/server/server_logs/<error_filename.log> --time```
+  
+  More options for forever can be found here: https://pm2.keymetrics.io/docs/usage/quick-start/
+
+* TODO add a line about the S3 backup script once done.
 
 ## Debugging
 Control D on emulator (Control M on Android) - to set automatic reloads and allow remote debugging.
@@ -190,4 +210,4 @@ Download React Native Debugger [here](https://github.com/jhen0409/react-native-d
 
 ## Notes
 
-1. You will need up update the API Key for the Geolocator under server/.env
+1. You will need up update the API Key for the Geolocator under server/.env 
