@@ -187,7 +187,14 @@ internals.applyRoutes = function (server, next) {
       }
     },
     handler: function (request, reply) {
-      var userID = request.state.AuthCookie.userId;
+      var userID = request.state.AuthCookie.userId ? request.state.AuthCookie.userId : request.auth.credentials.user._id.toString();
+      
+      //want to capture these for future logs
+      console.log("authcookie user id is...");
+      console.log(request.state.AuthCookie.userId);
+      console.log("From the usual way of request.auth is...");
+      console.log(request.auth.credentials.user._id.toString());
+      
       Measurement.find({userID: userID}, (err, session) => {
         if (err) {
           reply(404);
