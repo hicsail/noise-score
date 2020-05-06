@@ -187,7 +187,7 @@ internals.applyRoutes = function (server, next) {
       }
     },
     handler: function (request, reply) {
-      var userID = request.state.AuthCookie.userId ? request.state.AuthCookie.userId : request.auth.credentials.user._id.toString();
+      var userID = request.state.AuthCookie ? request.state.AuthCookie.userId : request.auth.credentials.user._id.toString();
       
       //want to capture these for future logs
       console.log("authcookie user id is...");
