@@ -20,7 +20,7 @@
     "axios": "^0.18.0",
     "babel-preset-react-native": "^5.0.2",
     "dateformat": "^3.0.3",
-    "expo": "^32.0.6",
+    "expo": "^46.0.16",
     "expo-asset": "^4.0.0",
     "expo-file-system": "^4.0.0",
     "expo-font": "^4.0.0",
